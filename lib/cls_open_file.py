@@ -7,7 +7,7 @@ from lib.gui.cls_edit_window import EditWindow
 
 class OpenFile(EditWindow):
     def __init__(self, param, master=None, gui=False):
-        self.dst_img = None
+        self.dst_img = []
 
         if len(param) == 1:
             self.__file_path = param[0]
@@ -47,7 +47,7 @@ class OpenFile(EditWindow):
         param = []
         param.append(self.__file_path)
         if self.__file_path == '':
-            self.dst_img = None
+            self.dst_img = []
         else:
             self.dst_img = cv2.imread(self.__file_path)
 
