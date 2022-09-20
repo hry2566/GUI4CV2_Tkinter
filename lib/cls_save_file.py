@@ -30,6 +30,11 @@ class SaveFile():
             path = file
         return path
 
+    def get_data(self):
+        print('Proc : Save File')
+        print(f'param = {self.__file_path}')
+        return self.__file_path, self.dst_img
+
 
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
