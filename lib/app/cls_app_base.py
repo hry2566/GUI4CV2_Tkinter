@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import tkinter as tk
-import cv2
-from lib.cls_average import Average
+import tkinter.ttk as ttk
 
 
 class App_Base:
@@ -11,8 +10,8 @@ class App_Base:
         self.toplevel1.configure(height=200, width=200)
         self.frame1 = tk.Frame(self.toplevel1)
         self.frame1.configure(height=200, padx=5, pady=5, width=200)
+        __values = ['a']
         self.tkvar = tk.StringVar()
-        __values = ['aaa', 'bbb']
         self.optionmenu1 = tk.OptionMenu(
             self.frame1, self.tkvar, *__values, command=None)
         self.optionmenu1.pack(fill="x", side="top")
@@ -27,6 +26,9 @@ class App_Base:
         self.frame3.pack(fill="x", side="top")
         self.task_list = tk.Listbox(self.frame1)
         self.task_list.pack(expand="true", fill="both", side="top")
+        self.set_param_btn = ttk.Button(self.frame1)
+        self.set_param_btn.configure(text="Set Param")
+        self.set_param_btn.pack(fill="x", side="top")
         self.create_code_btn = tk.Button(self.frame1)
         self.create_code_btn.configure(text="Create Python Code")
         self.create_code_btn.pack(fill="x", side="top")
@@ -43,14 +45,5 @@ class App_Base:
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-
     app = App_Base()
-    param = []
-    param = [15, 15]
-    app.dummy_frame.destroy()
-    app_child = Average(img, param, master=app.appwindow, gui=True)
-    # app_child.image_edit_frame.destroy()
-    # app_child = Average(img, param, master=app.mainwindow, gui=True)
-    # app_child.image_edit_frame.destroy()
     app.run()
