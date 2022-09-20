@@ -61,6 +61,15 @@
           </object>
         </child>
         <child>
+          <object class="ttk.Button" id="set_param_btn" named="True">
+            <property name="text" translatable="yes">Set Param</property>
+            <layout manager="pack">
+              <property name="fill">x</property>
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
+        <child>
           <object class="tk.Button" id="create_code_btn" named="True">
             <property name="text" translatable="yes">Create Python Code</property>
             <layout manager="pack">
