@@ -17,8 +17,6 @@ class App(App_Base):
         self.__init_gui()
         self.__init_events()
 
-        pass
-
     def __init_gui(self):
         self.optionmenu1["menu"].delete(0, "last")
         self.menu_list.append('ファイル開く(Open File)')
@@ -32,59 +30,48 @@ class App(App_Base):
 
         self.add_btn.bind('<1>', self.__onAddBtn_Events)
         self.task_list.bind("<<ListboxSelect>>", self.__onSelectListBox_Events)
+        self.set_param_btn.bind('<1>', self.__onSetParam_Events)
+
+    def __onSetParam_Events(self, event):
+        param, dst_img = self.app_child.get_data()
+        index = self.task_list.curselection()[0]
+        self.param_list[index] = param
+        self.dstimg_list[index] = dst_img
 
     def __onAddBtn_Events(self, event):
         task = self.tkvar.get()
         self.task_list.insert(tk.END, task)
         self.proc_list.append(task)
         self.param_list.append([])
-        self.dstimg_list.append(None)
-        pass
+        self.dstimg_list.append([])
 
     def __onSelectListBox_Events(self, event):
         index = event.widget.curselection()
         self.__run_proc(event.widget.get(index), index[0], True)
-        pass
 
     def __run_proc(self, proc, index, gui_flag):
         if not index == 0:
-            for i in range(index-1):
-                pass
+            if self.dstimg_list[index-1] == []:
+                return
+            img = self.dstimg_list[index-1]
+
+        try:
+            self.dummy_frame.destroy()
+            self.app_child.image_edit_frame.destroy()
+        except:
+            pass
 
         if proc == 'ファイル開く(Open File)':
-            # self.param_list[index] = []
-            # self.param = ['./0000_img/opencv_logo.jpg']
-            self.dummy_frame.destroy()
             self.app_child = OpenFile(
                 self.param_list, master=self.appwindow, gui=gui_flag)
-            param, dst_img = self.app_child.get_data()
-            self.dstimg_list[index] = dst_img
-            self.param_list[index] = param
 
-            pass
         elif proc == 'ファイル保存(Save File)':
-            param, dst_img = self.app_child.get_data()
-            self.dstimg_list[index-1] = dst_img
-            self.param_list[index-1] = param
-
-            img = self.dstimg_list[index-1]
-            # img = cv2.imread('./0000_img/opencv_logo.jpg')
-            # param = []
-            # param = ['./save.jpg']
             self.app_child = SaveFile(
                 img, self.param_list[index], gui=gui_flag)
-            pass
+
         elif proc == 'ぼかし (Average)':
-            img = self.dstimg_list[index-1]
-            # param = []
-            # param = [15, 15]
-            # self.dummy_frame.destroy()
-            self.app_child.image_edit_frame.destroy()
             self.app_child = Average(
                 img, self.param_list[index], master=self.appwindow, gui=gui_flag)
-
-            pass
-        pass
 
 
 if __name__ == "__main__":
