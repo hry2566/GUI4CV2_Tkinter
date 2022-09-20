@@ -33,7 +33,6 @@ class Average(EditWindow):
     def __init_gui(self):
         self.none_label.destroy()
 
-        # self.mainwindow.title('Average')
         self.__scale_x = tk.Scale(self.settings_frame)
         self.__scale_x.configure(label="kernel x",
                                  orient="horizontal",
