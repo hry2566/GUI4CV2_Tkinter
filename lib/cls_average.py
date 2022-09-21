@@ -1,6 +1,8 @@
 import tkinter as tk
+
 import cv2
 import numpy as np
+
 from lib.gui.cls_edit_window import EditWindow
 
 
@@ -18,10 +20,6 @@ class Average(EditWindow):
 
         if gui:
             super().__init__(img, master)
-            self.__var_scale_x = tk.IntVar()
-            self.__var_scale_y = tk.IntVar()
-            self.__var_scale_x.set(self.__kernel_x)
-            self.__var_scale_y.set(self.__kernel_y)
             self.__init_gui()
             self.__init_events()
 
@@ -34,22 +32,17 @@ class Average(EditWindow):
         self.none_label.destroy()
 
         self.__scale_x = tk.Scale(self.settings_frame)
-        self.__scale_x.configure(label="kernel x",
-                                 orient="horizontal",
-                                 from_=1,
-                                 to=50,
-                                 variable=self.__var_scale_x,
-                                 command=self.__onScale)
+        self.__scale_x.configure(from_=1, to=50,
+                                 label="kernel x", orient="horizontal", command=self.__onScale)
         self.__scale_x.pack(side="top")
 
         self.__scale_y = tk.Scale(self.settings_frame)
-        self.__scale_y.configure(label="kernel y",
-                                 orient="horizontal",
-                                 from_=1,
-                                 to=50,
-                                 variable=self.__var_scale_y,
-                                 command=self.__onScale)
+        self.__scale_y.configure(from_=1, to=50,
+                                 label="kernel y", orient="horizontal", command=self.__onScale)
         self.__scale_y.pack(side="top")
+
+        self.__scale_x.set(self.__kernel_x)
+        self.__scale_y.set(self.__kernel_y)
         pass
 
     def __init_events(self):
@@ -61,8 +54,8 @@ class Average(EditWindow):
         else:
             self.__proc_flag = True
 
-        self.__kernel_x = self.__var_scale_x.get()
-        self.__kernel_y = self.__var_scale_y.get()
+        self.__kernel_x = self.__scale_x.get()
+        self.__kernel_y = self.__scale_y.get()
         self.dst_img = self.__average()
         self.Draw()
         self.__proc_flag = False
