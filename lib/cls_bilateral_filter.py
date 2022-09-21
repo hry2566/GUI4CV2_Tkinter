@@ -20,10 +20,6 @@ class Bilateral_Filter(EditWindow):
 
         if gui:
             super().__init__(img, master)
-            # self.__var_scale_x = tk.IntVar()
-            # self.__var_scale_y = tk.IntVar()
-            # self.__var_scale_x.set(self.__kernel_x)
-            # self.__var_scale_y.set(self.__kernel_y)
             self.__init_gui()
             self.__init_events()
 
@@ -51,24 +47,6 @@ class Bilateral_Filter(EditWindow):
         self.scale1.set(self.d)
         self.scale2.set(self.sigma_color)
         self.scale3.set(self.sigma_space)
-
-        # self.__scale_x = tk.Scale(self.settings_frame)
-        # self.__scale_x.configure(label="kernel x",
-        #                          orient="horizontal",
-        #                          from_=1,
-        #                          to=50,
-        #                          variable=self.__var_scale_x,
-        #                          command=self.__onScale)
-        # self.__scale_x.pack(side="top")
-
-        # self.__scale_y = tk.Scale(self.settings_frame)
-        # self.__scale_y.configure(label="kernel y",
-        #                          orient="horizontal",
-        #                          from_=1,
-        #                          to=50,
-        #                          variable=self.__var_scale_y,
-        #                          command=self.__onScale)
-        # self.__scale_y.pack(side="top")
         pass
 
     def __init_events(self):
