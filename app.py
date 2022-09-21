@@ -1,4 +1,5 @@
 import tkinter as tk
+from cls_adaptive_threshold import Adaptive_Thresholed
 from lib.cls_open_file import OpenFile
 from lib.app.cls_app_base import App_Base
 from lib.cls_average import Average
@@ -22,6 +23,7 @@ class App(App_Base):
         self.menu_list.append('ファイル開く(Open File)')
         self.menu_list.append('ファイル保存(Save File)')
         self.menu_list.append('ぼかし (Average)')
+        self.menu_list.append('二値化 (Adaptive_Thresholed)')
 
     def __init_events(self):
         for menu in self.menu_list:
@@ -71,6 +73,10 @@ class App(App_Base):
 
         elif proc == 'ぼかし (Average)':
             self.app_child = Average(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == '二値化 (Adaptive_Thresholed)':
+            self.app_child = Adaptive_Thresholed(
                 img, self.param_list[index], master=self.appwindow, gui=gui_flag)
 
 
