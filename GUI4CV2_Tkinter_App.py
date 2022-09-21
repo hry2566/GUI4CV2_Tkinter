@@ -1,9 +1,10 @@
 import tkinter as tk
-from lib.cls_bilateral_filter import Bilateral_Filter
-from lib.cls_adaptive_threshold import Adaptive_Thresholed
-from lib.cls_open_file import OpenFile
+
 from lib.app.cls_app_base import App_Base
+from lib.cls_adaptive_threshold import Adaptive_Thresholed
 from lib.cls_average import Average
+from lib.cls_bilateral_filter import Bilateral_Filter
+from lib.cls_open_file import OpenFile
 from lib.cls_save_file import SaveFile
 
 
@@ -19,7 +20,7 @@ class App(App_Base):
         self.__init_gui()
         self.__init_events()
 
-        # ファイル開く(Open File)をtask先頭に追加
+        # ファイル開く(Open File)をtask_list先頭に追加
         self.task_list.insert(tk.END, 'ファイル開く(Open File)')
         self.proc_list.append('ファイル開く(Open File)')
         self.param_list.append([])
@@ -69,7 +70,6 @@ class App(App_Base):
         if task == '':
             print('add_cancel')
             return
-        print('add')
         self.task_list.insert(tk.END, task)
         self.proc_list.append(task)
         self.param_list.append([])
