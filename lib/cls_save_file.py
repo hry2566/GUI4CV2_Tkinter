@@ -1,6 +1,7 @@
 import tkinter
-import cv2
 from tkinter import filedialog
+
+import cv2
 
 
 class SaveFile():
