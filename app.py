@@ -18,6 +18,12 @@ class App(App_Base):
         self.__init_gui()
         self.__init_events()
 
+        # ファイル開く(Open File)をtask先頭に追加
+        self.task_list.insert(tk.END, 'ファイル開く(Open File)')
+        self.proc_list.append('ファイル開く(Open File)')
+        self.param_list.append([])
+        self.dstimg_list.append([])
+
     def __init_gui(self):
         self.optionmenu1["menu"].delete(0, "last")
         self.menu_list.append('ファイル開く(Open File)')
@@ -33,6 +39,7 @@ class App(App_Base):
         self.add_btn.bind('<1>', self.__onAddBtn_Events)
         self.task_list.bind("<<ListboxSelect>>", self.__onSelectListBox_Events)
         self.set_param_btn.bind('<1>', self.__onSetParam_Events)
+        self.del_btn.bind('<1>', self.__onDelBtn_Events)
 
     def __onSetParam_Events(self, event):
         param, dst_img = self.app_child.get_data()
@@ -40,8 +47,26 @@ class App(App_Base):
         self.param_list[index] = param
         self.dstimg_list[index] = dst_img
 
+    def __onDelBtn_Events(self, event):
+        if self.task_list.curselection() == () or self.task_list.curselection()[0] == 0:
+            print('del_cancel')
+            return
+        print('del')
+        index = self.task_list.curselection()[0]
+        print(index)
+
+        self.task_list.delete(index)
+        del self.proc_list[index]
+        del self.param_list[index]
+        del self.dstimg_list[index]
+        pass
+
     def __onAddBtn_Events(self, event):
         task = self.tkvar.get()
+        if task == '':
+            print('add_cancel')
+            return
+        print('add')
         self.task_list.insert(tk.END, task)
         self.proc_list.append(task)
         self.param_list.append([])
@@ -56,7 +81,8 @@ class App(App_Base):
             if self.dstimg_list[index-1] == []:
                 return
             img = self.dstimg_list[index-1]
-
+            if img == []:
+                return
         try:
             self.dummy_frame.destroy()
             self.app_child.image_edit_frame.destroy()
