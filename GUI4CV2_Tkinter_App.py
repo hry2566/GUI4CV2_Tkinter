@@ -1,10 +1,10 @@
 import tkinter as tk
-from lib.cls_blur import Blur
 
 from lib.app.cls_app_base import App_Base
 from lib.cls_adaptive_threshold import Adaptive_Thresholed
 from lib.cls_average import Average
 from lib.cls_bilateral_filter import Bilateral_Filter
+from lib.cls_blur import Blur
 from lib.cls_open_file import OpenFile
 from lib.cls_save_file import SaveFile
 
