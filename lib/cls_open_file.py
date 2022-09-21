@@ -1,7 +1,8 @@
-import tkinter as tk
 import tkinter
-import cv2
 from tkinter import filedialog
+
+import cv2
+
 from lib.gui.cls_edit_window import EditWindow
 
 
