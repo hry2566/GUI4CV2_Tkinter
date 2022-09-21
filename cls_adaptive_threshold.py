@@ -20,7 +20,7 @@ class Adaptive_Thresholed(EditWindow):
         else:
             self.method_index = 0
             self.Value = 255
-            self.block_size = 1
+            self.block_size = 3
             self.c = 1
 
         if gui:
@@ -97,7 +97,7 @@ class Adaptive_Thresholed(EditWindow):
         img_copy = cv2.medianBlur(img_copy, 5)
         img_copy = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
 
-        if self.block_size % 2 == 0:
+        if int(self.block_size) % 2 == 0:
             self.block_size += 1
 
         img = cv2.adaptiveThreshold(img_copy,
@@ -122,7 +122,7 @@ class Adaptive_Thresholed(EditWindow):
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [1, 255, 11, 1]
+    param = [0, 255, 3, 1]
     app = Adaptive_Thresholed(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./adaptive_thresholed.jpg', dst_img)
