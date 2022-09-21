@@ -1,4 +1,5 @@
 import tkinter as tk
+from lib.cls_blur import Blur
 
 from lib.app.cls_app_base import App_Base
 from lib.cls_adaptive_threshold import Adaptive_Thresholed
@@ -32,6 +33,7 @@ class App(App_Base):
         self.menu_list.append('ファイル開く(Open File)')
         self.menu_list.append('ファイル保存(Save File)')
         self.menu_list.append('ぼかし (Average)')
+        self.menu_list.append('ぼかし (Blur)')
         self.menu_list.append('ぼかし (Bilateral_Filter)')
         self.menu_list.append('二値化 (Adaptive_Thresholed)')
 
@@ -55,9 +57,7 @@ class App(App_Base):
         if self.task_list.curselection() == () or self.task_list.curselection()[0] == 0:
             print('del_cancel')
             return
-        print('del')
         index = self.task_list.curselection()[0]
-        print(index)
 
         self.task_list.delete(index)
         del self.proc_list[index]
@@ -110,6 +110,10 @@ class App(App_Base):
 
         elif proc == 'ぼかし (Bilateral_Filter)':
             self.app_child = Bilateral_Filter(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == 'ぼかし (Blur)':
+            self.app_child = Blur(
                 img, self.param_list[index], master=self.appwindow, gui=gui_flag)
 
 
