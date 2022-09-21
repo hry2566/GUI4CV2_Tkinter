@@ -9,6 +9,8 @@ class Adaptive_Thresholed(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__proc_flag = False
+        self.adaptiveMethod = [cv2.ADAPTIVE_THRESH_MEAN_C,
+                               cv2.ADAPTIVE_THRESH_GAUSSIAN_C]
 
         if len(param) == 4:
             self.method_index = param[0]
@@ -17,20 +19,16 @@ class Adaptive_Thresholed(EditWindow):
             self.c = param[3]
         else:
             self.method_index = 0
-            self.Value = 0
-            self.block_size = 0
-            self.c = 0
+            self.Value = 255
+            self.block_size = 1
+            self.c = 1
 
         if gui:
             super().__init__(img, master)
-            # self.__var_scale_x = tk.IntVar()
-            # self.__var_scale_y = tk.IntVar()
-            # self.__var_scale_x.set(self.__kernel_x)
-            # self.__var_scale_y.set(self.__kernel_y)
             self.__init_gui()
             self.__init_events()
 
-        self.dst_img = self.__average()
+        self.dst_img = self.__adaptive_thresholed()
 
         if gui:
             self.run()
@@ -38,27 +36,47 @@ class Adaptive_Thresholed(EditWindow):
     def __init_gui(self):
         self.none_label.destroy()
 
-        # self.__scale_x = tk.Scale(self.settings_frame)
-        # self.__scale_x.configure(label="kernel x",
-        #                          orient="horizontal",
-        #                          from_=1,
-        #                          to=50,
-        #                          variable=self.__var_scale_x,
-        #                          command=self.__onScale)
-        # self.__scale_x.pack(side="top")
+        self.__tkvar = tk.StringVar(value='MEAN')
+        __values = ['MEAN', 'GAUSSIAN']
+        self.optionmenu2 = tk.OptionMenu(
+            self.settings_frame, self.__tkvar, *__values, command=self.__onSelect)
+        self.optionmenu2.pack(fill='x', side='top')
 
-        # self.__scale_y = tk.Scale(self.settings_frame)
-        # self.__scale_y.configure(label="kernel y",
-        #                          orient="horizontal",
-        #                          from_=1,
-        #                          to=50,
-        #                          variable=self.__var_scale_y,
-        #                          command=self.__onScale)
-        # self.__scale_y.pack(side="top")
+        self.scale1 = tk.Scale(self.settings_frame)
+        self.scale1.configure(from_=0, to=255,
+                              label='Value', orient='horizontal', command=self.__onScale)
+        self.scale1.pack(side='top')
+        self.scale2 = tk.Scale(self.settings_frame)
+        self.scale2.configure(from_=3, to=255,
+                              label='block_size', orient='horizontal', command=self.__onScale)
+        self.scale2.pack(side='top')
+        self.scale3 = tk.Scale(self.settings_frame)
+        self.scale3.configure(from_=1, to=255,
+                              label='c', orient='horizontal', command=self.__onScale)
+        self.scale3.pack(side='top')
+
+        self.scale1.set(self.Value)
+        self.scale2.set(self.block_size)
+        self.scale3.set(self.c)
         pass
 
     def __init_events(self):
         pass
+
+    def __onSelect(self, event):
+        if self.__proc_flag:
+            return
+        else:
+            self.__proc_flag = True
+
+        if self.__tkvar.get() == 'MEAN':
+            self.method_index = 0
+        elif self.__tkvar.get() == 'GAUSSIAN':
+            self.method_index = 1
+
+        self.dst_img = self.__adaptive_thresholed()
+        self.Draw()
+        self.__proc_flag = False
 
     def __onScale(self, events):
         if self.__proc_flag:
@@ -66,24 +84,36 @@ class Adaptive_Thresholed(EditWindow):
         else:
             self.__proc_flag = True
 
-        self.__kernel_x = self.__var_scale_x.get()
-        self.__kernel_y = self.__var_scale_y.get()
-        self.dst_img = self.__average()
+        self.Value = self.scale1.get()
+        self.block_size = self.scale2.get()
+        self.c = self.scale3.get()
+        self.dst_img = self.__adaptive_thresholed()
         self.Draw()
         self.__proc_flag = False
         pass
 
-    def __average(self):
-        # kernel_x = self.__kernel_x
-        # kernel_y = self.__kernel_y
-        # kernel = np.ones((kernel_y, kernel_x), np.float32)/(kernel_x*kernel_y)
-        # img = cv2.filter2D(self.origin_img, -1, kernel)
+    def __adaptive_thresholed(self):
+        img_copy = self.origin_img.copy()
+        img_copy = cv2.medianBlur(img_copy, 5)
+        img_copy = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
+
+        if self.block_size % 2 == 0:
+            self.block_size += 1
+
+        img = cv2.adaptiveThreshold(img_copy,
+                                    self.Value,
+                                    self.adaptiveMethod[self.method_index],
+                                    cv2.THRESH_BINARY,
+                                    self.block_size,
+                                    self.c)
         return img
 
     def get_data(self):
         param = []
-        param.append(self.__kernel_x)
-        param.append(self.__kernel_y)
+        param.append(self.method_index)
+        param.append(self.Value)
+        param.append(self.block_size)
+        param.append(self.c)
         print('Proc : Average')
         print(f'param = {param}')
         return param, self.dst_img
@@ -92,7 +122,7 @@ class Adaptive_Thresholed(EditWindow):
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [0, 255, 211, 20]
+    param = [1, 255, 11, 1]
     app = Adaptive_Thresholed(img, param, gui=True)
     param, dst_img = app.get_data()
-    cv2.imwrite('./dst_img/adaptive_thresholed.jpg', dst_img)
+    cv2.imwrite('./adaptive_thresholed.jpg', dst_img)
