@@ -1,10 +1,14 @@
 import tkinter as tk
 
+from lib.cls_fillter2D import Fillter2D
 from lib.app.cls_app_base import App_Base
 from lib.cls_adaptive_threshold import Adaptive_Thresholed
 from lib.cls_average import Average
 from lib.cls_bilateral_filter import Bilateral_Filter
 from lib.cls_blur import Blur
+from lib.cls_canny import Canny
+from lib.cls_dilate import Dilate
+from lib.cls_erode import Erode
 from lib.cls_open_file import OpenFile
 from lib.cls_save_file import SaveFile
 
@@ -35,6 +39,10 @@ class App(App_Base):
         self.menu_list.append('ぼかし (Average)')
         self.menu_list.append('ぼかし (Blur)')
         self.menu_list.append('ぼかし (Bilateral_Filter)')
+        self.menu_list.append('シャープ (Filter2D)')
+        self.menu_list.append('膨張 (Dilate)')
+        self.menu_list.append('収縮 (Erode)')
+        self.menu_list.append('二値化 (Canny)')
         self.menu_list.append('二値化 (Adaptive_Thresholed)')
 
     def __init_events(self):
@@ -114,6 +122,22 @@ class App(App_Base):
 
         elif proc == 'ぼかし (Blur)':
             self.app_child = Blur(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == '二値化 (Canny)':
+            self.app_child = Canny(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == '膨張 (Dilate)':
+            self.app_child = Dilate(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == '収縮 (Erode)':
+            self.app_child = Erode(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == 'シャープ (Filter2D)':
+            self.app_child = Fillter2D(
                 img, self.param_list[index], master=self.appwindow, gui=gui_flag)
 
 
