@@ -1,4 +1,6 @@
 import tkinter as tk
+from lib.cls_morphology import Morphology
+from lib.cls_median_blur import Median_Blur
 
 from lib.app.cls_app_base import App_Base
 from lib.cls_adaptive_threshold import Adaptive_Thresholed
@@ -41,11 +43,13 @@ class App(App_Base):
         self.menu_list.append('ファイル保存(Save File)')
         self.menu_list.append('ぼかし (Average)')
         self.menu_list.append('ぼかし (Blur)')
+        self.menu_list.append('ぼかし (Median Blur)')
         self.menu_list.append('ぼかし (Gaussian_Blur)')
         self.menu_list.append('ぼかし (Bilateral_Filter)')
         self.menu_list.append('シャープ (Filter2D)')
         self.menu_list.append('膨張 (Dilate)')
         self.menu_list.append('収縮 (Erode)')
+        self.menu_list.append('モルフォロジー (Morphology)')
         self.menu_list.append('二値化 (Canny)')
         self.menu_list.append('二値化 (inRange)')
         self.menu_list.append('二値化 (Adaptive_Thresholed)')
@@ -156,6 +160,14 @@ class App(App_Base):
 
         elif proc == '輪郭抽出 (Laplacian)':
             self.app_child = Laplacian(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == 'ぼかし (Median Blur)':
+            self.app_child = Median_Blur(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == 'モルフォロジー (Morphology)':
+            self.app_child = Morphology(
                 img, self.param_list[index], master=self.appwindow, gui=gui_flag)
 
 
