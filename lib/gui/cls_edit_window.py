@@ -104,7 +104,13 @@ class EditWindow(GuiBase):
                 image=self.__canvas_img)
 
         self.__draw_flag = False
-        pass
+
+
+# 奇数化
+def even2odd(number: int):
+    if number % 2 == 0:
+        number += 1
+    return number
 
 
 if __name__ == "__main__":
