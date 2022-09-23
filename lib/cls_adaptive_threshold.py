@@ -2,7 +2,7 @@ import tkinter as tk
 
 import cv2
 
-from lib.gui.cls_edit_window import EditWindow
+from lib.gui.cls_edit_window import EditWindow, even2odd
 
 
 class Adaptive_Thresholed(EditWindow):
@@ -97,8 +97,10 @@ class Adaptive_Thresholed(EditWindow):
         img_copy = cv2.medianBlur(img_copy, 5)
         img_copy = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
 
-        if int(self.block_size) % 2 == 0:
-            self.block_size += 1
+        # if int(self.block_size) % 2 == 0:
+        #     self.block_size += 1
+
+        self.block_size = even2odd(self.block_size)
 
         img = cv2.adaptiveThreshold(img_copy,
                                     self.Value,
