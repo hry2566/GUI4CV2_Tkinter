@@ -3,7 +3,7 @@ import tkinter as tk
 import cv2
 import numpy as np
 
-from lib.gui.cls_edit_window import EditWindow
+from lib.gui.cls_edit_window import EditWindow, even2odd
 
 
 class Canny(EditWindow):
@@ -86,8 +86,10 @@ class Canny(EditWindow):
             self.scale2.set(self.max_val)
             self.scale3.set(self.min_val)
 
-        if self.kernel % 2 == 0:
-            self.kernel += 1
+        # if self.kernel % 2 == 0:
+        #     self.kernel += 1
+
+        self.kernel = even2odd(self.kernel)
 
         # ぼかし
         img_blur = cv2.GaussianBlur(img_gray, (self.kernel, self.kernel), None)
