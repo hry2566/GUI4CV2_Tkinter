@@ -1,4 +1,5 @@
 import tkinter as tk
+from lib.cls_gaussian_blur import Gaussian_Blur
 
 from lib.cls_fillter2D import Fillter2D
 from lib.app.cls_app_base import App_Base
@@ -38,6 +39,7 @@ class App(App_Base):
         self.menu_list.append('ファイル保存(Save File)')
         self.menu_list.append('ぼかし (Average)')
         self.menu_list.append('ぼかし (Blur)')
+        self.menu_list.append('ぼかし (Gaussian_Blur)')
         self.menu_list.append('ぼかし (Bilateral_Filter)')
         self.menu_list.append('シャープ (Filter2D)')
         self.menu_list.append('膨張 (Dilate)')
@@ -138,6 +140,10 @@ class App(App_Base):
 
         elif proc == 'シャープ (Filter2D)':
             self.app_child = Fillter2D(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == 'ぼかし (Gaussian_Blur)':
+            self.app_child = Gaussian_Blur(
                 img, self.param_list[index], master=self.appwindow, gui=gui_flag)
 
 
