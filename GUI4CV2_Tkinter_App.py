@@ -1,7 +1,5 @@
 import tkinter as tk
-from lib.cls_gaussian_blur import Gaussian_Blur
 
-from lib.cls_fillter2D import Fillter2D
 from lib.app.cls_app_base import App_Base
 from lib.cls_adaptive_threshold import Adaptive_Thresholed
 from lib.cls_average import Average
@@ -10,6 +8,10 @@ from lib.cls_blur import Blur
 from lib.cls_canny import Canny
 from lib.cls_dilate import Dilate
 from lib.cls_erode import Erode
+from lib.cls_fillter2D import Fillter2D
+from lib.cls_gaussian_blur import Gaussian_Blur
+from lib.cls_inrange import InRange
+from lib.cls_laplacian import Laplacian
 from lib.cls_open_file import OpenFile
 from lib.cls_save_file import SaveFile
 
@@ -45,7 +47,9 @@ class App(App_Base):
         self.menu_list.append('膨張 (Dilate)')
         self.menu_list.append('収縮 (Erode)')
         self.menu_list.append('二値化 (Canny)')
+        self.menu_list.append('二値化 (inRange)')
         self.menu_list.append('二値化 (Adaptive_Thresholed)')
+        self.menu_list.append('輪郭抽出 (Laplacian)')
 
     def __init_events(self):
         for menu in self.menu_list:
@@ -144,6 +148,14 @@ class App(App_Base):
 
         elif proc == 'ぼかし (Gaussian_Blur)':
             self.app_child = Gaussian_Blur(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == '二値化 (inRange)':
+            self.app_child = InRange(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == '輪郭抽出 (Laplacian)':
+            self.app_child = Laplacian(
                 img, self.param_list[index], master=self.appwindow, gui=gui_flag)
 
 
