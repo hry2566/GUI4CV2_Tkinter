@@ -1,6 +1,4 @@
 import tkinter as tk
-from lib.cls_morphology import Morphology
-from lib.cls_median_blur import Median_Blur
 
 from lib.app.cls_app_base import App_Base
 from lib.cls_adaptive_threshold import Adaptive_Thresholed
@@ -14,8 +12,15 @@ from lib.cls_fillter2D import Fillter2D
 from lib.cls_gaussian_blur import Gaussian_Blur
 from lib.cls_inrange import InRange
 from lib.cls_laplacian import Laplacian
+from lib.cls_median_blur import Median_Blur
+from lib.cls_morphology import Morphology
 from lib.cls_open_file import OpenFile
+from lib.cls_rotate import Rotate
 from lib.cls_save_file import SaveFile
+from lib.cls_sobel import Sobel
+from lib.cls_threshold import Threshold
+from lib.cls_trim import Trim
+from lib.cls_unsharp import UnSharp
 
 
 class App(App_Base):
@@ -41,19 +46,24 @@ class App(App_Base):
         self.optionmenu1["menu"].delete(0, "last")
         self.menu_list.append('ファイル開く(Open File)')
         self.menu_list.append('ファイル保存(Save File)')
+        self.menu_list.append('回転 (Rotate)')
+        self.menu_list.append('切り抜き (Trim)')
         self.menu_list.append('ぼかし (Average)')
         self.menu_list.append('ぼかし (Blur)')
         self.menu_list.append('ぼかし (Median Blur)')
         self.menu_list.append('ぼかし (Gaussian_Blur)')
         self.menu_list.append('ぼかし (Bilateral_Filter)')
         self.menu_list.append('シャープ (Filter2D)')
+        self.menu_list.append('シャープ (UnSharp)')
         self.menu_list.append('膨張 (Dilate)')
         self.menu_list.append('収縮 (Erode)')
         self.menu_list.append('モルフォロジー (Morphology)')
+        self.menu_list.append('二値化 (Threshold)')
         self.menu_list.append('二値化 (Canny)')
         self.menu_list.append('二値化 (inRange)')
         self.menu_list.append('二値化 (Adaptive_Thresholed)')
         self.menu_list.append('輪郭抽出 (Laplacian)')
+        self.menu_list.append('輪郭抽出 (Sobel)')
 
     def __init_events(self):
         for menu in self.menu_list:
@@ -168,6 +178,26 @@ class App(App_Base):
 
         elif proc == 'モルフォロジー (Morphology)':
             self.app_child = Morphology(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == '回転 (Rotate)':
+            self.app_child = Rotate(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == '輪郭抽出 (Sobel)':
+            self.app_child = Sobel(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == '二値化 (Threshold)':
+            self.app_child = Threshold(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == '切り抜き (Trim)':
+            self.app_child = Trim(
+                img, self.param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == 'シャープ (UnSharp)':
+            self.app_child = UnSharp(
                 img, self.param_list[index], master=self.appwindow, gui=gui_flag)
 
 
