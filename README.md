@@ -9,14 +9,17 @@ GUI for OpenCV-Python with Tkinter
 ・numpy  
 ・tkinter
   
-単体動作  
-  
+単体動作（ぼかし）  
+![スクリーンショット_2022-09-24_11-13-54](https://user-images.githubusercontent.com/86605611/192075844-00cecf9b-a432-4740-b0da-f4ccbdbb8d80.png)
+
   
 アプリ動作  
-  
+![スクリーンショット_2022-09-24_11-20-44](https://user-images.githubusercontent.com/86605611/192076052-25b7f997-86cd-4de7-a650-48c55700d2cc.png)
+![スクリーンショット_2022-09-24_11-21-52](https://user-images.githubusercontent.com/86605611/192076061-6e088691-ed36-4180-971a-e33c218a0d89.png)
+
   
 動画    
-  
+・後日  
   
 実装済み  
 ・ファイル開く(Open File)  
@@ -42,5 +45,6 @@ GUI for OpenCV-Python with Tkinter
 ・  
   
 実装予定  
-アプリで処理した内容のPythonのコードを出力  
+・その他画像処理  
+・アプリで処理した内容のPythonのコードを出力  
 
