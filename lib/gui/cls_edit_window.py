@@ -15,6 +15,10 @@ class EditWindow(GuiBase):
         self.__img_switch = True
         self.__draw_flag = False
         self.__view_scale = 1.0
+        self.__start_x = 0
+        self.__start_y = 0
+        self.__imgpos_x = 0
+        self.__imgpos_y = 0
 
         self.__init_gui()
         self.__init_events()
@@ -36,19 +40,36 @@ class EditWindow(GuiBase):
         elif self.__os_type == 'Linux':
             self.canvas1.bind("<ButtonPress-4>", self.__mouse_wheel)
             self.canvas1.bind("<ButtonPress-5>", self.__mouse_wheel)
+            self.canvas1.bind('<2>', self.__mouse_wheel_down)
+            self.canvas1.bind('<ButtonRelease-2>', self.__mouse_wheel_up)
+            # self.canvas1.bind("<Motion>", self.__canvas_mousemove, add='')
         pass
 
-    def __mouse_wheel(self, events):
+    def __mouse_wheel_down(self, event):
+        self.__start_x = event.x
+        self.__start_y = event.y
+        pass
+
+    def __mouse_wheel_up(self, event):
+        self.__imgpos_x -= self.__start_x - event.x
+        self.__imgpos_y -= self.__start_y - event.y
+        self.Draw()
+        pass
+
+    # def __canvas_mousemove(self, event):
+    #     pass
+
+    def __mouse_wheel(self, event):
         wheel = True
         if self.__os_type == 'Windows':
-            if events.delta > 0:
+            if event.delta > 0:
                 wheel = True
             else:
                 wheel = False
         elif self.__os_type == 'Linux':
-            if events.num == 4:
+            if event.num == 4:
                 wheel = True
-            elif events.num == 5:
+            elif event.num == 5:
                 wheel = False
 
         if wheel:
@@ -58,12 +79,14 @@ class EditWindow(GuiBase):
         self.Draw()
         pass
 
-    def __onReset_btn(self, events):
+    def __onReset_btn(self, event):
         self.__view_scale = 1.0
+        self.__imgpos_x = 0
+        self.__imgpos_y = 0
         self.Draw()
         pass
 
-    def __onSwitch_btn(self, events):
+    def __onSwitch_btn(self, event):
         if self.__img_switch:
             self.__img_switch = False
             self.image_switch_btn.configure(text='switch view\n(dst)')
@@ -73,7 +96,7 @@ class EditWindow(GuiBase):
         self.Draw()
         pass
 
-    def __onResize(self, events):
+    def __onResize(self, event):
         self.Draw()
 
     def Draw(self):
@@ -93,14 +116,16 @@ class EditWindow(GuiBase):
 
         if 1 < canvas_width and 1 < canvas_height:
             cv_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            w = cv_image.shape[0]
             pil_image = Image.fromarray(cv_image)
             pil_image = ImageOps.pad(pil_image, (canvas_width, canvas_height))
+
             self.__canvas_img = ImageTk.PhotoImage(image=pil_image)
 
             self.canvas1.delete()
             self.canvas1.create_image(
-                canvas_width / 2,
-                canvas_height / 2,
+                canvas_width / 2+self.__imgpos_x,
+                canvas_height / 2+self.__imgpos_y,
                 image=self.__canvas_img)
 
         self.__draw_flag = False
