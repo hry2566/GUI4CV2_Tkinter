@@ -19,7 +19,8 @@ GUI for OpenCV-Python with Tkinter
 
   
 動画    
-・後日  
+・単体：https://youtu.be/W58tFDa8cvc  
+・アプリ：https://youtu.be/QmiHQ8GiGpE  
   
 実装済み  
 ・ファイル開く(Open File)  
