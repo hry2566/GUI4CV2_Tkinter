@@ -37,11 +37,11 @@ class Bilateral_Filter(EditWindow):
                               label="d", orient="horizontal", command=self.__onScale)
         self.scale1.pack(side="top")
         self.scale2 = tk.Scale(self.settings_frame)
-        self.scale2.configure(from_=0, to=255,
+        self.scale2.configure(from_=0, to=30,
                               label="sigma_color", orient="horizontal", command=self.__onScale)
         self.scale2.pack(side="top")
         self.scale3 = tk.Scale(self.settings_frame)
-        self.scale3.configure(from_=0, to=255,
+        self.scale3.configure(from_=0, to=30,
                               label="sigma_space", orient="horizontal", command=self.__onScale)
         self.scale3.pack(side="top")
 
