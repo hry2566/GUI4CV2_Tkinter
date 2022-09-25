@@ -48,4 +48,6 @@ GUI for OpenCV-Python with Tkinter
 実装予定  
 ・その他画像処理  
 ・アプリで処理した内容のPythonコードを出力  
-
+  
+ブログ  
+https://danpapa-hry.hateblo.jp/entry/2022/09/25/072516  
