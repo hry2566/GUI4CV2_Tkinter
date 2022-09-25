@@ -45,7 +45,6 @@ class App(App_Base):
 
     def __init_gui(self):
         self.appwindow.title('GUI4CV2_Tkinter')
-        self.create_code_btn.bind('<1>', self.__onClick_create_code)
         self.optionmenu1["menu"].delete(0, "last")
         self.__menu_list.append('ファイル開く(Open File)')
         self.__menu_list.append('ファイル保存(Save File)')
@@ -69,6 +68,8 @@ class App(App_Base):
         self.__menu_list.append('輪郭抽出 (Sobel)')
 
     def __init_events(self):
+        self.create_code_btn.bind('<1>', self.__onClick_create_code)
+
         for menu in self.__menu_list:
             self.optionmenu1["menu"].add_command(
                 label=menu, command=tk._setit(self.tkvar, menu))
@@ -94,6 +95,7 @@ class App(App_Base):
         del self.__proc_list[index]
         del self.__param_list[index]
         del self.__dstimg_list[index]
+        del self.__code_list[index]
         pass
 
     def __onAddBtn_Events(self, event):
@@ -274,6 +276,7 @@ class App(App_Base):
             if pycode == '':
                 pycode = f'param = {str(self.__param_list[index])}\nimgLib = {code}'
             else:
+                print(index)
                 pycode += '\n' + \
                     f'param = {str(self.__param_list[index])}\nimgLib = {code}'
             pycode += '\nparam, img = imgLib.get_data()\n'
