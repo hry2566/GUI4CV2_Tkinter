@@ -32,9 +32,11 @@ class SaveFile():
         return path
 
     def get_data(self):
+        param = []
+        param.append(self.__file_path)
         print('Proc : Save File')
-        print(f'param = {self.__file_path}')
-        return self.__file_path, self.dst_img
+        print(f'param = {param}')
+        return param, self.dst_img
 
 
 if __name__ == "__main__":
