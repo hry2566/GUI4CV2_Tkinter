@@ -42,7 +42,7 @@ class EditWindow(GuiBase):
             self.canvas1.bind("<ButtonPress-5>", self.__mouse_wheel)
         self.canvas1.bind('<2>', self.__mouse_wheel_down)
         self.canvas1.bind('<ButtonRelease-2>', self.__mouse_wheel_up)
-            # self.canvas1.bind("<Motion>", self.__canvas_mousemove, add='')
+        # self.canvas1.bind("<Motion>", self.__canvas_mousemove, add='')
         pass
 
     def __mouse_wheel_down(self, event):
