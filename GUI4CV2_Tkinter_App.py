@@ -1,5 +1,4 @@
 import tkinter as tk
-from lib.cls_convert_scale_abs import ConvertScaleAbs
 
 from lib.app.cls_app_base import App_Base
 from lib.cls_adaptive_threshold import Adaptive_Thresholed
@@ -7,6 +6,7 @@ from lib.cls_average import Average
 from lib.cls_bilateral_filter import Bilateral_Filter
 from lib.cls_blur import Blur
 from lib.cls_canny import Canny
+from lib.cls_convert_scale_abs import ConvertScaleAbs
 from lib.cls_dilate import Dilate
 from lib.cls_erode import Erode
 from lib.cls_fillter2D import Fillter2D
@@ -295,6 +295,7 @@ class App(App_Base):
         str_import += 'from lib.cls_bilateral_filter import Bilateral_Filter \n'
         str_import += 'from lib.cls_blur import Blur \n'
         str_import += 'from lib.cls_canny import Canny \n'
+        str_import += 'from lib.cls_convert_scale_abs import ConvertScaleAbs \n'
         str_import += 'from lib.cls_dilate import Dilate \n'
         str_import += 'from lib.cls_erode import Erode \n'
         str_import += 'from lib.cls_fillter2D import Fillter2D \n'
