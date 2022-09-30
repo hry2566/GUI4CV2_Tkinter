@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import tkinter as tk
 import tkinter.ttk as ttk
+from turtle import width
 
 
 class App_Base:
@@ -25,6 +26,7 @@ class App_Base:
         self.del_btn.pack(expand="true", fill="x", side="left")
         self.frame3.pack(fill="x", side="top")
         self.task_list = tk.Listbox(self.frame1)
+        self.task_list.configure(width=0)
         self.task_list.pack(expand="true", fill="both", side="top")
         self.set_param_btn = ttk.Button(self.frame1)
         self.set_param_btn.configure(text="Set Param")
