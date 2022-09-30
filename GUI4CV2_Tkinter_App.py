@@ -1,4 +1,5 @@
 import tkinter as tk
+from lib.cls_convert_scale_abs import ConvertScaleAbs
 
 from lib.app.cls_app_base import App_Base
 from lib.cls_adaptive_threshold import Adaptive_Thresholed
@@ -48,6 +49,7 @@ class App(App_Base):
         self.optionmenu1["menu"].delete(0, "last")
         self.__menu_list.append('ファイル開く(Open File)')
         self.__menu_list.append('ファイル保存(Save File)')
+        self.__menu_list.append('明るさ／コントラスト (ConvertScaleAbs)')
         self.__menu_list.append('回転 (Rotate)')
         self.__menu_list.append('切り抜き (Trim)')
         self.__menu_list.append('ぼかし (Average)')
@@ -206,6 +208,10 @@ class App(App_Base):
             self.app_child = UnSharp(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
+        elif proc == '明るさ／コントラスト (ConvertScaleAbs)':
+            self.app_child = ConvertScaleAbs(
+                img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
+
     def __create_code(self, proc):
         code = ''
         if proc == 'ファイル開く(Open File)':
@@ -267,6 +273,9 @@ class App(App_Base):
 
         elif proc == 'シャープ (UnSharp)':
             code = 'UnSharp(img, param, gui=False)'
+
+        elif proc == '明るさ／コントラスト (ConvertScaleAbs)':
+            code = 'ConvertScaleAbs(img, param, gui=False)'
 
         return code
 
