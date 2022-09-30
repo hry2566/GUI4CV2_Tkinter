@@ -40,8 +40,8 @@ class EditWindow(GuiBase):
         elif self.__os_type == 'Linux':
             self.canvas1.bind("<ButtonPress-4>", self.__mouse_wheel)
             self.canvas1.bind("<ButtonPress-5>", self.__mouse_wheel)
-            self.canvas1.bind('<2>', self.__mouse_wheel_down)
-            self.canvas1.bind('<ButtonRelease-2>', self.__mouse_wheel_up)
+        self.canvas1.bind('<2>', self.__mouse_wheel_down)
+        self.canvas1.bind('<ButtonRelease-2>', self.__mouse_wheel_up)
             # self.canvas1.bind("<Motion>", self.__canvas_mousemove, add='')
         pass
 
