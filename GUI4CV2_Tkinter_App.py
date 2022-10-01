@@ -6,7 +6,7 @@ from lib.cls_lib import *
 class App(App_Base):
     def __init__(self, master=None):
         super().__init__(master)
-        self.app_child = None
+        self.__app_child = None
         self.__menu_list = []
         self.__proc_list = []
         self.__param_list = []
@@ -62,7 +62,7 @@ class App(App_Base):
         self.del_btn.bind('<1>', self.__onDelBtn_Events)
 
     def __onSetParam_Events(self, event):
-        param, dst_img = self.app_child.get_data()
+        param, dst_img = self.__app_child.get_data()
         index = self.task_list.curselection()[0]
         self.__param_list[index] = param
         self.__dstimg_list[index] = dst_img
@@ -104,92 +104,92 @@ class App(App_Base):
                 return
         try:
             self.dummy_frame.destroy()
-            self.app_child.image_edit_frame.destroy()
+            self.__app_child.image_edit_frame.destroy()
         except:
             pass
 
         if proc == 'ファイル開く(Open File)':
-            self.app_child = OpenFile(
+            self.__app_child = OpenFile(
                 self.__param_list, master=self.appwindow, gui=gui_flag)
 
         elif proc == 'ファイル保存(Save File)':
-            self.app_child = SaveFile(
+            self.__app_child = SaveFile(
                 img, self.__param_list[index], gui=gui_flag)
 
         elif proc == 'ぼかし (Average)':
-            self.app_child = Average(
+            self.__app_child = Average(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '二値化 (Adaptive_Thresholed)':
-            self.app_child = Adaptive_Thresholed(
+            self.__app_child = Adaptive_Thresholed(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == 'ぼかし (Bilateral_Filter)':
-            self.app_child = Bilateral_Filter(
+            self.__app_child = Bilateral_Filter(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == 'ぼかし (Blur)':
-            self.app_child = Blur(
+            self.__app_child = Blur(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '二値化 (Canny)':
-            self.app_child = Canny(
+            self.__app_child = Canny(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '膨張 (Dilate)':
-            self.app_child = Dilate(
+            self.__app_child = Dilate(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '収縮 (Erode)':
-            self.app_child = Erode(
+            self.__app_child = Erode(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == 'シャープ (Filter2D)':
-            self.app_child = Fillter2D(
+            self.__app_child = Fillter2D(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == 'ぼかし (Gaussian_Blur)':
-            self.app_child = Gaussian_Blur(
+            self.__app_child = Gaussian_Blur(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '二値化 (inRange)':
-            self.app_child = InRange(
+            self.__app_child = InRange(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '輪郭抽出 (Laplacian)':
-            self.app_child = Laplacian(
+            self.__app_child = Laplacian(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == 'ぼかし (Median Blur)':
-            self.app_child = Median_Blur(
+            self.__app_child = Median_Blur(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == 'モルフォロジー (Morphology)':
-            self.app_child = Morphology(
+            self.__app_child = Morphology(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '回転 (Rotate)':
-            self.app_child = Rotate(
+            self.__app_child = Rotate(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '輪郭抽出 (Sobel)':
-            self.app_child = Sobel(
+            self.__app_child = Sobel(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '二値化 (Threshold)':
-            self.app_child = Threshold(
+            self.__app_child = Threshold(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '切り抜き (Trim)':
-            self.app_child = Trim(
+            self.__app_child = Trim(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == 'シャープ (UnSharp)':
-            self.app_child = UnSharp(
+            self.__app_child = UnSharp(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '明るさ／コントラスト (ConvertScaleAbs)':
-            self.app_child = ConvertScaleAbs(
+            self.__app_child = ConvertScaleAbs(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
     def __create_code(self, proc):
