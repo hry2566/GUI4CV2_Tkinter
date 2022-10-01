@@ -11,19 +11,19 @@ class InRange(EditWindow):
         self.__proc_flag = False
 
         if len(param) == 6:
-            self.r_h_1 = param[0]
-            self.g_s_1 = param[1]
-            self.b_v_1 = param[2]
-            self.r_h_2 = param[3]
-            self.g_s_2 = param[4]
-            self.b_v_2 = param[5]
+            self.__r_h_1 = param[0]
+            self.__g_s_1 = param[1]
+            self.__b_v_1 = param[2]
+            self.__r_h_2 = param[3]
+            self.__g_s_2 = param[4]
+            self.__b_v_2 = param[5]
         else:
-            self.r_h_1 = 0
-            self.g_s_1 = 0
-            self.b_v_1 = 0
-            self.r_h_2 = 255
-            self.g_s_2 = 255
-            self.b_v_2 = 255
+            self.__r_h_1 = 0
+            self.__g_s_1 = 0
+            self.__b_v_1 = 0
+            self.__r_h_2 = 255
+            self.__g_s_2 = 255
+            self.__b_v_2 = 255
 
         if gui:
             super().__init__(img, master)
@@ -68,12 +68,12 @@ class InRange(EditWindow):
                                 label='b(h)_2', orient="horizontal", command=self.__onScale)
         self.__scale6.pack(side="top")
 
-        self.__scale1.set(self.r_h_1)
-        self.__scale2.set(self.g_s_1)
-        self.__scale3.set(self.b_v_1)
-        self.__scale4.set(self.r_h_2)
-        self.__scale5.set(self.g_s_2)
-        self.__scale6.set(self.b_v_2)
+        self.__scale1.set(self.__r_h_1)
+        self.__scale2.set(self.__g_s_1)
+        self.__scale3.set(self.__b_v_1)
+        self.__scale4.set(self.__r_h_2)
+        self.__scale5.set(self.__g_s_2)
+        self.__scale6.set(self.__b_v_2)
 
         pass
 
@@ -86,12 +86,12 @@ class InRange(EditWindow):
         else:
             self.__proc_flag = True
 
-        self.r_h_1 = self.__scale1.get()
-        self.g_s_1 = self.__scale2.get()
-        self.b_v_1 = self.__scale3.get()
-        self.r_h_2 = self.__scale4.get()
-        self.g_s_2 = self.__scale5.get()
-        self.b_v_2 = self.__scale6.get()
+        self.__r_h_1 = self.__scale1.get()
+        self.__g_s_1 = self.__scale2.get()
+        self.__b_v_1 = self.__scale3.get()
+        self.__r_h_2 = self.__scale4.get()
+        self.__g_s_2 = self.__scale5.get()
+        self.__b_v_2 = self.__scale6.get()
 
         self.dst_img = self.__inrange()
         self.Draw()
@@ -102,18 +102,18 @@ class InRange(EditWindow):
         img_copy = self.origin_img.copy()
 
         img = cv2.inRange(img_copy,
-                          (self.b_v_1, self.g_s_1, self.r_h_1),
-                          (self.b_v_2, self.g_s_2, self.r_h_2))
+                          (self.__b_v_1, self.__g_s_1, self.__r_h_1),
+                          (self.__b_v_2, self.__g_s_2, self.__r_h_2))
         return img
 
     def get_data(self):
         param = []
-        param.append(self.r_h_1)
-        param.append(self.g_s_1)
-        param.append(self.b_v_1)
-        param.append(self.r_h_2)
-        param.append(self.g_s_2)
-        param.append(self.b_v_2)
+        param.append(self.__r_h_1)
+        param.append(self.__g_s_1)
+        param.append(self.__b_v_1)
+        param.append(self.__r_h_2)
+        param.append(self.__g_s_2)
+        param.append(self.__b_v_2)
         img = cv2.cvtColor(self.dst_img, cv2.COLOR_GRAY2BGR)
         print('Proc : inRange')
         print(f'param = {param}')
