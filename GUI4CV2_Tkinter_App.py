@@ -93,6 +93,8 @@ class App(App_Base):
 
     def __onSelectListBox_Events(self, event):
         index = event.widget.curselection()
+        if index == ():
+            return
         self.__run_proc(event.widget.get(index), index[0], True)
 
     def __run_proc(self, proc, index, gui_flag):
