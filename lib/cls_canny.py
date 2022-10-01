@@ -12,14 +12,14 @@ class Canny(EditWindow):
         self.__proc_flag = False
 
         if len(param) == 3:
-            self.kernel = param[0]
-            self.max_val = param[1]
-            self.min_val = param[2]
+            self.__kernel = param[0]
+            self.__max_val = param[1]
+            self.__min_val = param[2]
             mode = 1
         else:
-            self.kernel = 0
-            self.max_val = 0
-            self.min_val = 0
+            self.__kernel = 0
+            self.__max_val = 0
+            self.__min_val = 0
             mode = 0
 
         if gui:
@@ -35,22 +35,22 @@ class Canny(EditWindow):
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.scale1 = tk.Scale(self.settings_frame)
-        self.scale1.configure(from_=1, to=50,
-                              label="kernel", orient="horizontal", command=self.__onScale)
-        self.scale1.pack(side="top")
-        self.scale2 = tk.Scale(self.settings_frame)
-        self.scale2.configure(from_=0, to=500,
-                              label="max_val", orient="horizontal", command=self.__onScale)
-        self.scale2.pack(side="top")
-        self.scale3 = tk.Scale(self.settings_frame)
-        self.scale3.configure(from_=0, to=500,
-                              label="min_val", orient="horizontal", command=self.__onScale)
-        self.scale3.pack(side="top")
+        self.__scale1 = tk.Scale(self.settings_frame)
+        self.__scale1.configure(from_=1, to=50,
+                                label="kernel", orient="horizontal", command=self.__onScale)
+        self.__scale1.pack(side="top")
+        self.__scale2 = tk.Scale(self.settings_frame)
+        self.__scale2.configure(from_=0, to=500,
+                                label="max_val", orient="horizontal", command=self.__onScale)
+        self.__scale2.pack(side="top")
+        self.__scale3 = tk.Scale(self.settings_frame)
+        self.__scale3.configure(from_=0, to=500,
+                                label="min_val", orient="horizontal", command=self.__onScale)
+        self.__scale3.pack(side="top")
 
-        self.scale1.set(self.kernel)
-        self.scale2.set(self.max_val)
-        self.scale3.set(self.min_val)
+        self.__scale1.set(self.__kernel)
+        self.__scale2.set(self.__max_val)
+        self.__scale3.set(self.__min_val)
         pass
 
     def __init_events(self):
@@ -62,9 +62,9 @@ class Canny(EditWindow):
         else:
             self.__proc_flag = True
 
-        self.kernel = self.scale1.get()
-        self.max_val = self.scale2.get()
-        self.min_val = self.scale3.get()
+        self.__kernel = self.__scale1.get()
+        self.__max_val = self.__scale2.get()
+        self.__min_val = self.__scale3.get()
 
         mode = 1
         self.dst_img = self.__canny(mode)
@@ -79,33 +79,34 @@ class Canny(EditWindow):
         if mode == 0:
             med_val = np.median(img_gray)
             sigma = 0.33  # 0.33
-            self.min_val = int(max(0, (1.0 - sigma) * med_val))
-            self.max_val = int(max(255, (1.0 + sigma) * med_val))
+            self.__min_val = int(max(0, (1.0 - sigma) * med_val))
+            self.__max_val = int(max(255, (1.0 + sigma) * med_val))
 
-            self.scale1.set(self.kernel)
-            self.scale2.set(self.max_val)
-            self.scale3.set(self.min_val)
+            self.__scale1.set(self.__kernel)
+            self.__scale2.set(self.__max_val)
+            self.__scale3.set(self.__min_val)
 
-        # if self.kernel % 2 == 0:
-        #     self.kernel += 1
+        # if self.__kernel % 2 == 0:
+        #     self.__kernel += 1
 
-        self.kernel = even2odd(self.kernel)
+        self.__kernel = even2odd(self.__kernel)
 
         # ぼかし
-        img_blur = cv2.GaussianBlur(img_gray, (self.kernel, self.kernel), None)
+        img_blur = cv2.GaussianBlur(
+            img_gray, (self.__kernel, self.__kernel), None)
 
         # 輪郭抽出
         img = cv2.Canny(img_blur,
-                        threshold1=self.max_val,
-                        threshold2=self.min_val)
+                        threshold1=self.__max_val,
+                        threshold2=self.__min_val)
 
         return img
 
     def get_data(self):
         param = []
-        param.append(self.kernel)
-        param.append(self.max_val)
-        param.append(self.min_val)
+        param.append(self.__kernel)
+        param.append(self.__max_val)
+        param.append(self.__min_val)
         print('Proc : Canny')
         print(f'param = {param}')
         img = cv2.cvtColor(self.dst_img, cv2.COLOR_GRAY2BGR)
