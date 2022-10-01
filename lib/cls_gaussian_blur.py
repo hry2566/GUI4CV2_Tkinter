@@ -32,24 +32,24 @@ class Gaussian_Blur(EditWindow):
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__scale_x = tk.Scale(self.settings_frame)
-        self.__scale_x.configure(from_=1, to=50,
-                                 label="kernel x", orient="horizontal", command=self.__onScale)
-        self.__scale_x.pack(side="top")
+        self.__scale1 = tk.Scale(self.settings_frame)
+        self.__scale1.configure(from_=1, to=50,
+                                label="kernel x", orient="horizontal", command=self.__onScale)
+        self.__scale1.pack(side="top")
 
-        self.__scale_y = tk.Scale(self.settings_frame)
-        self.__scale_y.configure(from_=1, to=50,
-                                 label="kernel y", orient="horizontal", command=self.__onScale)
-        self.__scale_y.pack(side="top")
+        self.__scale2 = tk.Scale(self.settings_frame)
+        self.__scale2.configure(from_=1, to=50,
+                                label="kernel y", orient="horizontal", command=self.__onScale)
+        self.__scale2.pack(side="top")
 
-        self.__scale_std = tk.Scale(self.settings_frame)
-        self.__scale_std.configure(from_=1, to=50,
-                                   label="std", orient="horizontal", command=self.__onScale)
-        self.__scale_std.pack(side="top")
+        self.__scale3 = tk.Scale(self.settings_frame)
+        self.__scale3.configure(from_=1, to=50,
+                                label="std", orient="horizontal", command=self.__onScale)
+        self.__scale3.pack(side="top")
 
-        self.__scale_x.set(self.__kernel_x)
-        self.__scale_y.set(self.__kernel_y)
-        self.__scale_std.set(self.__std)
+        self.__scale1.set(self.__kernel_x)
+        self.__scale2.set(self.__kernel_y)
+        self.__scale3.set(self.__std)
         pass
 
     def __init_events(self):
@@ -61,9 +61,9 @@ class Gaussian_Blur(EditWindow):
         else:
             self.__proc_flag = True
 
-        self.__kernel_x = self.__scale_x.get()
-        self.__kernel_y = self.__scale_y.get()
-        self.__std = self.__scale_std.get()
+        self.__kernel_x = self.__scale1.get()
+        self.__kernel_y = self.__scale2.get()
+        self.__std = self.__scale3.get()
         self.dst_img = self.__gaussian_blur()
         self.Draw()
         self.__proc_flag = False
