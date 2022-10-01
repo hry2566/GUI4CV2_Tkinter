@@ -16,6 +16,9 @@ class App(App_Base):
         self.__init_gui()
         self.__init_events()
 
+    def __init_gui(self):
+        self.appwindow.title('GUI4CV2_Tkinter')
+
         # ファイル開く(Open File)をtask_list先頭に追加
         self.task_list.insert(tk.END, 'ファイル開く(Open File)')
         self.__proc_list.append('ファイル開く(Open File)')
@@ -23,8 +26,6 @@ class App(App_Base):
         self.__dstimg_list.append([])
         self.__code_list.append(self.__create_code('ファイル開く(Open File)'))
 
-    def __init_gui(self):
-        self.appwindow.title('GUI4CV2_Tkinter')
         self.optionmenu1["menu"].delete(0, "last")
         self.__menu_list.append('ファイル開く(Open File)')
         self.__menu_list.append('ファイル保存(Save File)')
