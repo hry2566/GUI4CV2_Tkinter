@@ -37,6 +37,7 @@ class App(App_Base):
         self.__menu_list.append('ぼかし (Median Blur)')
         self.__menu_list.append('ぼかし (Gaussian_Blur)')
         self.__menu_list.append('ぼかし (Bilateral_Filter)')
+        self.__menu_list.append('ぼかし (FastNlMeansDenoisingColored)')
         self.__menu_list.append('シャープ (Filter2D)')
         self.__menu_list.append('シャープ (UnSharp)')
         self.__menu_list.append('膨張 (Dilate)')
@@ -194,6 +195,10 @@ class App(App_Base):
             self.__app_child = ConvertScaleAbs(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
+        elif proc == 'ぼかし (FastNlMeansDenoisingColored)':
+            self.__app_child = FastNlMeansDenoisingColored(
+                img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
+
     def __create_code(self, proc):
         code = ''
         if proc == 'ファイル開く(Open File)':
@@ -258,6 +263,9 @@ class App(App_Base):
 
         elif proc == '明るさ／コントラスト (ConvertScaleAbs)':
             code = 'ConvertScaleAbs(img, param, gui=False)'
+
+        elif proc == 'ぼかし (FastNlMeansDenoisingColored)':
+            code = 'FastNlMeansDenoisingColored(img, param, gui=False)'
 
         return code
 
