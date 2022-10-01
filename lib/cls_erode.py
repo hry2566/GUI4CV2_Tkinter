@@ -31,18 +31,18 @@ class Erode(EditWindow):
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__scale_x = tk.Scale(self.settings_frame)
-        self.__scale_x.configure(from_=1, to=50,
-                                 label="kernel x", orient="horizontal", command=self.__onScale)
-        self.__scale_x.pack(side="top")
+        self.__scale1 = tk.Scale(self.settings_frame)
+        self.__scale1.configure(from_=1, to=50,
+                                label="kernel x", orient="horizontal", command=self.__onScale)
+        self.__scale1.pack(side="top")
 
-        self.__scale_y = tk.Scale(self.settings_frame)
-        self.__scale_y.configure(from_=1, to=50,
-                                 label="kernel y", orient="horizontal", command=self.__onScale)
-        self.__scale_y.pack(side="top")
+        self.__scale2 = tk.Scale(self.settings_frame)
+        self.__scale2.configure(from_=1, to=50,
+                                label="kernel y", orient="horizontal", command=self.__onScale)
+        self.__scale2.pack(side="top")
 
-        self.__scale_x.set(self.__kernel_x)
-        self.__scale_y.set(self.__kernel_y)
+        self.__scale1.set(self.__kernel_x)
+        self.__scale2.set(self.__kernel_y)
         pass
 
     def __init_events(self):
@@ -54,8 +54,8 @@ class Erode(EditWindow):
         else:
             self.__proc_flag = True
 
-        self.__kernel_x = self.__scale_x.get()
-        self.__kernel_y = self.__scale_y.get()
+        self.__kernel_x = self.__scale1.get()
+        self.__kernel_y = self.__scale2.get()
         self.dst_img = self.__erode()
         self.Draw()
         self.__proc_flag = False
