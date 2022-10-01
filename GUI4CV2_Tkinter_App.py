@@ -1,27 +1,6 @@
 import tkinter as tk
 
-from lib.app.cls_app_base import App_Base
-from lib.cls_adaptive_threshold import Adaptive_Thresholed
-from lib.cls_average import Average
-from lib.cls_bilateral_filter import Bilateral_Filter
-from lib.cls_blur import Blur
-from lib.cls_canny import Canny
-from lib.cls_convert_scale_abs import ConvertScaleAbs
-from lib.cls_dilate import Dilate
-from lib.cls_erode import Erode
-from lib.cls_fillter2D import Fillter2D
-from lib.cls_gaussian_blur import Gaussian_Blur
-from lib.cls_inrange import InRange
-from lib.cls_laplacian import Laplacian
-from lib.cls_median_blur import Median_Blur
-from lib.cls_morphology import Morphology
-from lib.cls_open_file import OpenFile
-from lib.cls_rotate import Rotate
-from lib.cls_save_file import SaveFile
-from lib.cls_sobel import Sobel
-from lib.cls_threshold import Threshold
-from lib.cls_trim import Trim
-from lib.cls_unsharp import UnSharp
+from lib.cls_lib import *
 
 
 class App(App_Base):
@@ -290,27 +269,7 @@ class App(App_Base):
                     f'param = {str(self.__param_list[index])}\nimgLib = {code}'
             pycode += '\nparam, img = imgLib.get_data()\n'
 
-        str_import = 'from lib.cls_adaptive_threshold import Adaptive_Thresholed \n'
-        str_import += 'from lib.cls_average import Average \n'
-        str_import += 'from lib.cls_bilateral_filter import Bilateral_Filter \n'
-        str_import += 'from lib.cls_blur import Blur \n'
-        str_import += 'from lib.cls_canny import Canny \n'
-        str_import += 'from lib.cls_convert_scale_abs import ConvertScaleAbs \n'
-        str_import += 'from lib.cls_dilate import Dilate \n'
-        str_import += 'from lib.cls_erode import Erode \n'
-        str_import += 'from lib.cls_fillter2D import Fillter2D \n'
-        str_import += 'from lib.cls_gaussian_blur import Gaussian_Blur \n'
-        str_import += 'from lib.cls_inrange import InRange \n'
-        str_import += 'from lib.cls_laplacian import Laplacian \n'
-        str_import += 'from lib.cls_median_blur import Median_Blur \n'
-        str_import += 'from lib.cls_morphology import Morphology \n'
-        str_import += 'from lib.cls_open_file import OpenFile \n'
-        str_import += 'from lib.cls_rotate import Rotate \n'
-        str_import += 'from lib.cls_save_file import SaveFile \n'
-        str_import += 'from lib.cls_sobel import Sobel \n'
-        str_import += 'from lib.cls_threshold import Threshold \n'
-        str_import += 'from lib.cls_trim import Trim \n'
-        str_import += 'from lib.cls_unsharp import UnSharp \n'
+        str_import = 'from lib.cls_lib import * \n'
 
         pycode = f'{str_import}\n\n{pycode}'
 
