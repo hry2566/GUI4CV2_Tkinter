@@ -25,6 +25,7 @@ GUI for OpenCV-Python with Tkinter
 実装済み  
 ・ファイル開く(Open File)  
 ・ファイル保存(Save File)  
+・明るさ／コントラスト (ConvertScaleAbs)  
 ・回転 (Rotate)  
 ・切り抜き (Trim)  
 ・ぼかし (Average)  
@@ -32,6 +33,7 @@ GUI for OpenCV-Python with Tkinter
 ・ぼかし (Median Blur)  
 ・ぼかし (Gaussian_Blur)  
 ・ぼかし (Bilateral_Filter)  
+・ぼかし (FastNlMeansDenoisingColored)  
 ・シャープ (Filter2D)  
 ・シャープ (UnSharp)  
 ・膨張 (Dilate)  
@@ -47,7 +49,7 @@ GUI for OpenCV-Python with Tkinter
   
 実装予定  
 ・その他画像処理  
-・アプリで処理した内容のPythonコードを出力  
+・~~アプリで処理した内容のPythonコードを出力~~ 実装済み  
   
 ブログ  
 https://danpapa-hry.hateblo.jp/entry/2022/09/25/072516  
