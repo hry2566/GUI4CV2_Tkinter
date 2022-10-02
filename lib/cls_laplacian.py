@@ -54,7 +54,7 @@ class Laplacian(EditWindow):
 
     def __laplacian(self):
         img_copy = self.origin_img.copy()
-        img_copy = cv2.cvtColor(img_copy, cv2.COLOR_RGB2GRAY)
+        img_copy = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
 
         self.__kernel = even2odd(self.__kernel)
         img = cv2.Laplacian(img_copy, cv2.CV_64F, ksize=self.__kernel)
