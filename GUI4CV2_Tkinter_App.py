@@ -30,7 +30,7 @@ class App(App_Base):
         self.__menu_list.append('ファイル開く(Open File)')
         self.__menu_list.append('ファイル保存(Save File)')
         self.__menu_list.append('明るさ／コントラスト (ConvertScaleAbs)')
-        self.__menu_list.append('明るさ (Gamma)')
+        self.__menu_list.append('ガンマ補正 (Gamma)')
         self.__menu_list.append('回転 (Rotate)')
         self.__menu_list.append('切り抜き (Trim)')
         self.__menu_list.append('ぼかし (Average)')
@@ -200,7 +200,7 @@ class App(App_Base):
             self.__app_child = FastNlMeansDenoisingColored(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
-        elif proc == '明るさ (Gamma)':
+        elif proc == 'ガンマ補正 (Gamma)':
             self.__app_child = Gamma(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
@@ -272,7 +272,7 @@ class App(App_Base):
         elif proc == 'ぼかし (FastNlMeansDenoisingColored)':
             code = 'FastNlMeansDenoisingColored(img, param, gui=False)'
 
-        elif proc == '明るさ (Gamma)':
+        elif proc == 'ガンマ補正 (Gamma)':
             code = 'Gamma(img, param, gui=False)'
 
         return code
