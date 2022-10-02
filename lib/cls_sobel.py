@@ -55,7 +55,7 @@ class Sobel(EditWindow):
 
     def __sobel(self):
         img_copy = self.origin_img.copy()
-        img_copy = cv2.cvtColor(img_copy, cv2.COLOR_RGB2GRAY)
+        img_copy = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
         self.__kernel = even2odd(self.__kernel)
         gray_x = cv2.Sobel(img_copy, cv2.CV_32F, 1, 0, ksize=self.__kernel)
         gray_y = cv2.Sobel(img_copy, cv2.CV_32F, 0, 1, ksize=self.__kernel)
