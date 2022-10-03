@@ -1,5 +1,6 @@
 import tkinter as tk
 
+
 from lib.cls_lib import *
 
 
@@ -31,6 +32,7 @@ class App(App_Base):
         self.__menu_list.append('ファイル保存(Save File)')
         self.__menu_list.append('明るさ／コントラスト (ConvertScaleAbs)')
         self.__menu_list.append('ガンマ補正 (Gamma)')
+        self.__menu_list.append('ホワイトバランス (WhiteBalance)')
         self.__menu_list.append('回転 (Rotate)')
         self.__menu_list.append('切り抜き (Trim)')
         self.__menu_list.append('ぼかし (Average)')
@@ -204,6 +206,10 @@ class App(App_Base):
             self.__app_child = Gamma(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
+        elif proc == 'ホワイトバランス (WhiteBalance)':
+            self.__app_child = WhiteBalance(
+                img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
+
     def __create_code(self, proc):
         code = ''
         if proc == 'ファイル開く(Open File)':
@@ -274,6 +280,9 @@ class App(App_Base):
 
         elif proc == 'ガンマ補正 (Gamma)':
             code = 'Gamma(img, param, gui=False)'
+
+        elif proc == 'ホワイトバランス (WhiteBalance)':
+            code = 'WhiteBalance(img, param, gui=False)'
 
         return code
 
