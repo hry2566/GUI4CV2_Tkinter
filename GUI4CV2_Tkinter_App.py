@@ -47,9 +47,9 @@ class App(App_Base):
         self.__menu_list.append('収縮 (Erode)')
         self.__menu_list.append('モルフォロジー (Morphology)')
         self.__menu_list.append('二値化 (Threshold)')
-        self.__menu_list.append('二値化 (Canny)')
         self.__menu_list.append('二値化 (inRange)')
         self.__menu_list.append('二値化 (Adaptive_Thresholed)')
+        self.__menu_list.append('輪郭抽出 (Canny)')
         self.__menu_list.append('輪郭抽出 (Laplacian)')
         self.__menu_list.append('輪郭抽出 (Sobel)')
 
@@ -138,7 +138,7 @@ class App(App_Base):
             self.__app_child = Blur(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
-        elif proc == '二値化 (Canny)':
+        elif proc == '輪郭抽出 (Canny)':
             self.__app_child = Canny(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
@@ -234,7 +234,7 @@ class App(App_Base):
         elif proc == 'ぼかし (Blur)':
             code = 'Blur(img, param, gui=False)'
 
-        elif proc == '二値化 (Canny)':
+        elif proc == '輪郭抽出 (Canny)':
             code = 'Canny(img, param, gui=False)'
 
         elif proc == '膨張 (Dilate)':
