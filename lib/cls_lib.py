@@ -6,6 +6,7 @@ from lib.cls_blur import Blur
 from lib.cls_canny import Canny
 from lib.cls_convert_scale_abs import ConvertScaleAbs
 from lib.cls_dilate import Dilate
+from lib.cls_equalize_hist import EqualizeHist
 from lib.cls_erode import Erode
 from lib.cls_fast_nl_means_denoising_colored import FastNlMeansDenoisingColored
 from lib.cls_fillter2D import Fillter2D
