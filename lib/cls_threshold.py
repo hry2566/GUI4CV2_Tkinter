@@ -66,6 +66,8 @@ class Threshold(EditWindow):
 
         _, img = cv2.threshold(
             img_gray, self.__thresh, self.__val, cv2.THRESH_BINARY_INV)
+
+        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
         return img
 
     def get_data(self):
