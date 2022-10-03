@@ -1,6 +1,5 @@
 import tkinter as tk
 
-
 from lib.cls_lib import *
 
 
@@ -25,14 +24,15 @@ class App(App_Base):
         self.__proc_list.append('ファイル開く(Open File)')
         self.__param_list.append([])
         self.__dstimg_list.append([])
-        self.__code_list.append(self.__create_code('ファイル開く(Open File)'))
 
+        self.__code_list.append(self.__create_code('ファイル開く(Open File)'))
         self.optionmenu1["menu"].delete(0, "last")
         self.__menu_list.append('ファイル開く(Open File)')
         self.__menu_list.append('ファイル保存(Save File)')
         self.__menu_list.append('明るさ／コントラスト (ConvertScaleAbs)')
         self.__menu_list.append('ガンマ補正 (Gamma)')
         self.__menu_list.append('ホワイトバランス (WhiteBalance)')
+        self.__menu_list.append('平坦化 (EqualizeHist)')
         self.__menu_list.append('回転 (Rotate)')
         self.__menu_list.append('切り抜き (Trim)')
         self.__menu_list.append('ぼかし (Average)')
@@ -210,6 +210,10 @@ class App(App_Base):
             self.__app_child = WhiteBalance(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
+        elif proc == '平坦化 (EqualizeHist)':
+            self.__app_child = EqualizeHist(
+                img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
+
     def __create_code(self, proc):
         code = ''
         if proc == 'ファイル開く(Open File)':
@@ -283,6 +287,9 @@ class App(App_Base):
 
         elif proc == 'ホワイトバランス (WhiteBalance)':
             code = 'WhiteBalance(img, param, gui=False)'
+
+        elif proc == '平坦化 (EqualizeHist)':
+            code = 'EqualizeHist(img, param, gui=False)'
 
         return code
 
