@@ -299,7 +299,7 @@ class App(App_Base):
             if pycode == '':
                 pycode = f'param = {str(self.__param_list[index])}\nimgLib = {code}'
             else:
-                print(index)
+                # print(index)
                 pycode += '\n' + \
                     f'param = {str(self.__param_list[index])}\nimgLib = {code}'
             pycode += '\nparam, img = imgLib.get_data()\n'
