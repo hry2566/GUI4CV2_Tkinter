@@ -27,6 +27,7 @@ class App(App_Base):
 
         self.__code_list.append(self.__create_code('ファイル開く(Open File)'))
         self.optionmenu1["menu"].delete(0, "last")
+
         self.__menu_list.append('ファイル開く(Open File)')
         self.__menu_list.append('ファイル保存(Save File)')
         self.__menu_list.append('明るさ／コントラスト (ConvertScaleAbs)')
