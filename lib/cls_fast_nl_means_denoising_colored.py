@@ -69,7 +69,6 @@ class FastNlMeansDenoisingColored(EditWindow):
             return
         else:
             self.__proc_flag = True
-        print('onScale')
 
         self.__h = self.__scale1.get()
         self.__hColor = self.__scale2.get()
