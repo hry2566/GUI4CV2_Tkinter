@@ -13,16 +13,16 @@ class UnSharp(EditWindow):
 
         if len(param) == 5:
             self.__kernel_x = param[0]
-            self.__kernel_y = param[0]
-            self.__sigma = param[0]
-            self.__amount = param[0]
-            self.__threshold = param[0]
+            self.__kernel_y = param[1]
+            self.__sigma = param[2]
+            self.__amount = param[3]
+            self.__threshold = param[4]
         else:
             self.__kernel_x = 3
             self.__kernel_y = 3
-            self.__sigma = 0
-            self.__amount = 0
-            self.__threshold = 0
+            self.__sigma = 1
+            self.__amount = 1
+            self.__threshold = 1
 
         if gui:
             super().__init__(img, master)
