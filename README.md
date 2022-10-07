@@ -26,6 +26,9 @@ GUI for OpenCV-Python with Tkinter
 ・ファイル開く(Open File)  
 ・ファイル保存(Save File)  
 ・明るさ／コントラスト (ConvertScaleAbs)  
+・ガンマ補正（Gamma）  
+・ホワイトバランス (WhiteBalance)  
+・平坦化 (EqualizeHist)  
 ・回転 (Rotate)  
 ・切り抜き (Trim)  
 ・ぼかし (Average)  
@@ -40,9 +43,9 @@ GUI for OpenCV-Python with Tkinter
 ・収縮 (Erode)  
 ・モルフォロジー (Morphology)  
 ・二値化 (Threshold)  
-・二値化 (Canny)  
 ・二値化 (inRange)  
 ・二値化 (Adaptive_Thresholed)  
+・輪郭抽出 (Canny)  
 ・輪郭抽出 (Laplacian)  
 ・輪郭抽出 (Sobel)  
 ・  
