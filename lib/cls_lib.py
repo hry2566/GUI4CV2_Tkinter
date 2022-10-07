@@ -2,6 +2,7 @@ from lib.app.cls_app_base import App_Base
 from lib.cls_adaptive_threshold import Adaptive_Thresholed
 from lib.cls_average import Average
 from lib.cls_bilateral_filter import Bilateral_Filter
+from lib.cls_bitwise_not import Bitwise_Not
 from lib.cls_blur import Blur
 from lib.cls_canny import Canny
 from lib.cls_convert_scale_abs import ConvertScaleAbs
