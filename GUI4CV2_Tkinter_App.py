@@ -34,6 +34,7 @@ class App(App_Base):
         self.__menu_list.append('ガンマ補正 (Gamma)')
         self.__menu_list.append('ホワイトバランス (WhiteBalance)')
         self.__menu_list.append('平坦化 (EqualizeHist)')
+        self.__menu_list.append('色反転 (Bitwise Not)')
         self.__menu_list.append('回転 (Rotate)')
         self.__menu_list.append('切り抜き (Trim)')
         self.__menu_list.append('ぼかし (Average)')
@@ -215,6 +216,10 @@ class App(App_Base):
             self.__app_child = EqualizeHist(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
+        elif proc == '色反転 (Bitwise Not)':
+            self.__app_child = Bitwise_Not(
+                img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
+
     def __create_code(self, proc):
         code = ''
         if proc == 'ファイル開く(Open File)':
@@ -291,6 +296,9 @@ class App(App_Base):
 
         elif proc == '平坦化 (EqualizeHist)':
             code = 'EqualizeHist(img, param, gui=False)'
+
+        elif proc == '色反転 (Bitwise Not)':
+            code = 'Bitwise_Not(img, param, gui=False)'
 
         return code
 
