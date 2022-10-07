@@ -29,10 +29,11 @@ class Fillter2D(EditWindow):
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__scale_kernel = tk.Scale(self.settings_frame)
-        self.__scale_kernel.configure(from_=0, to=100,
-                                      label="kernel", orient="horizontal", command=self.__onScale)
-        self.__scale_kernel.pack(side="top")
+        self.__scale1 = tk.Scale(self.settings_frame)
+        self.__scale1.configure(from_=0, to=10,
+                                label="kernel", orient="horizontal", resolution=0.1, command=self.__onScale)
+        self.__scale1.pack(side="top")
+        self.__scale1.set(self.__kernel)
 
         pass
 
@@ -45,7 +46,7 @@ class Fillter2D(EditWindow):
         else:
             self.__proc_flag = True
 
-        self.__kernel = self.__scale_kernel.get()/10
+        self.__kernel = self.__scale1.get()
         self.dst_img = self.__fillter2d()
         self.Draw()
         self.__proc_flag = False
