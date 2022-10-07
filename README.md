@@ -29,6 +29,7 @@ GUI for OpenCV-Python with Tkinter
 ・ガンマ補正（Gamma）  
 ・ホワイトバランス (WhiteBalance)  
 ・平坦化 (EqualizeHist)  
+・色反転 (Bitwise Not)  
 ・回転 (Rotate)  
 ・切り抜き (Trim)  
 ・ぼかし (Average)  
