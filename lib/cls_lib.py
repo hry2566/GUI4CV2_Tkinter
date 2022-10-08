@@ -18,6 +18,7 @@ from lib.cls_laplacian import Laplacian
 from lib.cls_median_blur import Median_Blur
 from lib.cls_morphology import Morphology
 from lib.cls_open_file import OpenFile
+from lib.cls_reverse_brightness import ReverseBrightness
 from lib.cls_rotate import Rotate
 from lib.cls_save_file import SaveFile
 from lib.cls_sobel import Sobel
