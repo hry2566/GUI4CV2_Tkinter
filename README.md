@@ -30,6 +30,7 @@ GUI for OpenCV-Python with Tkinter
 ・ホワイトバランス (WhiteBalance)  
 ・平坦化 (EqualizeHist)  
 ・色反転 (Bitwise Not)  
+・明度反転 (Reverse Brightness)  
 ・回転 (Rotate)  
 ・切り抜き (Trim)  
 ・ぼかし (Average)  
