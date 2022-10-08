@@ -1,3 +1,4 @@
+from asyncio.proactor_events import _ProactorDuplexPipeTransport
 import tkinter as tk
 
 import cv2
@@ -10,13 +11,18 @@ class InRange(EditWindow):
         self.origin_img = img
         self.__proc_flag = False
 
-        if len(param) == 6:
+        if gui:
+            super().__init__(img, master)
+            self.__hsv_flag = tk.BooleanVar()
+
+        if len(param) == 7:
             self.__r_h_1 = param[0]
             self.__g_s_1 = param[1]
             self.__b_v_1 = param[2]
             self.__r_h_2 = param[3]
             self.__g_s_2 = param[4]
             self.__b_v_2 = param[5]
+            self.__hsv_flag.set(param[6])
         else:
             self.__r_h_1 = 0
             self.__g_s_1 = 0
@@ -24,9 +30,11 @@ class InRange(EditWindow):
             self.__r_h_2 = 255
             self.__g_s_2 = 255
             self.__b_v_2 = 255
+            self.__hsv_flag.set(False)
 
         if gui:
-            super().__init__(img, master)
+            # super().__init__(img, master)
+            # self.__hsv_flag = tk.BooleanVar()
             self.__init_gui()
             self.__init_events()
 
@@ -37,6 +45,11 @@ class InRange(EditWindow):
 
     def __init_gui(self):
         self.none_label.destroy()
+
+        self.checkbutton1 = tk.Checkbutton(
+            self.settings_frame, variable=self.__hsv_flag)
+        self.checkbutton1.configure(text="HSV", command=self.__onClick)
+        self.checkbutton1.pack(anchor="w", side="top")
 
         self.__scale1 = tk.Scale(self.settings_frame)
         self.__scale1.configure(from_=0, to=255,
@@ -77,10 +90,14 @@ class InRange(EditWindow):
 
         pass
 
+    def __onClick(self):
+        self.dst_img = self.__inrange()
+        self.Draw()
+
     def __init_events(self):
         pass
 
-    def __onScale(self, events):
+    def __onScale(self, event):
         if self.__proc_flag:
             return
         else:
@@ -101,6 +118,9 @@ class InRange(EditWindow):
     def __inrange(self):
         img_copy = self.origin_img.copy()
 
+        if self.__hsv_flag.get():
+            img_copy = cv2.cvtColor(img_copy, cv2.COLOR_BGR2HSV_FULL)
+
         img = cv2.inRange(img_copy,
                           (self.__b_v_1, self.__g_s_1, self.__r_h_1),
                           (self.__b_v_2, self.__g_s_2, self.__r_h_2))
@@ -114,6 +134,7 @@ class InRange(EditWindow):
         param.append(self.__r_h_2)
         param.append(self.__g_s_2)
         param.append(self.__b_v_2)
+        param.append(self.__hsv_flag.get())
         img = cv2.cvtColor(self.dst_img, cv2.COLOR_GRAY2BGR)
         print('Proc : inRange')
         print(f'param = {param}')
@@ -121,7 +142,7 @@ class InRange(EditWindow):
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
+    img = cv2.imread('./0000_img/opencv-inrange_02.jpg')
     param = []
     param = [33, 33, 3]
     app = InRange(img, param, gui=True)
