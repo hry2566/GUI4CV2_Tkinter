@@ -11,10 +11,6 @@ class InRange(EditWindow):
         self.origin_img = img
         self.__proc_flag = False
 
-        if gui:
-            super().__init__(img, master)
-            self.__hsv_flag = tk.BooleanVar()
-
         if len(param) == 7:
             self.__r_h_1 = param[0]
             self.__g_s_1 = param[1]
@@ -22,7 +18,7 @@ class InRange(EditWindow):
             self.__r_h_2 = param[3]
             self.__g_s_2 = param[4]
             self.__b_v_2 = param[5]
-            self.__hsv_flag.set(param[6])
+            self.__hsv_flag = param[6]
         else:
             self.__r_h_1 = 0
             self.__g_s_1 = 0
@@ -30,11 +26,10 @@ class InRange(EditWindow):
             self.__r_h_2 = 255
             self.__g_s_2 = 255
             self.__b_v_2 = 255
-            self.__hsv_flag.set(False)
+            self.__hsv_flag = False
 
         if gui:
-            # super().__init__(img, master)
-            # self.__hsv_flag = tk.BooleanVar()
+            super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
 
@@ -46,8 +41,11 @@ class InRange(EditWindow):
     def __init_gui(self):
         self.none_label.destroy()
 
+        self.__hsv_bool = tk.BooleanVar()
+        self.__hsv_bool.set(self.__hsv_flag)
+
         self.checkbutton1 = tk.Checkbutton(
-            self.settings_frame, variable=self.__hsv_flag)
+            self.settings_frame, variable=self.__hsv_bool)
         self.checkbutton1.configure(text="HSV", command=self.__onClick)
         self.checkbutton1.pack(anchor="w", side="top")
 
@@ -91,6 +89,8 @@ class InRange(EditWindow):
         pass
 
     def __onClick(self):
+        self.__hsv_flag = self.__hsv_bool.get()
+        print(self.__hsv_flag)
         self.dst_img = self.__inrange()
         self.Draw()
 
@@ -118,7 +118,7 @@ class InRange(EditWindow):
     def __inrange(self):
         img_copy = self.origin_img.copy()
 
-        if self.__hsv_flag.get():
+        if self.__hsv_flag:
             img_copy = cv2.cvtColor(img_copy, cv2.COLOR_BGR2HSV_FULL)
 
         img = cv2.inRange(img_copy,
@@ -134,7 +134,7 @@ class InRange(EditWindow):
         param.append(self.__r_h_2)
         param.append(self.__g_s_2)
         param.append(self.__b_v_2)
-        param.append(self.__hsv_flag.get())
+        param.append(self.__hsv_flag)
         img = cv2.cvtColor(self.dst_img, cv2.COLOR_GRAY2BGR)
         print('Proc : inRange')
         print(f'param = {param}')
@@ -142,9 +142,9 @@ class InRange(EditWindow):
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv-inrange_02.jpg')
+    img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [33, 33, 3]
-    app = InRange(img, param, gui=True)
+    param = [150, 188, 45, 255, 255, 109, True]
+    app = InRange(img, param, gui=False)
     param, dst_img = app.get_data()
     cv2.imwrite('./inrange.jpg', dst_img)
