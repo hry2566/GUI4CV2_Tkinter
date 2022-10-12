@@ -21,6 +21,11 @@ from lib.cls_open_file import OpenFile
 from lib.cls_reverse_brightness import ReverseBrightness
 from lib.cls_rotate import Rotate
 from lib.cls_save_file import SaveFile
+from lib.cls_shading_approximate import Shading_Approximate
+from lib.cls_shading_blur import Shading_Blur
+from lib.cls_shading_color_moving_ave import Shading_Color_MovingAve
+from lib.cls_shading_medianblur import Shading_MedianBlur
+from lib.cls_shading_moving_ave import Shading_MovingAve
 from lib.cls_sobel import Sobel
 from lib.cls_threshold import Threshold
 from lib.cls_trim import Trim
