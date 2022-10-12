@@ -90,7 +90,7 @@ class InRange(EditWindow):
 
     def __onClick(self):
         self.__hsv_flag = self.__hsv_bool.get()
-        print(self.__hsv_flag)
+        # print(self.__hsv_flag)
         self.dst_img = self.__inrange()
         self.Draw()
 
