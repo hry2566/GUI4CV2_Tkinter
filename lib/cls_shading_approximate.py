@@ -1,7 +1,6 @@
 import tkinter as tk
 
 import cv2
-from matplotlib import pyplot as plt
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow
