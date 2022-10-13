@@ -79,15 +79,12 @@ class Shading_Approximate(EditWindow):
         height, width = img.shape[:2]
         x1 = np.arange(width)
         x2 = np.arange(height)
-        dimension = 17
 
         for index in range(height):
             y1 = img[index:index+1, 0:width][0]
             res = np.polyfit(x1, y1, self.__kernel_x)
             y2 = np.poly1d(res)(x1)
             dev = np.round(y1-y2)
-            if not self.__noise_cut == 255 and not self.__noise_cut == 0:
-                dev = np.where(abs(dev) < self.__noise_cut, 0, int(255/2))
             img[index:index+1, 0:width][0] = dev+int(255/2)
 
         for index in range(width):
@@ -95,9 +92,13 @@ class Shading_Approximate(EditWindow):
             res = np.polyfit(x2, y1, self.__kernel_y)
             y2 = np.poly1d(res)(x2)
             dev = np.round(y1-y2)
-            if not self.__noise_cut == 255 and not self.__noise_cut == 0:
-                dev = np.where(abs(dev) < self.__noise_cut, 0, int(255/2))
             img[0:height, index:index+1].T[0] = dev+int(255/2)
+
+        if self.__noise_cut > 0:
+            for index in range(height):
+                v = img[index:index+1, 0:width][0]
+                v = np.where(v < self.__noise_cut, 255, int(255/2))
+                img[index:index+1, 0:width][0] = v
 
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
         return img
@@ -113,8 +114,8 @@ class Shading_Approximate(EditWindow):
 
 
 if __name__ == "__main__":
-    # img = cv2.imread('./0000_img/shading.png')
-    img = cv2.imread('./0000_img/I.jpg')
+    img = cv2.imread('./0000_img/shading.png')
+    # img = cv2.imread('./0000_img/I.jpg')
     param = []
     app = Shading_Approximate(img, param, gui=True)
     param, dst_img = app.get_data()
