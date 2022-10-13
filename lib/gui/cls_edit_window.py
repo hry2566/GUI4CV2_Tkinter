@@ -99,6 +99,12 @@ class EditWindow(GuiBase):
     def __onResize(self, event):
         self.Draw()
 
+    def GetViewScale(self):
+        return self.__view_scale
+
+    def GetImgPos(self):
+        return self.__imgpos_x, self.__imgpos_y
+
     def Draw(self):
         if self.__draw_flag:
             return
@@ -116,7 +122,6 @@ class EditWindow(GuiBase):
 
         if 1 < canvas_width and 1 < canvas_height:
             cv_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            w = cv_image.shape[0]
             pil_image = Image.fromarray(cv_image)
             pil_image = ImageOps.pad(pil_image, (canvas_width, canvas_height))
 
