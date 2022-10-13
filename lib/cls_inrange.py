@@ -1,6 +1,5 @@
-from asyncio.proactor_events import _ProactorDuplexPipeTransport
 import tkinter as tk
-
+import numpy as np
 import cv2
 
 from lib.gui.cls_edit_window import EditWindow
@@ -9,7 +8,11 @@ from lib.gui.cls_edit_window import EditWindow
 class InRange(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__origin_bk = img
         self.__proc_flag = False
+        self.__start_x = 0
+        self.__start_y = 0
+        self.__drag_flag = False
 
         if len(param) == 7:
             self.__r_h_1 = param[0]
@@ -90,12 +93,97 @@ class InRange(EditWindow):
 
     def __onClick(self):
         self.__hsv_flag = self.__hsv_bool.get()
-        # print(self.__hsv_flag)
         self.dst_img = self.__inrange()
         self.Draw()
 
     def __init_events(self):
+        self.canvas1.bind("<ButtonPress-1>", self.__OnMouseDown)
+        self.canvas1.bind("<ButtonRelease-1>", self.__OnMouseUp)
+        self.canvas1.bind('<B1-Motion>', self.__OnMouseMove)
         pass
+
+    def __GetMousePos(self, pos):
+        view_scale = self.GetViewScale()
+        canvas_width = int(self.canvas1.winfo_width()*view_scale)
+        canvas_height = int(self.canvas1.winfo_height()*view_scale)
+
+        img_width = self.origin_img.shape[1]
+        img_height = self.origin_img.shape[0]
+
+        scale_x = img_width/canvas_width
+        scale_y = img_height/canvas_height
+        pos_x, pos_y = self.GetImgPos()
+
+        if scale_x < scale_y:
+            scale = scale_y
+            dev = int((canvas_width-img_width/scale)/2)
+            x = int((pos.x-dev)*scale)-int(pos_x*scale)
+            y = int(pos.y*scale)-int(pos_y*scale)
+        else:
+            scale = scale_x
+            dev = int((canvas_height-img_height/scale)/2)
+            x = int(pos.x*scale)-int(pos_x*scale)
+            y = int((pos.y-dev)*scale)-int(pos_y*scale)
+
+        return x, y
+
+    def __OnMouseDown(self, event):
+        self.__drag_flag = False
+
+        self.__start_x, self.__start_y = self.__GetMousePos(event)
+        # print(f'down:{self.__start_x, self.__start_y}')
+
+    def __OnMouseUp(self, event):
+        self.__drag_flag = True
+        self.origin_img = self.__origin_bk.copy()
+
+        x, y = self.__GetMousePos(event)
+
+        b, g, r = cv2.split(
+            self.origin_img[self.__start_y:y, self.__start_x:x])
+
+        # print(np.max(b), np.min(b))
+        # print(np.max(g), np.min(g))
+        # print(np.max(r), np.min(r))
+
+        self.__proc_flag = True
+
+        self.__scale1.set(np.min(r))
+        self.__scale2.set(np.min(g))
+        self.__scale3.set(np.min(b))
+        self.__scale4.set(np.max(r))
+        self.__scale5.set(np.max(g))
+        self.__scale6.set(np.max(b))
+
+        self.__hsv_flag = False
+
+        self.__proc_flag = False
+
+        self.dst_img = self.__inrange()
+        self.Draw()
+
+        # print(g[0])
+        # print(r[0])
+        # print(self.origin_img[self.__start_y:y, self.__start_x:x][0])
+
+        self.Draw()
+        # print(f'up:{x, y}')
+
+    def __OnMouseMove(self, event):
+        if not self.__drag_flag:
+            x, y = self.__GetMousePos(event)
+            print(f'drag:{x, y}')
+
+            self.origin_img = self.__origin_bk.copy()
+            cv2.rectangle(self.origin_img,
+                          pt1=(self.__start_x, self.__start_y),
+                          pt2=(x, y),
+                          color=(0, 0, 0),
+                          thickness=1,
+                          lineType=cv2.LINE_4,
+                          shift=0)
+
+            self.Draw()
 
     def __onScale(self, event):
         if self.__proc_flag:
@@ -142,9 +230,10 @@ class InRange(EditWindow):
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
+    img = cv2.imread('./0000_img/I.jpg')
+    # img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [150, 188, 45, 255, 255, 109, True]
-    app = InRange(img, param, gui=False)
+    # param = [150, 188, 45, 255, 255, 109, True]
+    app = InRange(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./inrange.jpg', dst_img)
