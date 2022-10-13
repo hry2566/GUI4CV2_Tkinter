@@ -80,9 +80,9 @@ class Shading_Color_MovingAve(EditWindow):
         h1, s1, v1 = cv2.split(image)
         height, width = image.shape[:2]
 
-        num_x = self.__kernel_x  # 移動平均の個数
+        num_x = self.__kernel_x
         kernel_x = np.ones(num_x)/num_x
-        num_y = self.__kernel_y  # 移動平均の個数
+        num_y = self.__kernel_y
         kernel_y = np.ones(num_y)/num_y
 
         if num_x > 1:
@@ -90,8 +90,6 @@ class Shading_Color_MovingAve(EditWindow):
                 y1 = v1[index:index+1, 0:width][0]
                 y2 = np.convolve(y1, kernel_x, mode='same')
                 dev = y1-y2
-                if not self.__noise_cut == 255 and not self.__noise_cut == 0:
-                    dev = np.where(abs(dev) < self.__noise_cut, 0, int(255/2))
                 v1[index:index+1, 0:width][0] = dev+int(255/2)
 
         if num_y > 1:
@@ -99,9 +97,13 @@ class Shading_Color_MovingAve(EditWindow):
                 y1 = v1[0:height, index:index+1].T[0]
                 y2 = np.convolve(y1, kernel_y, mode='same')
                 dev = y1-y2
-                if not self.__noise_cut == 255 and not self.__noise_cut == 0:
-                    dev = np.where(abs(dev) < self.__noise_cut, 0, int(255/2))
                 v1[0:height, index:index+1].T[0] = dev+int(255/2)
+
+        if self.__noise_cut > 0:
+            for index in range(height):
+                v = v1[index:index+1, 0:width][0]
+                v = np.where(abs(v) < self.__noise_cut, 255, int(255/2))
+                v1[index:index+1, 0:width][0] = v
 
         img = cv2.cvtColor(cv2.merge((h1, s1, v1)), cv2.COLOR_HSV2BGR)
 
@@ -118,8 +120,10 @@ class Shading_Color_MovingAve(EditWindow):
 
 
 if __name__ == "__main__":
-    # img = cv2.imread('./0000_img/shading.png')
-    img = cv2.imread('./0000_img/I.jpg')
+    img = cv2.imread('./0000_img/shading.png')
+    # img = cv2.imread('./0000_img/1.jpg')
+    # img = cv2.imread('./0000_img/I.jpg')
+    # img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
     app = Shading_Color_MovingAve(img, param, gui=True)
     param, dst_img = app.get_data()
