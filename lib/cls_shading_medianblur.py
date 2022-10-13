@@ -73,10 +73,11 @@ class Shading_MedianBlur(EditWindow):
         blur = cv2.medianBlur(image, ksize=kernel)
         img = image/blur
         img = np.clip(img*128, 0, 255).astype(np.uint8)
-        if not self.__noise_cut == 255 and not self.__noise_cut == 0:
+
+        if self.__noise_cut > 0:
             for index in range(height):
                 y1 = img[index:index+1, 0:width][0]
-                y1 = np.where(abs(y1) < self.__noise_cut, 0, int(255/2))
+                y1 = np.where(abs(y1) < self.__noise_cut, 255, int(255/2))
                 img[index:index+1, 0:width][0] = y1
 
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
