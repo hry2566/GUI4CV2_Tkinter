@@ -3,7 +3,7 @@ import tkinter as tk
 import cv2
 import numpy as np
 
-from lib.gui.cls_edit_window import EditWindow, even2odd
+from lib.gui.cls_edit_window import EditWindow
 
 
 class Shading_Blur(EditWindow):
@@ -80,15 +80,14 @@ class Shading_Blur(EditWindow):
         height, width = image.shape[:2]
 
         blur = cv2.blur(image, (self.__kernel_x, self.__kernel_y))
-        # kernel = even2odd(self.__kernel_x)
-        # blur = cv2.medianBlur(image, ksize=kernel)
         img = image/blur
         img = np.clip(img*128, 0, 255).astype(np.uint8)
-        if not self.__noise_cut == 255 and not self.__noise_cut == 0:
+
+        if self.__noise_cut > 0:
             for index in range(height):
-                y1 = img[index:index+1, 0:width][0]
-                y1 = np.where(abs(y1) < self.__noise_cut, 0, int(255/2))
-                img[index:index+1, 0:width][0] = y1
+                v = img[index:index+1, 0:width][0]
+                v = np.where(abs(v) < self.__noise_cut, 255, int(255/2))
+                img[index:index+1, 0:width][0] = v
 
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
         return img
@@ -104,8 +103,8 @@ class Shading_Blur(EditWindow):
 
 
 if __name__ == "__main__":
-    # img = cv2.imread('./0000_img/shading.png')
-    img = cv2.imread('./0000_img/I.jpg')
+    img = cv2.imread('./0000_img/shading.png')
+    # img = cv2.imread('./0000_img/I.jpg')
     param = []
     app = Shading_Blur(img, param, gui=True)
     param, dst_img = app.get_data()
