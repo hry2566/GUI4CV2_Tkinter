@@ -76,8 +76,8 @@ class Shading_MovingAve(EditWindow):
 
     def __shading_moving_ave(self):
         img_copy = self.origin_img.copy()
-        image = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
-        height, width = image.shape[:2]
+        img = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
+        height, width = img.shape[:2]
 
         num_x = self.__kernel_x  # 移動平均の個数
         kernel_x = np.ones(num_x)/num_x
@@ -86,23 +86,29 @@ class Shading_MovingAve(EditWindow):
 
         if num_x > 1:
             for index in range(height):
-                y1 = image[index:index+1, 0:width][0]
+                y1 = img[index:index+1, 0:width][0]
                 y2 = np.convolve(y1, kernel_x, mode='same')
                 dev = y1-y2
-                if not self.__noise_cut == 255 and not self.__noise_cut == 0:
-                    dev = np.where(abs(dev) < self.__noise_cut, 0, int(255/2))
-                image[index:index+1, 0:width][0] = dev+int(255/2)
+                # if not self.__noise_cut == 255 and not self.__noise_cut == 0:
+                #     dev = np.where(abs(dev) < self.__noise_cut, 0, int(255/2))
+                img[index:index+1, 0:width][0] = dev+int(255/2)
 
         if num_y > 1:
             for index in range(width):
-                y1 = image[0:height, index:index+1].T[0]
+                y1 = img[0:height, index:index+1].T[0]
                 y2 = np.convolve(y1, kernel_y, mode='same')
                 dev = y1-y2
-                if not self.__noise_cut == 255 and not self.__noise_cut == 0:
-                    dev = np.where(abs(dev) < self.__noise_cut, 0, int(255/2))
-                image[0:height, index:index+1].T[0] = dev+int(255/2)
+                # if not self.__noise_cut == 255 and not self.__noise_cut == 0:
+                #     dev = np.where(abs(dev) < self.__noise_cut, 0, int(255/2))
+                img[0:height, index:index+1].T[0] = dev+int(255/2)
 
-        img = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+        if self.__noise_cut > 0:
+            for index in range(height):
+                y1 = img[index:index+1, 0:width][0]
+                y1 = np.where(abs(y1) < self.__noise_cut, 255, int(255/2))
+                img[index:index+1, 0:width][0] = y1
+
+        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
 
         return img
 
@@ -117,8 +123,8 @@ class Shading_MovingAve(EditWindow):
 
 
 if __name__ == "__main__":
-    # img = cv2.imread('./0000_img/shading.png')
-    img = cv2.imread('./0000_img/I.jpg')
+    img = cv2.imread('./0000_img/shading.png')
+    # img = cv2.imread('./0000_img/I.jpg')
     param = []
     app = Shading_MovingAve(img, param, gui=True)
     param, dst_img = app.get_data()
