@@ -1,5 +1,4 @@
 import tkinter as tk
-from matplotlib import pyplot as plt
 import numpy as np
 import cv2
 
@@ -216,7 +215,6 @@ class InRange(EditWindow):
         self.__proc_flag = False
 
         self.Draw()
-
 
     def __OnMouseMove(self, event):
         if not self.__add_flag:
