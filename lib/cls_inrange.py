@@ -1,4 +1,5 @@
 import tkinter as tk
+from matplotlib import pyplot as plt
 import numpy as np
 import cv2
 
@@ -10,9 +11,13 @@ class InRange(EditWindow):
         self.origin_img = img
         self.__origin_bk = img
         self.__proc_flag = False
+        self.__hsv_flag = False
         self.__start_x = 0
         self.__start_y = 0
         self.__drag_flag = False
+        self.__add_flag = False
+        self.__select_img = []
+        self.__master = master
 
         if len(param) == 7:
             self.__r_h_1 = param[0]
@@ -89,6 +94,14 @@ class InRange(EditWindow):
         self.__scale5.set(self.__g_s_2)
         self.__scale6.set(self.__b_v_2)
 
+        self.reset_label = tk.Label(self.settings_frame)
+        self.reset_label.configure(text="select reset")
+        self.reset_label.pack(side="top", fill='x')
+
+        self.add_reset_btn = tk.Button(self.settings_frame)
+        self.add_reset_btn.configure(text="reset", command=self.__select_reset)
+        self.add_reset_btn.pack(side="top", fill='x')
+
         pass
 
     def __onClick(self):
@@ -100,7 +113,27 @@ class InRange(EditWindow):
         self.canvas1.bind("<ButtonPress-1>", self.__OnMouseDown)
         self.canvas1.bind("<ButtonRelease-1>", self.__OnMouseUp)
         self.canvas1.bind('<B1-Motion>', self.__OnMouseMove)
+
+        if self.__master == None:
+            self.mainwindow.bind("<KeyPress>", self.__keydown_event)
+            self.mainwindow.bind("<KeyRelease>", self.__keyup_event)
+        else:
+            self.__master.bind("<KeyPress>", self.__keydown_event)
+            self.__master.bind("<KeyRelease>", self.__keyup_event)
+
         pass
+
+    def __keydown_event(self, event):
+        if event.keysym == 'Control_L':
+            self.__add_flag = True
+
+    def __keyup_event(self, event):
+        # if event.keysym == 'Control_L':
+        #     self.__add_flag = False
+        pass
+
+    def __select_reset(self):
+        self.__select_img = []
 
     def __GetMousePos(self, pos):
         view_scale = self.GetViewScale()
@@ -128,52 +161,69 @@ class InRange(EditWindow):
         return x, y
 
     def __OnMouseDown(self, event):
-        self.__drag_flag = False
+        if not self.__add_flag:
+            return
 
+        self.__drag_flag = True
         self.__start_x, self.__start_y = self.__GetMousePos(event)
-        # print(f'down:{self.__start_x, self.__start_y}')
 
     def __OnMouseUp(self, event):
-        self.__drag_flag = True
-        self.origin_img = self.__origin_bk.copy()
+        if not self.__add_flag:
+            return
 
+        self.__add_flag = False
+        self.__drag_flag = False
+        self.origin_img = self.__origin_bk.copy()
         x, y = self.__GetMousePos(event)
 
-        b, g, r = cv2.split(
-            self.origin_img[self.__start_y:y, self.__start_x:x])
+        if x == self.__start_x and y == self.__start_y:
+            return
 
-        # print(np.max(b), np.min(b))
-        # print(np.max(g), np.min(g))
-        # print(np.max(r), np.min(r))
+        if self.__start_x > x:
+            dummy1 = self.__start_x
+            dummy2 = x
+            self.__start_x = dummy2
+            x = dummy1
+
+        if self.__start_y > y:
+            dummy1 = self.__start_y
+            dummy2 = y
+            self.__start_y = dummy2
+            y = dummy1
+
+        img1 = self.origin_img[self.__start_y:y, self.__start_x:x]
+        self.__select_img.append(img1)
+
+        total_b_h = []
+        total_g_s = []
+        total_r_v = []
+        for img in self.__select_img:
+            if self.__hsv_flag:
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV_FULL)
+
+            b_h, g_s, r_v = cv2.split(img)
+            total_b_h.extend(b_h[0].tolist())
+            total_g_s.extend(g_s[0].tolist())
+            total_r_v.extend(r_v[0].tolist())
 
         self.__proc_flag = True
-
-        self.__scale1.set(np.min(r))
-        self.__scale2.set(np.min(g))
-        self.__scale3.set(np.min(b))
-        self.__scale4.set(np.max(r))
-        self.__scale5.set(np.max(g))
-        self.__scale6.set(np.max(b))
-
-        self.__hsv_flag = False
-
+        self.__scale1.set(min(total_r_v))
+        self.__scale2.set(min(total_g_s))
+        self.__scale3.set(min(total_b_h))
+        self.__scale4.set(max(total_r_v))
+        self.__scale5.set(max(total_g_s))
+        self.__scale6.set(max(total_b_h))
         self.__proc_flag = False
 
-        self.dst_img = self.__inrange()
         self.Draw()
 
-        # print(g[0])
-        # print(r[0])
-        # print(self.origin_img[self.__start_y:y, self.__start_x:x][0])
-
-        self.Draw()
-        # print(f'up:{x, y}')
 
     def __OnMouseMove(self, event):
-        if not self.__drag_flag:
-            x, y = self.__GetMousePos(event)
-            print(f'drag:{x, y}')
+        if not self.__add_flag:
+            return
 
+        if self.__drag_flag:
+            x, y = self.__GetMousePos(event)
             self.origin_img = self.__origin_bk.copy()
             cv2.rectangle(self.origin_img,
                           pt1=(self.__start_x, self.__start_y),
@@ -197,7 +247,6 @@ class InRange(EditWindow):
         self.__r_h_2 = self.__scale4.get()
         self.__g_s_2 = self.__scale5.get()
         self.__b_v_2 = self.__scale6.get()
-
         self.dst_img = self.__inrange()
         self.Draw()
         self.__proc_flag = False
@@ -230,8 +279,8 @@ class InRange(EditWindow):
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/I.jpg')
-    # img = cv2.imread('./0000_img/opencv_logo.jpg')
+    # img = cv2.imread('./0000_img/I.jpg')
+    img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
     # param = [150, 188, 45, 255, 255, 109, True]
     app = InRange(img, param, gui=True)
