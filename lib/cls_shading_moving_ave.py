@@ -1,3 +1,4 @@
+import math
 import tkinter as tk
 
 import cv2
@@ -88,18 +89,28 @@ class Shading_MovingAve(EditWindow):
             for index in range(height):
                 y1 = img[index:index+1, 0:width][0]
                 y2 = np.convolve(y1, kernel_x, mode='same')
+
+                n_conv = math.ceil(num_x/2)
+                y2[0] *= num_x/n_conv
+                for i in range(1, n_conv):
+                    y2[i] *= num_x/(i+n_conv)
+                    y2[-i] *= num_x/(i + n_conv - (num_x % 2))
+
                 dev = y1-y2
-                # if not self.__noise_cut == 255 and not self.__noise_cut == 0:
-                #     dev = np.where(abs(dev) < self.__noise_cut, 0, int(255/2))
                 img[index:index+1, 0:width][0] = dev+int(255/2)
 
         if num_y > 1:
             for index in range(width):
                 y1 = img[0:height, index:index+1].T[0]
                 y2 = np.convolve(y1, kernel_y, mode='same')
+
+                n_conv = math.ceil(num_y/2)
+                y2[0] *= num_y/n_conv
+                for i in range(1, n_conv):
+                    y2[i] *= num_y/(i+n_conv)
+                    y2[-i] *= num_y/(i + n_conv - (num_y % 2))
+
                 dev = y1-y2
-                # if not self.__noise_cut == 255 and not self.__noise_cut == 0:
-                #     dev = np.where(abs(dev) < self.__noise_cut, 0, int(255/2))
                 img[0:height, index:index+1].T[0] = dev+int(255/2)
 
         if self.__noise_cut > 0:
@@ -123,7 +134,7 @@ class Shading_MovingAve(EditWindow):
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/shading.png')
+    img = cv2.imread('./0000_img/2.png')
     # img = cv2.imread('./0000_img/I.jpg')
     param = []
     app = Shading_MovingAve(img, param, gui=True)
