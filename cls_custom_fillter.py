@@ -74,56 +74,33 @@ class CustomFillter(EditWindow):
 
         # 微分フィルタ
         kernel = np.array([[0, 0, 0],
-                           [0, -1, 1],
+                           [0, 0, 0],
                            [0, 0, 0]])
 
-        # １次微分フィルタ
-        # kernel_x = np.array([[0, 0, 0],
-        #                     [-1, 0, 1],
-        #                     [0, 0, 0]])
-        # kernel_y = np.array([[0, -1, 0],
-        #                     [0, 0, 0],
-        #                     [0, 1, 0]])
-        # kernel_x = np.array([[-1, 0, 0],
-        #                     [0, 0, 0],
-        #                     [0, 0, 1]])
-        # kernel_y = np.array([[0, 0, 1],
-        #                     [0, 0, 0],
-        #                     [-1, 0, 0]])
-        kernel_x1 = np.array([[-1, -1, -1],
-                              [0, 0, 0],
-                              [1, 1, 1]])
-        kernel_x2 = np.array([[1, 1, 1],
-                              [0, 0, 0],
-                              [-1, -1, -1]])
-        kernel_y1 = np.array([[-1, 0, 1],
-                              [-1, 0, 1],
-                              [-1, 0, 1]])
-        kernel_y2 = np.array([[1, 0, -1],
-                              [1, 0, -1],
-                              [1, 0, -1]])
+        kernel = np.array([[0, -1, 0],
+                           [-1, 0, 1],
+                           [0, 1, 0]])
 
-        outputx1 = cv2.filter2D(
-            self.origin_img, cv2.CV_64F, kernel_x1, delta=64)
+        # kernel = np.array([[0, -1, 0, 0],
+        #                    [-1, 0, 0, 0],
+        #                    [0, 0, 0, 1],
+        #                    [0, 0, 1, 0]])
 
-        outputx2 = cv2.filter2D(
-            self.origin_img, cv2.CV_64F, kernel_x2, delta=64)
+        # kernel = np.array([[0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
+        #                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        #                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        #                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        #                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        #                    [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        #                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        #                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        #                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        #                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        #                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        #                    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0], ])
 
-        outputy1 = cv2.filter2D(
-            self.origin_img, cv2.CV_64F, kernel_y1, delta=64)
+        img = cv2.filter2D(self.origin_img, -1, kernel, delta=128)
 
-        outputy2 = cv2.filter2D(
-            self.origin_img, cv2.CV_64F, kernel_y2, delta=64)
-
-        img1 = np.sqrt(outputx1 ** 2 + outputx2 ** 2)
-        img2 = np.sqrt(outputy1 ** 2 + outputy2 ** 2)
-        img = np.sqrt(img1 ** 2 + img2 ** 2)
-
-        cv2.imwrite('dummy.jpg', img)
-        img = cv2.imread('dummy.jpg')
-        os.remove('dummy.jpg')
-
-        # img = cv2.filter2D(self.origin_img, -1, kernel, delta=128)
         return img
 
     def get_data(self):
