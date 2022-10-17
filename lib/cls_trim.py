@@ -9,6 +9,10 @@ from lib.gui.cls_edit_window import EditWindow
 class Trim(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__x1 = 0
+        self.__y1 = 0
+        self.__x2 = self.origin_img.shape[1]
+        self.__y2 = self.origin_img.shape[0]
         self.__proc_flag = False
 
         if len(param) == 4:
@@ -16,21 +20,14 @@ class Trim(EditWindow):
             self.__y1 = param[1]
             self.__x2 = param[2]
             self.__y2 = param[3]
-        else:
-            self.__x1 = 0
-            self.__y1 = 0
-            self.__x2 = self.origin_img.shape[1]
-            self.__y2 = self.origin_img.shape[0]
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__trim()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__trim()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -104,7 +101,7 @@ class Trim(EditWindow):
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    # param = [0, 0, 0, 0]
+    param = [6, 115, 113, 227]
     app = Trim(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./Trim.jpg', dst_img)
