@@ -8,6 +8,10 @@ from lib.gui.cls_edit_window import EditWindow, even2odd
 class Adaptive_Thresholed(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__method_index = 0
+        self.__Value = 255
+        self.__block_size = 3
+        self.__c = 1
         self.__proc_flag = False
         self.__adaptiveMethod = [cv2.ADAPTIVE_THRESH_MEAN_C,
                                  cv2.ADAPTIVE_THRESH_GAUSSIAN_C]
@@ -17,26 +21,24 @@ class Adaptive_Thresholed(EditWindow):
             self.__Value = param[1]
             self.__block_size = param[2]
             self.__c = param[3]
-        else:
-            self.__method_index = 0
-            self.__Value = 255
-            self.__block_size = 3
-            self.__c = 1
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__adaptive_thresholed()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__adaptive_thresholed()
 
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__tkvar = tk.StringVar(value='MEAN')
+        if self.__method_index == 0:
+            val = 'MEAN'
+        else:
+            val = 'GAUSSIAN'
+
+        self.__tkvar = tk.StringVar(value=val)
         __values = ['MEAN', 'GAUSSIAN']
         self.__optionmenu2 = tk.OptionMenu(
             self.settings_frame, self.__tkvar, *__values, command=self.__onSelect)
@@ -96,10 +98,6 @@ class Adaptive_Thresholed(EditWindow):
         img_copy = self.origin_img.copy()
         img_copy = cv2.medianBlur(img_copy, 5)
         img_copy = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
-
-        # if int(self.__block_size) % 2 == 0:
-        #     self.__block_size += 1
-
         self.__block_size = even2odd(self.__block_size)
 
         img = cv2.adaptiveThreshold(img_copy,
@@ -125,7 +123,7 @@ class Adaptive_Thresholed(EditWindow):
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [0, 255, 3, 1]
+    param = [0, 255, 7, 2]
     app = Adaptive_Thresholed(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./adaptive_thresholed.jpg', dst_img)
