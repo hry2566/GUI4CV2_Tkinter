@@ -8,24 +8,21 @@ from lib.gui.cls_edit_window import EditWindow
 class Blur(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__kernel_x = 1
+        self.__kernel_y = 1
         self.__proc_flag = False
 
         if len(param) == 2:
             self.__kernel_x = param[0]
             self.__kernel_y = param[1]
-        else:
-            self.__kernel_x = 1
-            self.__kernel_y = 1
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__blur()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__blur()
 
     def __init_gui(self):
         self.none_label.destroy()
