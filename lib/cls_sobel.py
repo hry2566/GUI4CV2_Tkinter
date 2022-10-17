@@ -10,22 +10,19 @@ from lib.gui.cls_edit_window import EditWindow, even2odd
 class Sobel(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__kernel = 1
         self.__proc_flag = False
 
         if len(param) == 1:
             self.__kernel = param[0]
-        else:
-            self.__kernel = 1
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__sobel()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__sobel()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -76,7 +73,7 @@ class Sobel(EditWindow):
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [1]
+    param = [3]
     app = Sobel(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./Sobel.jpg', dst_img)
