@@ -9,28 +9,23 @@ from lib.gui.cls_edit_window import EditWindow, even2odd
 class Canny(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__kernel = 0
+        self.__max_val = 0
+        self.__min_val = 0
         self.__proc_flag = False
 
         if len(param) == 3:
             self.__kernel = param[0]
             self.__max_val = param[1]
             self.__min_val = param[2]
-            mode = 1
-        else:
-            self.__kernel = 0
-            self.__max_val = 0
-            self.__min_val = 0
-            mode = 0
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__canny(mode)
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__canny()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -66,29 +61,14 @@ class Canny(EditWindow):
         self.__max_val = self.__scale2.get()
         self.__min_val = self.__scale3.get()
 
-        mode = 1
-        self.dst_img = self.__canny(mode)
+        self.dst_img = self.__canny()
         self.Draw()
         self.__proc_flag = False
         pass
 
-    def __canny(self, mode: int):
+    def __canny(self):
         img_copy = self.origin_img.copy()
         img_gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
-
-        if mode == 0:
-            med_val = np.median(img_gray)
-            sigma = 0.33  # 0.33
-            self.__min_val = int(max(0, (1.0 - sigma) * med_val))
-            self.__max_val = int(max(255, (1.0 + sigma) * med_val))
-
-            self.__scale1.set(self.__kernel)
-            self.__scale2.set(self.__max_val)
-            self.__scale3.set(self.__min_val)
-
-        # if self.__kernel % 2 == 0:
-        #     self.__kernel += 1
-
         self.__kernel = even2odd(self.__kernel)
 
         # ぼかし
@@ -116,7 +96,7 @@ class Canny(EditWindow):
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [5, 6, 18]
+    param = [3, 74, 59]
     app = Canny(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./canny.jpg', dst_img)
