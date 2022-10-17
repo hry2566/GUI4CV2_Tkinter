@@ -9,6 +9,9 @@ from lib.gui.cls_edit_window import EditWindow, even2odd
 class Morphology(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__type_index = 0
+        self.__kernel_x = 1
+        self.__kernel_y = 1
         self.__proc_flag = False
         self.__type_list = [cv2.MORPH_OPEN,
                             cv2.MORPH_CLOSE,
@@ -18,20 +21,14 @@ class Morphology(EditWindow):
             self.__type_index = param[0]
             self.__kernel_x = param[1]
             self.__kernel_y = param[2]
-        else:
-            self.__type_index = 0
-            self.__kernel_x = 1
-            self.__kernel_y = 1
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__morphology()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__morphology()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -43,12 +40,12 @@ class Morphology(EditWindow):
         self.__optionmenu2.pack(fill='x', side='top')
 
         self.__scale1 = tk.Scale(self.settings_frame)
-        self.__scale1.configure(from_=0, to=30,
+        self.__scale1.configure(from_=1, to=30,
                                 label='kernel_x', orient='horizontal', command=self.__onScale)
         self.__scale1.pack(side='top')
 
         self.__scale2 = tk.Scale(self.settings_frame)
-        self.__scale2.configure(from_=0, to=30,
+        self.__scale2.configure(from_=1, to=30,
                                 label='kernel_y', orient='horizontal', command=self.__onScale)
         self.__scale2.pack(side='top')
 
@@ -91,13 +88,7 @@ class Morphology(EditWindow):
 
     def __morphology(self):
         img_copy = self.origin_img.copy()
-
         kernel = np.ones((self.__kernel_x, self.__kernel_y), np.uint8)
-        # kernel = cv2.getStructuringElement(
-        #     cv2.MORPH_RECT, (self.kernel_x, self.kernel_y))
-        # kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (self.kernel_x, self.kernel_y))
-        # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (self.kernel_x, self.kernel_y))
-
         self.type = self.__type_list[self.__type_index]
         img = cv2.morphologyEx(img_copy, self.type, kernel)
         return img
@@ -115,7 +106,7 @@ class Morphology(EditWindow):
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [0, 1, 1]
+    param = [2, 4, 4]
     app = Morphology(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./Morphology.jpg', dst_img)
