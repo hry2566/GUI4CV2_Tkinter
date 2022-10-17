@@ -9,22 +9,19 @@ from lib.gui.cls_edit_window import EditWindow, even2odd
 class Laplacian(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__kernel = 1
         self.__proc_flag = False
 
         if len(param) == 1:
             self.__kernel = param[0]
-        else:
-            self.__kernel = 1
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__laplacian()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__laplacian()
 
     def __init_gui(self):
         self.none_label.destroy()
