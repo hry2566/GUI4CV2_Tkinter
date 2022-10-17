@@ -8,26 +8,23 @@ from lib.gui.cls_edit_window import EditWindow, even2odd
 class Gaussian_Blur(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__kernel_x = 1
+        self.__kernel_y = 1
+        self.__std = 1
         self.__proc_flag = False
 
         if len(param) == 3:
             self.__kernel_x = param[0]
             self.__kernel_y = param[1]
             self.__std = param[2]
-        else:
-            self.__kernel_x = 1
-            self.__kernel_y = 1
-            self.__std = 1
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__gaussian_blur()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__gaussian_blur()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -71,7 +68,6 @@ class Gaussian_Blur(EditWindow):
 
     def __gaussian_blur(self):
         img_copy = self.origin_img.copy()
-
         self.__kernel_x = even2odd(self.__kernel_x)
         self.__kernel_y = even2odd(self.__kernel_y)
 
