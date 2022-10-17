@@ -9,22 +9,19 @@ from lib.gui.cls_edit_window import EditWindow, even2odd
 class Median_Blur(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__kernel = 1
         self.__proc_flag = False
 
         if len(param) == 1:
             self.__kernel = param[0]
-        else:
-            self.__kernel = 1
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__median_blur()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__median_blur()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -70,7 +67,7 @@ class Median_Blur(EditWindow):
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [5]
+    param = [8]
     app = Median_Blur(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./Median_Blur.jpg', dst_img)
