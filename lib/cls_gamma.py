@@ -9,22 +9,19 @@ from lib.gui.cls_edit_window import EditWindow
 class Gamma(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__gamma = 1
         self.__proc_flag = False
 
         if len(param) == 1:
             self.__gamma = param[0]
-        else:
-            self.__gamma = 1
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__gamma_correction()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__gamma_correction()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -68,9 +65,9 @@ class Gamma(EditWindow):
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/test.jpg')
+    img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [1]
+    param = [0.5]
     app = Gamma(img, param, gui=True)
     param, dst_img = app.get_data()
-    cv2.imwrite('./laplacian.jpg', dst_img)
+    cv2.imwrite('./Gamma.jpg', dst_img)
