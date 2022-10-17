@@ -8,26 +8,24 @@ from lib.gui.cls_edit_window import EditWindow
 class Bilateral_Filter(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__d = 0
+        self.__sigma_color = 0
+        self.__sigma_space = 0
         self.__proc_flag = False
 
         if len(param) == 3:
             self.__d = param[0]
             self.__sigma_color = param[1]
             self.__sigma_space = param[2]
-        else:
-            self.__d = 0
-            self.__sigma_color = 0
-            self.__sigma_space = 0
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__bilateral_filter()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__bilateral_filter()
+
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -88,7 +86,8 @@ class Bilateral_Filter(EditWindow):
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
+    # img = cv2.imread('./0000_img/opencv_logo.jpg')
+    img = cv2.imread('./0000_img/I.jpg')
     param = []
     param = [60, 30, 30]
     app = Bilateral_Filter(img, param, gui=True)
