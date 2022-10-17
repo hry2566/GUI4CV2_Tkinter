@@ -9,6 +9,10 @@ from lib.gui.cls_edit_window import EditWindow
 class FastNlMeansDenoisingColored(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__h = 3
+        self.__hColor = 20
+        self.__templateWindowSize = 5
+        self.__searchWindowSize = 20
         self.__proc_flag = False
 
         if len(param) == 4:
@@ -16,21 +20,14 @@ class FastNlMeansDenoisingColored(EditWindow):
             self.__hColor = param[1]
             self.__templateWindowSize = param[2]
             self.__searchWindowSize = param[3]
-        else:
-            self.__h = 3
-            self.__hColor = 20
-            self.__templateWindowSize = 5
-            self.__searchWindowSize = 20
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__fast_nl_means_denoising_colored()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__fast_nl_means_denoising_colored()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -101,9 +98,9 @@ class FastNlMeansDenoisingColored(EditWindow):
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/test.jpg')
+    img = cv2.imread('./0000_img/I.jpg')
     param = []
-    param = [3, 20, 5, 30]
+    param = [10, 20, 5, 20]
     app = FastNlMeansDenoisingColored(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./FastNlMeansDenoisingColored.jpg', dst_img)
