@@ -7,11 +7,10 @@ import cv2
 class SaveFile():
     def __init__(self, img, param, master=None, gui=False):
         self.dst_img = img
+        self.__file_path = ''
 
         if len(param) == 1:
             self.__file_path = param[0]
-        else:
-            self.__file_path = ''
 
         if gui:
             self.__file_path = self.__save_file()
