@@ -9,22 +9,19 @@ from lib.gui.cls_edit_window import EditWindow
 class Fillter2D(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__kernel = 0
         self.__proc_flag = False
 
         if len(param) == 1:
             self.__kernel = param[0]
-        else:
-            self.__kernel = 0
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__fillter2d()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__fillter2d()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -34,8 +31,6 @@ class Fillter2D(EditWindow):
                                 label="kernel", orient="horizontal", resolution=0.1, command=self.__onScale)
         self.__scale1.pack(side="top")
         self.__scale1.set(self.__kernel)
-
-        pass
 
     def __init_events(self):
         pass
@@ -72,7 +67,7 @@ class Fillter2D(EditWindow):
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    # param = [15]
+    param = [3.2]
     app = Fillter2D(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./fillter2d.jpg', dst_img)
