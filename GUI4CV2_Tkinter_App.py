@@ -1,5 +1,6 @@
 import tkinter as tk
 
+
 from lib.cls_lib import *
 
 
@@ -36,6 +37,7 @@ class App(App_Base):
         self.__menu_list.append('濃淡補正 (ShadingApproximate)')
         self.__menu_list.append('濃淡補正 (ShadingBlur)')
         self.__menu_list.append('濃淡補正 (ShadingMediaBlur)')
+        self.__menu_list.append('濃淡補正 (ShadingCustomFillter)')
         self.__menu_list.append('明るさ／コントラスト (ConvertScaleAbs)')
         self.__menu_list.append('ガンマ補正 (Gamma)')
         self.__menu_list.append('ホワイトバランス (WhiteBalance)')
@@ -107,20 +109,20 @@ class App(App_Base):
     def __onSelectListBox_Events(self, event):
         if self.__proc_flag:
             return
-        
-        self.__proc_flag=True
+
+        self.__proc_flag = True
         index = event.widget.curselection()
         if index == ():
             return
         self.__run_proc(event.widget.get(index), index[0], True)
-        self.__proc_flag=False
+        self.__proc_flag = False
 
     def __run_proc(self, proc, index, gui_flag):
         if not index == 0:
             if self.__dstimg_list[index-1] == []:
                 return
             img = self.__dstimg_list[index-1]
-            if img == []:
+            if len(img) == []:
                 return
         try:
             self.dummy_frame.destroy()
@@ -256,6 +258,10 @@ class App(App_Base):
             self.__app_child = Shading_MedianBlur(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
+        elif proc == '濃淡補正 (ShadingCustomFillter)':
+            self.__app_child = Shading_CustomFillter(
+                img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
+
     def __create_code(self, proc):
         code = ''
         if proc == 'ファイル開く(Open File)':
@@ -342,7 +348,7 @@ class App(App_Base):
         elif proc == '濃淡補正 (MovingAve)':
             code = 'Shading_MovingAve(img, param, gui=False)'
 
-        elif proc == '濃淡補正 (MovingAve)':
+        elif proc == '濃淡補正 (MovingAveColor)':
             code = 'Shading_Color_MovingAve(img, param, gui=False)'
 
         elif proc == '濃淡補正 (ShadingApproximate)':
@@ -353,6 +359,9 @@ class App(App_Base):
 
         elif proc == '濃淡補正 (ShadingMediaBlur)':
             code = 'Shading_MedianBlur(img, param, gui=False)'
+
+        elif proc == '濃淡補正 (ShadingCustomFillter)':
+            code = 'Shading_CustomFillter(img, param, gui=False)'
 
         return code
 
