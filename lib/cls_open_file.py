@@ -9,11 +9,10 @@ from lib.gui.cls_edit_window import EditWindow
 class OpenFile(EditWindow):
     def __init__(self, param, master=None, gui=False):
         self.dst_img = []
+        self.__file_path = ''
 
         if len(param) == 1:
             self.__file_path = param[0]
-        else:
-            self.__file_path = ''
 
         if gui:
             self.__file_path = self.__open_file()
@@ -22,9 +21,7 @@ class OpenFile(EditWindow):
                 super().__init__(img, master)
                 if master == None:
                     self.__init_gui()
-
-        if gui and not self.__file_path == '':
-            self.run()
+                self.run()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -62,3 +59,4 @@ if __name__ == "__main__":
     param = ['./0000_img/opencv_logo.jpg']
     app = OpenFile(param, gui=True)
     param, dst_img = app.get_data()
+    # cv2.imwrite('./open.jpg', dst_img)
