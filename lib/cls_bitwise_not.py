@@ -11,7 +11,7 @@ class Bitwise_Not(EditWindow):
         self.origin_img = img
         # self.__proc_flag = False
 
-        if len(param) == 1:
+        if len(param) == 0:
             pass
         else:
             pass
@@ -44,13 +44,13 @@ class Bitwise_Not(EditWindow):
 
     def get_data(self):
         param = []
-        print('Proc : WhiteBalance')
+        print('Proc : Bitwise_Not')
         print(f'param = {param}')
         return param, self.dst_img
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/202103100903164c4.jpg')
+    img = cv2.imread('./0000_img/I.jpg')
     param = []
     app = Bitwise_Not(img, param, gui=True)
     param, dst_img = app.get_data()
