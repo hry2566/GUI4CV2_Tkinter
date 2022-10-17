@@ -18,17 +18,11 @@ class EqualizeHist(EditWindow):
             self.__h_flag = param[0]
             self.__s_flag = param[1]
             self.__v_flag = param[2]
-            pass
-        else:
-            self.__h_flag = True
-            self.__s_flag = True
-            self.__v_flag = True
-            pass
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
-            # self.__init_events()
+            self.__init_events()
 
         self.dst_img = self.__equalize_hist()
 
@@ -59,9 +53,6 @@ class EqualizeHist(EditWindow):
             self.settings_frame, variable=self.__v_bool, command=self.__onClick)
         self.checkbutton3.configure(text="V")
         self.checkbutton3.pack(side="top")
-
-        self.checkbutton1.update()
-        pass
 
     def __init_events(self):
         pass
