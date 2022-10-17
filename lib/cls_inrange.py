@@ -10,6 +10,12 @@ class InRange(EditWindow):
         self.origin_img = img
         self.__origin_bk = img
         self.__proc_flag = False
+        self.__r_h_1 = 0
+        self.__g_s_1 = 0
+        self.__b_v_1 = 0
+        self.__r_h_2 = 255
+        self.__g_s_2 = 255
+        self.__b_v_2 = 255
         self.__hsv_flag = False
         self.__start_x = 0
         self.__start_y = 0
@@ -26,24 +32,14 @@ class InRange(EditWindow):
             self.__g_s_2 = param[4]
             self.__b_v_2 = param[5]
             self.__hsv_flag = param[6]
-        else:
-            self.__r_h_1 = 0
-            self.__g_s_1 = 0
-            self.__b_v_1 = 0
-            self.__r_h_2 = 255
-            self.__g_s_2 = 255
-            self.__b_v_2 = 255
-            self.__hsv_flag = False
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__inrange()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__inrange()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -101,8 +97,6 @@ class InRange(EditWindow):
         self.add_reset_btn.configure(text="reset", command=self.__select_reset)
         self.add_reset_btn.pack(side="top", fill='x')
 
-        pass
-
     def __onClick(self):
         self.__hsv_flag = self.__hsv_bool.get()
         self.dst_img = self.__inrange()
@@ -127,8 +121,6 @@ class InRange(EditWindow):
             self.__add_flag = True
 
     def __keyup_event(self, event):
-        # if event.keysym == 'Control_L':
-        #     self.__add_flag = False
         pass
 
     def __select_reset(self):
@@ -280,7 +272,7 @@ if __name__ == "__main__":
     # img = cv2.imread('./0000_img/I.jpg')
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    # param = [150, 188, 45, 255, 255, 109, True]
+    param = [150, 188, 45, 255, 255, 109, True]
     app = InRange(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./inrange.jpg', dst_img)
