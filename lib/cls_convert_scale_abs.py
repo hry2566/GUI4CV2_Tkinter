@@ -1,7 +1,6 @@
 import tkinter as tk
 
 import cv2
-import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow
 
@@ -9,24 +8,21 @@ from lib.gui.cls_edit_window import EditWindow
 class ConvertScaleAbs(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__alpha = 1
+        self.__beta = 0
         self.__proc_flag = False
 
         if len(param) == 2:
             self.__alpha = param[0]
             self.__beta = param[1]
-        else:
-            self.__alpha = 1
-            self.__beta = 0
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__convert_scale_abs()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__convert_scale_abs()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -76,9 +72,9 @@ class ConvertScaleAbs(EditWindow):
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/202103100903164c4.jpg')
+    img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [0, 0]
-    app = ConvertScaleAbs(img, param, gui=True)
+    param = [2.12, -34]
+    app = ConvertScaleAbs(img, param, gui=False)
     param, dst_img = app.get_data()
     cv2.imwrite('./ConvertScaleAbs.jpg', dst_img)
