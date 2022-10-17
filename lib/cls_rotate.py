@@ -9,24 +9,21 @@ from lib.gui.cls_edit_window import EditWindow
 class Rotate(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__ang = 0
+        self.__scale = 1.0
         self.__proc_flag = False
 
         if len(param) == 2:
             self.__ang = param[0]
             self.__scale = param[1]
-        else:
-            self.__ang = 0
-            self.__scale = 1.0
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__rotate()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__rotate()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -70,7 +67,6 @@ class Rotate(EditWindow):
         width = img_copy.shape[1]
         # 回転の中心を指定
         center = (int(width/2), int(height/2))
-
         # getRotationMatrix2D関数を使用
         trans = cv2.getRotationMatrix2D(center, self.__ang, self.__scale)
         # アフィン変換
@@ -90,7 +86,7 @@ class Rotate(EditWindow):
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [0, 1]
+    param = [90, 1]
     app = Rotate(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./rotate.jpg', dst_img)
