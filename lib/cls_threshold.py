@@ -8,24 +8,21 @@ from lib.gui.cls_edit_window import EditWindow
 class Threshold(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__thresh = 1
+        self.__val = 255
         self.__proc_flag = False
 
         if len(param) == 2:
             self.__thresh = param[0]
             self.__val = param[1]
-        else:
-            self.__thresh = 1
-            self.__val = 255
 
         if gui:
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
-
-        self.dst_img = self.__threshold()
-
-        if gui:
             self.run()
+        else:
+            self.dst_img = self.__threshold()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -82,7 +79,7 @@ class Threshold(EditWindow):
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [1, 255]
+    param = [23, 255]
     app = Threshold(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./Threshold.jpg', dst_img)
