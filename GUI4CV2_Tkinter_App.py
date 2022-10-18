@@ -1,4 +1,5 @@
 import tkinter as tk
+from lib.cls_create_img_memory import Create_Img_Memory
 
 
 from lib.cls_lib import *
@@ -13,6 +14,8 @@ class App(App_Base):
         self.__param_list = []
         self.__dstimg_list = []
         self.__code_list = []
+        self.__img_array = []
+        self.__img_names = []
         self.__proc_flag = False
 
         self.__init_gui()
@@ -32,6 +35,7 @@ class App(App_Base):
 
         self.__menu_list.append('ファイル開く(Open File)')
         self.__menu_list.append('ファイル保存(Save File)')
+        self.__menu_list.append('画像メモリ作成(Create IMG Memory)')
         self.__menu_list.append('濃淡補正 (MovingAve)')
         self.__menu_list.append('濃淡補正 (MovingAveColor)')
         self.__menu_list.append('濃淡補正 (ShadingApproximate)')
@@ -262,6 +266,12 @@ class App(App_Base):
             self.__app_child = Shading_CustomFillter(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
+        elif proc == '画像メモリ作成(Create IMG Memory)':
+            self.__param_list[index].append(self.__img_array)
+            self.__param_list[index].append(self.__img_names)
+            self.__app_child = Create_Img_Memory(
+                img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
+
     def __create_code(self, proc):
         code = ''
         if proc == 'ファイル開く(Open File)':
@@ -363,18 +373,40 @@ class App(App_Base):
         elif proc == '濃淡補正 (ShadingCustomFillter)':
             code = 'Shading_CustomFillter(img, param, gui=False)'
 
+        elif proc == '画像メモリ作成(Create IMG Memory)':
+            # code = 'img_array = []\n'
+            # code += 'param.append(img_array)\n'
+            # code += 'param.append(img_names)\n'
+            code += 'imgLib = Create_Img_Memory(img, [img_array, img_names], gui=False)'
+
         return code
 
     def __onClick_create_code(self, event):
+        memory_mode = 0
+
         pycode = ''
         for index, code in enumerate(self.__code_list):
+            if code.endswith('imgLib = Create_Img_Memory(img, [img_array, img_names], gui=False)'):
+                memory_mode = 1
+
             if pycode == '':
                 pycode = f'param = {str(self.__param_list[index])}\nimgLib = {code}'
             else:
-                # print(index)
-                pycode += '\n' + \
-                    f'param = {str(self.__param_list[index])}\nimgLib = {code}'
+                if memory_mode == 1:
+                    pycode += '\n'
+                    pycode += f'img_array = []\n'
+                    pycode += f'img_names = {str(self.__param_list[index][1])}\n'
+                    pycode += 'param = [img_array, img_names]\n'
+                    pycode += f'{code}'
+
+                else:
+                    pycode += '\n' + \
+                        f'param = {str(self.__param_list[index])}\nimgLib = {code}'
+
             pycode += '\nparam, img = imgLib.get_data()\n'
+            if memory_mode == 1:
+                pycode += 'img_array = param[0]\n'
+                pycode += 'img_names = param[1]\n'
 
         str_import = 'from lib.cls_lib import * \n'
 
