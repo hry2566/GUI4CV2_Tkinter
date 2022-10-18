@@ -20,12 +20,12 @@ class GuiBase:
         self.none_label.configure(text="none label")
         self.none_label.pack(side="top")
         self.settings_frame.pack(fill="y", side="left")
-        image_view_frame = tk.LabelFrame(self.image_edit_frame)
-        image_view_frame.configure(
+        self.image_view_frame = tk.LabelFrame(self.image_edit_frame)
+        self.image_view_frame.configure(
             height=200, text="image view", width=200)
-        self.canvas1 = tk.Canvas(image_view_frame)
+        self.canvas1 = tk.Canvas(self.image_view_frame)
         self.canvas1.pack(expand="true", fill="both", side="top")
-        frame5 = tk.Frame(image_view_frame)
+        frame5 = tk.Frame(self.image_view_frame)
         frame5.configure(height=200, width=200)
         self.image_switch_btn = tk.Button(frame5)
         self.image_switch_btn.configure(text="button1")
@@ -34,7 +34,7 @@ class GuiBase:
         self.image_reset_btn.configure(text="button2")
         self.image_reset_btn.pack(side="right")
         frame5.pack(fill="x", side="top")
-        image_view_frame.pack(expand="true", fill="both", side="left")
+        self.image_view_frame.pack(expand="true", fill="both", side="left")
         self.image_edit_frame.pack(expand="true", fill="both", side="top")
 
         if master == None:
