@@ -6,6 +6,7 @@ from lib.cls_bitwise_not import Bitwise_Not
 from lib.cls_blur import Blur
 from lib.cls_canny import Canny
 from lib.cls_convert_scale_abs import ConvertScaleAbs
+from lib.cls_create_img_memory import Create_Img_Memory
 from lib.cls_dilate import Dilate
 from lib.cls_equalize_hist import EqualizeHist
 from lib.cls_erode import Erode
