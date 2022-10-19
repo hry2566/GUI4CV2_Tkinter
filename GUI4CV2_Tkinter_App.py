@@ -1,4 +1,5 @@
 import tkinter as tk
+from cls_rotate_3d import Rotate3D
 from lib.cls_create_img_memory import Create_Img_Memory
 
 
@@ -49,6 +50,7 @@ class App(App_Base):
         self.__menu_list.append('色反転 (Bitwise Not)')
         self.__menu_list.append('明度反転 (Reverse Brightness)')
         self.__menu_list.append('回転 (Rotate)')
+        self.__menu_list.append('回転3D (Rotate3D)')
         self.__menu_list.append('切り抜き (Trim)')
         self.__menu_list.append('ぼかし (Average)')
         self.__menu_list.append('ぼかし (Blur)')
@@ -272,6 +274,10 @@ class App(App_Base):
             self.__app_child = Create_Img_Memory(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
+        elif proc == '回転3D (Rotate3D)':
+            self.__app_child = Rotate3D(
+                img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
+
     def __create_code(self, proc):
         code = ''
         if proc == 'ファイル開く(Open File)':
@@ -378,6 +384,9 @@ class App(App_Base):
             # code += 'param.append(img_array)\n'
             # code += 'param.append(img_names)\n'
             code += 'imgLib = Create_Img_Memory(img, [img_array, img_names], gui=False)'
+
+        elif proc == '回転3D (Rotate3D)':
+            code = 'Rotate3D(img, param, gui=False)'
 
         return code
 
