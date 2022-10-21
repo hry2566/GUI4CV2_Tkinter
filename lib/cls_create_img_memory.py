@@ -117,7 +117,7 @@ class Create_Img_Memory(EditWindow):
         param.append(self.__img_array)
         param.append(self.__img_names)
         print('Proc : Create IMG Memory')
-        print('img_array = []')
+        print(f'len(img_array) = {len(self.__img_array)}')
         print(f'img_names = {param[1]}')
         print('param = [img_array, img_names]')
         return param, self.through_img
