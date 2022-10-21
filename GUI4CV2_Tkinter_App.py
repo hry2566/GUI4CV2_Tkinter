@@ -1,5 +1,6 @@
 import tkinter as tk
-from cls_rotate_3d import Rotate3D
+from cls_memory_io import MemoryIO
+
 from lib.cls_create_img_memory import Create_Img_Memory
 
 
@@ -17,6 +18,8 @@ class App(App_Base):
         self.__code_list = []
         self.__img_array = []
         self.__img_names = []
+        self.__memIO = []
+        self.__task_index = 0
         self.__proc_flag = False
 
         self.__init_gui()
@@ -37,6 +40,7 @@ class App(App_Base):
         self.__menu_list.append('ファイル開く(Open File)')
         self.__menu_list.append('ファイル保存(Save File)')
         self.__menu_list.append('画像メモリ作成(Create IMG Memory)')
+        self.__menu_list.append('画像メモリI/O(MemoryIO)')
         self.__menu_list.append('濃淡補正 (MovingAve)')
         self.__menu_list.append('濃淡補正 (MovingAveColor)')
         self.__menu_list.append('濃淡補正 (ShadingApproximate)')
@@ -50,7 +54,7 @@ class App(App_Base):
         self.__menu_list.append('色反転 (Bitwise Not)')
         self.__menu_list.append('明度反転 (Reverse Brightness)')
         self.__menu_list.append('回転 (Rotate)')
-        self.__menu_list.append('回転3D (Rotate3D)')
+        self.__menu_list.append('射影変換 (warpPerspective)')
         self.__menu_list.append('切り抜き (Trim)')
         self.__menu_list.append('ぼかし (Average)')
         self.__menu_list.append('ぼかし (Blur)')
@@ -84,15 +88,19 @@ class App(App_Base):
 
     def __onSetParam_Events(self, event):
         param, dst_img = self.__app_child.get_data()
-        index = self.task_list.curselection()[0]
+        # index = self.task_list.curselection()[0]
+        index = self.__task_index
         self.__param_list[index] = param
         self.__dstimg_list[index] = dst_img
+
+        # self.task_list.select_set(self.__task_index)
 
     def __onDelBtn_Events(self, event):
         if self.task_list.curselection() == () or self.task_list.curselection()[0] == 0:
             print('del_cancel')
             return
-        index = self.task_list.curselection()[0]
+        # index = self.task_list.curselection()[0]
+        index = self.__task_index
 
         self.task_list.delete(index)
         del self.__proc_list[index]
@@ -113,6 +121,11 @@ class App(App_Base):
         self.__code_list.append(self.__create_code(task))
 
     def __onSelectListBox_Events(self, event):
+        if self.task_list.curselection() == ():
+            return
+
+        self.__task_index = self.task_list.curselection()[0]
+
         if self.__proc_flag:
             return
 
@@ -274,8 +287,16 @@ class App(App_Base):
             self.__app_child = Create_Img_Memory(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
-        elif proc == '回転3D (Rotate3D)':
+        elif proc == '射影変換 (warpPerspective)':
             self.__app_child = Rotate3D(
+                img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == '画像メモリI/O(MemoryIO)':
+            memIO = ['', []]
+            self.__param_list[index].append(self.__img_array)
+            self.__param_list[index].append(self.__img_names)
+            self.__param_list[index].append(memIO)
+            self.__app_child = MemoryIO(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
     def __create_code(self, proc):
@@ -380,13 +401,13 @@ class App(App_Base):
             code = 'Shading_CustomFillter(img, param, gui=False)'
 
         elif proc == '画像メモリ作成(Create IMG Memory)':
-            # code = 'img_array = []\n'
-            # code += 'param.append(img_array)\n'
-            # code += 'param.append(img_names)\n'
             code += 'imgLib = Create_Img_Memory(img, [img_array, img_names], gui=False)'
 
-        elif proc == '回転3D (Rotate3D)':
+        elif proc == '射影変換 (warpPerspective)':
             code = 'Rotate3D(img, param, gui=False)'
+
+        elif proc == '画像メモリI/O(MemoryIO)':
+            code = 'MemoryIO(img, param, gui=False)'
 
         return code
 
@@ -397,6 +418,9 @@ class App(App_Base):
         for index, code in enumerate(self.__code_list):
             if code.endswith('imgLib = Create_Img_Memory(img, [img_array, img_names], gui=False)'):
                 memory_mode = 1
+            elif code == 'MemoryIO(img, param, gui=False)':
+                memory_mode = 2
+                pass
 
             if pycode == '':
                 pycode = f'param = {str(self.__param_list[index])}\nimgLib = {code}'
@@ -408,12 +432,18 @@ class App(App_Base):
                     pycode += 'param = [img_array, img_names]\n'
                     pycode += f'{code}'
 
+                elif memory_mode == 2:
+                    pycode += '\n' + \
+                        f'memIO = {str(self.__param_list[index][2])}\n'
+                    pycode += f'param = [img_array, img_names, memIO]\n'
+                    pycode += f'imgLib = {code}'
+                    pass
                 else:
                     pycode += '\n' + \
                         f'param = {str(self.__param_list[index])}\nimgLib = {code}'
 
             pycode += '\nparam, img = imgLib.get_data()\n'
-            if memory_mode == 1:
+            if memory_mode == 1 or memory_mode == 2:
                 pycode += 'img_array = param[0]\n'
                 pycode += 'img_names = param[1]\n'
 
