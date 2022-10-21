@@ -21,6 +21,7 @@ from lib.cls_morphology import Morphology
 from lib.cls_open_file import OpenFile
 from lib.cls_reverse_brightness import ReverseBrightness
 from lib.cls_rotate import Rotate
+from lib.cls_rotate_3d import Rotate3D
 from lib.cls_save_file import SaveFile
 from lib.cls_shading_approximate import Shading_Approximate
 from lib.cls_shading_blur import Shading_Blur
