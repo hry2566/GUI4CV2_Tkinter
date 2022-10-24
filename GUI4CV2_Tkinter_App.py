@@ -1,7 +1,5 @@
 import tkinter as tk
-from cls_memory_io import MemoryIO
-
-from lib.cls_create_img_memory import Create_Img_Memory
+from cls_image_combine import ImageCombine
 
 
 from lib.cls_lib import *
@@ -18,7 +16,6 @@ class App(App_Base):
         self.__code_list = []
         self.__img_array = []
         self.__img_names = []
-        self.__memIO = []
         self.__task_index = 0
         self.__proc_flag = False
 
@@ -41,6 +38,7 @@ class App(App_Base):
         self.__menu_list.append('ファイル保存(Save File)')
         self.__menu_list.append('画像メモリ作成(Create IMG Memory)')
         self.__menu_list.append('画像メモリI/O(MemoryIO)')
+        self.__menu_list.append('画像結合(ImageCombine)')
         self.__menu_list.append('濃淡補正 (MovingAve)')
         self.__menu_list.append('濃淡補正 (MovingAveColor)')
         self.__menu_list.append('濃淡補正 (ShadingApproximate)')
@@ -88,18 +86,19 @@ class App(App_Base):
 
     def __onSetParam_Events(self, event):
         param, dst_img = self.__app_child.get_data()
-        # index = self.task_list.curselection()[0]
         index = self.__task_index
         self.__param_list[index] = param
         self.__dstimg_list[index] = dst_img
 
-        # self.task_list.select_set(self.__task_index)
+        if self.task_list.get(index) == '画像メモリ作成(Create IMG Memory)':
+            self.__img_array = param[0]
+            self.__img_names = param[1]
 
     def __onDelBtn_Events(self, event):
         if self.task_list.curselection() == () or self.task_list.curselection()[0] == 0:
             print('del_cancel')
             return
-        # index = self.task_list.curselection()[0]
+
         index = self.__task_index
 
         self.task_list.delete(index)
@@ -282,8 +281,10 @@ class App(App_Base):
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '画像メモリ作成(Create IMG Memory)':
-            self.__param_list[index].append(self.__img_array)
-            self.__param_list[index].append(self.__img_names)
+            if len(self.__param_list[index]) == 0:
+                self.__param_list[index].append(self.__img_array)
+                self.__param_list[index].append(self.__img_names)
+
             self.__app_child = Create_Img_Memory(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
@@ -292,11 +293,17 @@ class App(App_Base):
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
         elif proc == '画像メモリI/O(MemoryIO)':
-            memIO = ['', []]
-            self.__param_list[index].append(self.__img_array)
-            self.__param_list[index].append(self.__img_names)
-            self.__param_list[index].append(memIO)
+            if len(self.__param_list[index]) == 0:
+                memIO = ['', []]
+                self.__param_list[index].append(self.__img_array)
+                self.__param_list[index].append(self.__img_names)
+                self.__param_list[index].append(memIO)
+
             self.__app_child = MemoryIO(
+                img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
+
+        elif proc == '画像結合(ImageCombine)':
+            self.__app_child = ImageCombine(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
     def __create_code(self, proc):
@@ -409,6 +416,9 @@ class App(App_Base):
         elif proc == '画像メモリI/O(MemoryIO)':
             code = 'MemoryIO(img, param, gui=False)'
 
+        elif proc == '画像結合(ImageCombine)':
+            code = 'ImageCombine(img, param, gui=False)'
+
         return code
 
     def __onClick_create_code(self, event):
@@ -420,7 +430,8 @@ class App(App_Base):
                 memory_mode = 1
             elif code == 'MemoryIO(img, param, gui=False)':
                 memory_mode = 2
-                pass
+            else:
+                memory_mode = 0
 
             if pycode == '':
                 pycode = f'param = {str(self.__param_list[index])}\nimgLib = {code}'
@@ -428,7 +439,7 @@ class App(App_Base):
                 if memory_mode == 1:
                     pycode += '\n'
                     pycode += f'img_array = []\n'
-                    pycode += f'img_names = {str(self.__param_list[index][1])}\n'
+                    pycode += f'img_names = {self.__img_names}\n'
                     pycode += 'param = [img_array, img_names]\n'
                     pycode += f'{code}'
 
@@ -443,9 +454,11 @@ class App(App_Base):
                         f'param = {str(self.__param_list[index])}\nimgLib = {code}'
 
             pycode += '\nparam, img = imgLib.get_data()\n'
-            if memory_mode == 1 or memory_mode == 2:
+            if memory_mode == 1:
                 pycode += 'img_array = param[0]\n'
                 pycode += 'img_names = param[1]\n'
+            elif memory_mode == 2:
+                pycode += 'img_array = param[0]\n'
 
         str_import = 'from lib.cls_lib import * \n'
 
