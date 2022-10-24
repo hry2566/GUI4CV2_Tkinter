@@ -14,9 +14,11 @@ from lib.cls_fast_nl_means_denoising_colored import FastNlMeansDenoisingColored
 from lib.cls_fillter2D import Fillter2D
 from lib.cls_gamma import Gamma
 from lib.cls_gaussian_blur import Gaussian_Blur
+from lib.cls_image_combine import ImageCombine
 from lib.cls_inrange import InRange
 from lib.cls_laplacian import Laplacian
 from lib.cls_median_blur import Median_Blur
+from lib.cls_memory_io import MemoryIO
 from lib.cls_morphology import Morphology
 from lib.cls_open_file import OpenFile
 from lib.cls_reverse_brightness import ReverseBrightness
