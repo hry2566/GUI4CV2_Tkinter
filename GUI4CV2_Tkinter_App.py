@@ -1,5 +1,5 @@
 import tkinter as tk
-from cls_image_combine import ImageCombine
+
 
 
 from lib.cls_lib import *
