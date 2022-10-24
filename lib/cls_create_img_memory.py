@@ -1,5 +1,3 @@
-from cgitb import enable
-import os
 import tkinter as tk
 
 import cv2
@@ -20,7 +18,6 @@ class Create_Img_Memory(EditWindow):
             self.__img_names = param[1]
             for i in param[1]:
                 self.__img_array.append(self.origin_img)
-
         else:
             exit()
 
@@ -32,13 +29,6 @@ class Create_Img_Memory(EditWindow):
                 for i in param[1]:
                     self.listbox1.insert(tk.END, i)
             self.run()
-
-        # self.dst_img = self.__create_img_memory()
-        # self.__create_img_memory()
-
-        # if gui:
-            # self.Draw()
-            # self.run()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -108,9 +98,6 @@ class Create_Img_Memory(EditWindow):
             self.__img_names.pop(select_index)
             self.listbox1.delete(select_index)
         pass
-
-    # def __create_img_memory(self):
-    #     return []
 
     def get_data(self):
         param = []
