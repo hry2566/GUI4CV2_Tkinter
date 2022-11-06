@@ -1,3 +1,4 @@
+import os
 import tkinter
 from tkinter import filedialog
 
@@ -16,7 +17,7 @@ class SaveFile():
             self.__file_path = self.__save_file()
 
         if not self.__file_path == '':
-            img = cv2.imwrite(self.__file_path, self.dst_img)
+            img = self.__imwrite(self.__file_path, self.dst_img)
 
     def __save_file(self):
         root = tkinter.Tk()
@@ -29,6 +30,21 @@ class SaveFile():
         else:
             path = file
         return path
+
+    def __imwrite(self, filename, img, params=None):
+        try:
+            ext = os.path.splitext(filename)[1]
+            result, n = cv2.imencode(ext, img, params)
+
+            if result:
+                with open(filename, mode='w+b') as f:
+                    n.tofile(f)
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(e)
+            return False
 
     def get_data(self):
         param = []
