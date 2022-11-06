@@ -20,16 +20,8 @@ class OpenFile(EditWindow):
         if gui:
             self.__file_path = self.__open_file()
             if not self.__file_path == '':
-                # img = cv2.imread(self.__file_path)
-
                 # 日本語ファイル／パス対応
-                pil_img = Image.open(self.__file_path)
-                img = np.array(pil_img)
-                if img.ndim == 3:
-                    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-                cv2.imwrite('dummy.jpg', img)
-                img = cv2.imread('dummy.jpg')
-                os.remove('./dummy.jpg')
+                img = self.__imread(self.__file_path)
 
                 super().__init__(img, master)
                 if master == None:
@@ -55,22 +47,38 @@ class OpenFile(EditWindow):
             path = file[0]
         return path
 
+    def __imread(self, filename, flags=cv2.IMREAD_COLOR, dtype=np.uint8):
+        try:
+            n = np.fromfile(filename, dtype)
+            img = cv2.imdecode(n, flags)
+            return img
+        except Exception as e:
+            print(e)
+            return None
+
+    def __imwrite(self, filename, img, params=None):
+        try:
+            ext = os.path.splitext(filename)[1]
+            result, n = cv2.imencode(ext, img, params)
+
+            if result:
+                with open(filename, mode='w+b') as f:
+                    n.tofile(f)
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(e)
+            return False
+
     def get_data(self):
         param = []
         param.append(self.__file_path)
         if self.__file_path == '':
             self.dst_img = []
         else:
-            # self.dst_img = cv2.imread(self.__file_path)
             # 日本語ファイル／パス対応
-            pil_img = Image.open(self.__file_path)
-            img = np.array(pil_img)
-            if img.ndim == 3:
-                img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-            cv2.imwrite('dummy.jpg', img)
-            self.dst_img = cv2.imread('dummy.jpg')
-            os.remove('./dummy.jpg')
-
+            img = self.__imread(self.__file_path)
 
         print('Proc : Open File')
         print(f'param = {param}')
