@@ -27,6 +27,7 @@ from lib.cls_rotate_3d import Rotate3D
 from lib.cls_save_file import SaveFile
 from lib.cls_shading_approximate import Shading_Approximate
 from lib.cls_shading_blur import Shading_Blur
+from lib.cls_shading_color_medianblur import Shading_Color_MedianBlur
 from lib.cls_shading_color_moving_ave import Shading_Color_MovingAve
 from lib.cls_shading_custom_fillter import Shading_CustomFillter
 from lib.cls_shading_medianblur import Shading_MedianBlur
