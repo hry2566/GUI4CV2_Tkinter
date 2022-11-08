@@ -1,7 +1,5 @@
 import tkinter as tk
 
-
-
 from lib.cls_lib import *
 
 
@@ -44,6 +42,7 @@ class App(App_Base):
         self.__menu_list.append('濃淡補正 (ShadingApproximate)')
         self.__menu_list.append('濃淡補正 (ShadingBlur)')
         self.__menu_list.append('濃淡補正 (ShadingMediaBlur)')
+        self.__menu_list.append('濃淡補正 (ShadingMediaBlurColor)')
         self.__menu_list.append('濃淡補正 (ShadingCustomFillter)')
         self.__menu_list.append('明るさ／コントラスト (ConvertScaleAbs)')
         self.__menu_list.append('ガンマ補正 (Gamma)')
@@ -306,6 +305,10 @@ class App(App_Base):
             self.__app_child = ImageCombine(
                 img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
 
+        elif proc == '濃淡補正 (ShadingMediaBlurColor)':
+            self.__app_child = Shading_Color_MedianBlur(
+                img, self.__param_list[index], master=self.appwindow, gui=gui_flag)
+
     def __create_code(self, proc):
         code = ''
         if proc == 'ファイル開く(Open File)':
@@ -418,6 +421,9 @@ class App(App_Base):
 
         elif proc == '画像結合(ImageCombine)':
             code = 'ImageCombine(img, param, gui=False)'
+
+        elif proc == '濃淡補正 (ShadingMediaBlurColor)':
+            code = 'Shading_Color_MedianBlur(img, param, gui=False)'
 
         return code
 
