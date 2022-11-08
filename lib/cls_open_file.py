@@ -73,6 +73,7 @@ class OpenFile(EditWindow):
 
     def get_data(self):
         param = []
+        img=[]
         param.append(self.__file_path)
         if self.__file_path == '':
             self.dst_img = []
@@ -82,7 +83,7 @@ class OpenFile(EditWindow):
 
         print('Proc : Open File')
         print(f'param = {param}')
-        return param, self.dst_img
+        return param, img
 
 
 if __name__ == "__main__":
