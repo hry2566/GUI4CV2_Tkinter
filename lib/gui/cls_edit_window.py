@@ -108,8 +108,7 @@ class EditWindow(GuiBase):
     def Draw(self):
         if self.__draw_flag:
             return
-        else:
-            self.__draw_flag = True
+        self.__draw_flag = True
 
         if self.__img_switch:
             img = self.dst_img
