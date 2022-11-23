@@ -91,7 +91,7 @@ class MemoryIO(EditWindow):
         for name in self.__img_names:
             self.listbox2.insert(tk.END, name)
 
-        self.listbox2.select_set(0)
+        # self.listbox2.select_set(0)
 
         if not len(self.__memIO) == 0:
             if self.__memIO[0] == '':
