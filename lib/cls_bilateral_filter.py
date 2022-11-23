@@ -26,7 +26,6 @@ class Bilateral_Filter(EditWindow):
         else:
             self.dst_img = self.__bilateral_filter()
 
-
     def __init_gui(self):
         self.none_label.destroy()
 
@@ -54,8 +53,7 @@ class Bilateral_Filter(EditWindow):
     def __onScale(self, events):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
+        self.__proc_flag = True
 
         self.__d = self.__scale1.get()
         self.__sigma_color = self.__scale2.get()
@@ -64,7 +62,6 @@ class Bilateral_Filter(EditWindow):
         self.dst_img = self.__bilateral_filter()
         self.Draw()
         self.__proc_flag = False
-        pass
 
     def __bilateral_filter(self):
         img_copy = self.origin_img.copy()
