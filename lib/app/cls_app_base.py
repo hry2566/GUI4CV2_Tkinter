@@ -1,46 +1,297 @@
 #!/usr/bin/python3
 import tkinter as tk
-import tkinter.ttk as ttk
-from turtle import width
+from functools import partial
+from lib.cls_lib import *
 
 
 class App_Base:
     def __init__(self, master=None):
+        self.__proc_list = []
+        self.__param_list = []
+        self.__dstimg_list = []
+        self.__code_list = []
+        self.proc_code_list = []
+        self.fnc_list = []
+        self.__task_index = 0
+        self.__app_child = 0
+        self.__img_array = []
+        self.__img_names = []
+        self.__proc_flag = False
+        self.__run_flag = False
+
         # build ui
-        self.toplevel1 = tk.Tk() if master is None else tk.Toplevel(master)
-        self.toplevel1.configure(height=200, width=200)
-        self.frame1 = tk.Frame(self.toplevel1)
-        self.frame1.configure(height=200, padx=5, pady=5, width=200)
-        __values = ['a']
-        self.tkvar = tk.StringVar()
-        self.optionmenu1 = tk.OptionMenu(
-            self.frame1, self.tkvar, *__values, command=None)
-        self.optionmenu1.pack(fill="x", side="top")
-        self.frame3 = tk.Frame(self.frame1)
+        self.toplevel2 = tk.Tk() if master is None else tk.Toplevel(master)
+        self.toplevel2.configure(height=200, width=230)
+        self.toplevel2.minsize(800, 400)
+        self.menu3 = tk.Menu(self.toplevel2)
+        self.menu_file = tk.Menu(self.menu3, tearoff="false")
+        self.menu3.add(tk.CASCADE, menu=self.menu_file, label='File')
+        self.menu_image = tk.Menu(self.menu3, tearoff="false")
+        self.menu3.add(tk.CASCADE, menu=self.menu_image, label='Image')
+        self.menu_color = tk.Menu(self.menu3, tearoff="false")
+        self.menu3.add(tk.CASCADE, menu=self.menu_color, label='Color')
+        self.menu_fillter = tk.Menu(self.menu3, tearoff="false")
+        self.menu3.add(tk.CASCADE, menu=self.menu_fillter, label='Fillter')
+        self.menu_memory = tk.Menu(self.menu3, tearoff="false")
+        self.menu3.add(tk.CASCADE, menu=self.menu_memory, label='Memory')
+        self.toplevel2.configure(menu=self.menu3)
+        self.split_frame = tk.Frame(self.toplevel2)
+        self.split_frame.configure(background="#d9d9d9", height=200, width=200)
+        self.frame2 = tk.Frame(self.split_frame)
+        self.frame2.configure(height=200, width=200)
+        self.labelframe1 = tk.LabelFrame(self.frame2)
+        self.labelframe1.configure(height=200, text='Task', width=200)
+        self.frame3 = tk.Frame(self.labelframe1)
         self.frame3.configure(height=200, width=200)
-        self.add_btn = tk.Button(self.frame3)
-        self.add_btn.configure(text="Add")
-        self.add_btn.pack(expand="true", fill="x", side="left")
-        self.del_btn = tk.Button(self.frame3)
-        self.del_btn.configure(text="Del")
-        self.del_btn.pack(expand="true", fill="x", side="left")
-        self.frame3.pack(fill="x", side="top")
-        self.task_list = tk.Listbox(self.frame1)
-        self.task_list.configure(width=0)
-        self.task_list.pack(expand="true", fill="both", side="top")
-        self.set_param_btn = ttk.Button(self.frame1)
-        self.set_param_btn.configure(text="Set Param")
-        self.set_param_btn.pack(fill="x", side="top")
-        self.create_code_btn = tk.Button(self.frame1)
-        self.create_code_btn.configure(text="Create Python Code")
-        self.create_code_btn.pack(fill="x", side="top")
-        self.frame1.pack(fill="y", side="left")
-        self.dummy_frame = tk.Frame(self.toplevel1)
-        self.dummy_frame.configure(height=200, padx=5, pady=5, width=200)
-        self.dummy_frame.pack(expand="true", fill="both", side="left")
+        self.run_btn = tk.Button(self.frame3)
+        self.run_btn.configure(compound="left", text=' Run Task_List')
+        self.run_btn.pack(fill="x", padx=5, side="top")
+        self.del_task_btn = tk.Button(self.frame3)
+        self.del_task_btn.configure(text=' Delete Task')
+        self.del_task_btn.pack(fill="x", padx=5, side="top")
+        self.set_param_btn = tk.Button(self.frame3)
+        self.set_param_btn.configure(text=' Set Param')
+        self.set_param_btn.pack(fill="x", padx=5, side="top")
+        self.frame3.pack(fill="both", side="top")
+        self.frame4 = tk.Frame(self.labelframe1)
+        self.frame4.configure(height=200, width=200)
+        self.label2 = tk.Label(self.frame4)
+        self.label2.configure(text='Task List')
+        self.label2.pack(anchor="w", padx=5, side="top")
+        self.task_lst = tk.Listbox(self.frame4)
+        self.task_lst.configure(activestyle="underline", width=35)
+        self.task_lst.pack(
+            expand="true",
+            fill="both",
+            padx=5,
+            pady=5,
+            side="top")
+        self.frame4.pack(expand="true", fill="both", side="top")
+        self.labelframe1.pack(
+            anchor="w",
+            expand="true",
+            fill="y",
+            padx=5,
+            side="top")
+        self.labelframe2 = tk.LabelFrame(self.frame2)
+        self.labelframe2.configure(height=200, text='Python Code', width=200)
+        self.create_code_btn = tk.Button(self.labelframe2)
+        self.create_code_btn.configure(text='Create Code')
+        self.create_code_btn.pack(fill="x", padx=5, side="top")
+        self.labelframe2.pack(fill="x", padx=5, side="top")
+        self.frame2.pack(fill="y", side="left")
+        self.dummy_frame = tk.LabelFrame(self.split_frame)
+        self.dummy_frame.configure(height=200, text='settings', width=200)
+        self.dummy_frame.pack(expand="true", fill="both", side="top")
+        self.split_frame.pack(
+            anchor="w",
+            expand="true",
+            fill="both",
+            padx=5,
+            pady=5,
+            side="left")
 
         # Main widget
-        self.appwindow = self.toplevel1
+        self.appwindow = self.toplevel2
+
+        # init
+        self.appwindow.title('GUI4CV2_Tkinter')
+        self.__init_events()
+
+    def __init_gui(self):
+        proc = 'ファイル開く(Open File)'
+        self.task_lst.insert(tk.END, proc)
+        self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
+
+        self.__proc_list.append(proc)
+        self.__param_list.append([])
+        self.__dstimg_list.append([])
+        self.__code_list.append(self.__create_code(proc))
+
+    def __init_events(self):
+        self.set_param_btn.bind('<1>', self.__onSetParam_Events)
+        self.del_task_btn.bind('<1>', self.__onDelBtn_Events)
+        self.create_code_btn.bind('<1>', self.__onClick_create_code)
+        self.task_lst.bind("<<ListboxSelect>>", self.__onSelectListBox_Events)
+        self.run_btn.bind("<1>", self.__onClick_run_task)
+
+    def set_menu(self, menu, items):
+        for item in items:
+            menu.add_command(label=item, command=partial(
+                self.__submenu_selected, item))
+
+    def __submenu_selected(self, proc):
+        self.task_lst.insert(tk.END, proc)
+        self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
+        self.task_lst.select_set(self.task_lst.size()-1)
+        self.__proc_list.append(proc)
+        self.__param_list.append([])
+        self.__dstimg_list.append([])
+        self.__code_list.append(self.__create_code(proc))
+        self.__onSelectListBox_Events(None)
+
+    def set_proc_code(self, proc_code_list, fnc_list):
+        self.proc_code_list = proc_code_list
+        self.fnc_list = fnc_list
+        self.__init_gui()
+
+    def __create_code(self, proc):
+        col1 = [col[0] for col in self.proc_code_list]
+        col2 = [col[1] for col in self.proc_code_list]
+        index = col1.index(proc)
+        return col2[index]
+
+    def __onSelectListBox_Events(self, event):
+        if self.task_lst.curselection() == ():
+            return
+
+        self.__task_index = self.task_lst.curselection()[0]
+
+        if self.__proc_flag:
+            return
+
+        self.__proc_flag = True
+        index = self.task_lst.curselection()
+        if index == ():
+            return
+        self.__run_proc(self.task_lst.get(index), index[0], True)
+        self.__proc_flag = False
+
+    def __run_proc(self, proc, index, gui_flag):
+        if not index == 0:
+            if self.__dstimg_list[index-1] == []:
+                return
+            img = self.__dstimg_list[index-1]
+            if len(img) == []:
+                return
+        try:
+            self.dummy_frame.destroy()
+            self.__app_child.image_edit_frame.destroy()
+        except:
+            pass
+
+        col1 = [col[0] for col in self.proc_code_list]
+        fnc_index = col1.index(proc)
+
+        if self.__run_flag:
+            gui_flag = False
+
+        if proc == '画像メモリ作成(Create IMG Memory)':
+            if len(self.__param_list[index]) == 0:
+                self.__param_list[index].append(self.__img_array)
+                self.__param_list[index].append(self.__img_names)
+
+            self.__app_child = self.fnc_list[fnc_index](
+                img, self.__param_list[index], master=self.split_frame, gui=gui_flag)
+        elif proc == '画像メモリI/O(MemoryIO)':
+            if len(self.__param_list[index]) == 0:
+                memIO = ['', []]
+                self.__param_list[index].append(self.__img_array)
+                self.__param_list[index].append(self.__img_names)
+                self.__param_list[index].append(memIO)
+
+            self.__app_child = self.fnc_list[fnc_index](
+                img, self.__param_list[index], master=self.split_frame, gui=gui_flag)
+        elif proc == 'ファイル開く(Open File)':
+            self.__app_child = self.fnc_list[fnc_index](
+                self.__param_list[index], master=self.split_frame, gui=gui_flag)
+        else:
+            self.__app_child = self.fnc_list[fnc_index](
+                img, self.__param_list[index], master=self.split_frame, gui=gui_flag)
+
+    def __onSetParam_Events(self, event):
+        if self.__app_child == 0:
+            print('set_param_cancel')
+            return
+
+        param, dst_img = self.__app_child.get_data()
+        index = self.__task_index
+        self.__param_list[index] = param
+        self.__dstimg_list[index] = dst_img
+
+        if self.task_lst.get(index) == '画像メモリ作成(Create IMG Memory)':
+            self.__img_array = param[0]
+            self.__img_names = param[1]
+
+    def __onClick_run_task(self, event):
+        self.__run_flag = True
+
+        for index, proc in enumerate(self.__proc_list):
+            self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
+            self.task_lst.select_set(index)
+            self.__onSelectListBox_Events(None)
+            self.__onSetParam_Events(None)
+
+        self.__run_flag = False
+
+    def __onDelBtn_Events(self, event):
+        if self.task_lst.curselection() == () or self.task_lst.curselection()[0] == 0:
+            print('del_cancel')
+            return
+
+        index = self.__task_index
+        self.task_lst.delete(index)
+        del self.__proc_list[index]
+        del self.__param_list[index]
+        del self.__dstimg_list[index]
+        del self.__code_list[index]
+
+    def __onClick_create_code(self, event):
+        memory_mode = 0
+
+        pycode = ''
+        for index, code in enumerate(self.__code_list):
+            if code.endswith('imgLib = Create_Img_Memory(img, [img_array, img_names], gui=False)'):
+                memory_mode = 1
+            elif code == 'MemoryIO(img, param, gui=False)':
+                memory_mode = 2
+            else:
+                memory_mode = 0
+
+            if pycode == '':
+                pycode = f'param = {str(self.__param_list[index])}\nimgLib = {code}'
+            else:
+                if memory_mode == 1:
+                    pycode += '\n'
+                    pycode += f'img_array = []\n'
+                    pycode += f'img_names = {self.__img_names}\n'
+                    pycode += 'param = [img_array, img_names]\n'
+                    pycode += f'{code}'
+
+                elif memory_mode == 2:
+                    pycode += '\n' + \
+                        f'memIO = {str(self.__param_list[index][2])}\n'
+                    pycode += f'param = [img_array, img_names, memIO]\n'
+                    pycode += f'imgLib = {code}'
+                    pass
+                else:
+                    pycode += '\n' + \
+                        f'param = {str(self.__param_list[index])}\nimgLib = {code}'
+
+            pycode += '\nparam, img = imgLib.get_data()\n'
+            if memory_mode == 1:
+                pycode += 'img_array = param[0]\n'
+                pycode += 'img_names = param[1]\n'
+            elif memory_mode == 2:
+                pycode += 'img_array = param[0]\n'
+
+        str_import = 'from lib.cls_lib import * \n'
+
+        pycode = f'{str_import}\n\n{pycode}'
+
+        root = tk.Tk()
+        root.withdraw()
+        dir = './'
+        file = tk.filedialog.asksaveasfilename(initialdir=dir)
+        root.destroy()
+        if len(file) == 0:
+            path = ''
+        else:
+            path = file
+            f = open(path, 'w', encoding='utf-8')
+            f.write(pycode)
+            f.close()
+        pass
 
     def run(self):
         self.appwindow.mainloop()
