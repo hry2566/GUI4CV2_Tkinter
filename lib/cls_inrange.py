@@ -111,9 +111,9 @@ class InRange(EditWindow):
             self.mainwindow.bind("<KeyPress>", self.__keydown_event)
             self.mainwindow.bind("<KeyRelease>", self.__keyup_event)
         else:
-            self.__master.bind("<KeyPress>", self.__keydown_event)
-            self.__master.bind("<KeyRelease>", self.__keyup_event)
-
+            master = self.settings_frame.master.master.master
+            master.bind("<KeyPress>", self.__keydown_event)
+            master.bind("<KeyRelease>", self.__keyup_event)
         pass
 
     def __keydown_event(self, event):
