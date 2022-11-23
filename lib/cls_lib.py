@@ -1,4 +1,3 @@
-from lib.app.cls_app_base import App_Base
 from lib.cls_adaptive_threshold import Adaptive_Thresholed
 from lib.cls_average import Average
 from lib.cls_bilateral_filter import Bilateral_Filter
@@ -21,6 +20,8 @@ from lib.cls_median_blur import Median_Blur
 from lib.cls_memory_io import MemoryIO
 from lib.cls_morphology import Morphology
 from lib.cls_open_file import OpenFile
+from lib.cls_phase_correlate import PhaseCorrelate
+from lib.cls_phase_correlate_xy import PhaseCorrelate_XY
 from lib.cls_reverse_brightness import ReverseBrightness
 from lib.cls_rotate import Rotate
 from lib.cls_rotate_3d import Rotate3D
