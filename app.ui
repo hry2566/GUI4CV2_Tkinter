@@ -81,6 +81,7 @@
                     <property name="width">200</property>
                     <layout manager="pack">
                       <property name="fill">both</property>
+                      <property name="pady">5</property>
                       <property name="side">top</property>
                     </layout>
                     <child>
@@ -126,13 +127,32 @@
                       <property name="side">top</property>
                     </layout>
                     <child>
-                      <object class="tk.Label" id="label2">
-                        <property name="text" translatable="yes">Task List</property>
+                      <object class="tk.Frame" id="frame1">
+                        <property name="height">200</property>
+                        <property name="width">200</property>
                         <layout manager="pack">
-                          <property name="anchor">w</property>
+                          <property name="fill">x</property>
                           <property name="padx">5</property>
                           <property name="side">top</property>
                         </layout>
+                        <child>
+                          <object class="tk.Label" id="label2">
+                            <property name="text" translatable="yes">Task List</property>
+                            <layout manager="pack">
+                              <property name="anchor">sw</property>
+                              <property name="side">left</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="tk.Button" id="list_clear_btn" named="True">
+                            <property name="text" translatable="yes">List All Clear</property>
+                            <layout manager="pack">
+                              <property name="anchor">e</property>
+                              <property name="side">top</property>
+                            </layout>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
@@ -143,7 +163,6 @@
                           <property name="expand">true</property>
                           <property name="fill">both</property>
                           <property name="padx">5</property>
-                          <property name="pady">5</property>
                           <property name="side">top</property>
                         </layout>
                       </object>
@@ -168,7 +187,45 @@
                     <layout manager="pack">
                       <property name="fill">x</property>
                       <property name="padx">5</property>
+                      <property name="pady">5</property>
                       <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="tk.LabelFrame" id="labelframe4">
+                <property name="height">200</property>
+                <property name="text" translatable="yes">Settings File</property>
+                <property name="width">200</property>
+                <layout manager="pack">
+                  <property name="fill">x</property>
+                  <property name="padx">5</property>
+                  <property name="pady">5</property>
+                  <property name="side">top</property>
+                </layout>
+                <child>
+                  <object class="tk.Button" id="load_settings_btn" named="True">
+                    <property name="text" translatable="yes">Load</property>
+                    <layout manager="pack">
+                      <property name="expand">true</property>
+                      <property name="fill">x</property>
+                      <property name="padx">5</property>
+                      <property name="pady">5</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="tk.Button" id="save_settings_btn" named="True">
+                    <property name="text" translatable="yes">Save</property>
+                    <layout manager="pack">
+                      <property name="expand">true</property>
+                      <property name="fill">x</property>
+                      <property name="padx">5</property>
+                      <property name="pady">5</property>
+                      <property name="side">left</property>
                     </layout>
                   </object>
                 </child>
