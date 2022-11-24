@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import pickle
 import tkinter as tk
 from functools import partial
 from lib.cls_lib import *
@@ -52,20 +53,21 @@ class App_Base:
         self.set_param_btn = tk.Button(self.frame3)
         self.set_param_btn.configure(text=' Set Param')
         self.set_param_btn.pack(fill="x", padx=5, side="top")
-        self.frame3.pack(fill="both", side="top")
+        self.frame3.pack(fill="both", pady=5, side="top")
         self.frame4 = tk.Frame(self.labelframe1)
         self.frame4.configure(height=200, width=200)
-        self.label2 = tk.Label(self.frame4)
+        self.frame1 = tk.Frame(self.frame4)
+        self.frame1.configure(height=200, width=200)
+        self.label2 = tk.Label(self.frame1)
         self.label2.configure(text='Task List')
-        self.label2.pack(anchor="w", padx=5, side="top")
+        self.label2.pack(anchor="sw", side="left")
+        self.list_clear_btn = tk.Button(self.frame1)
+        self.list_clear_btn.configure(text='List All Clear')
+        self.list_clear_btn.pack(anchor="e", side="top")
+        self.frame1.pack(fill="x", padx=5, side="top")
         self.task_lst = tk.Listbox(self.frame4)
         self.task_lst.configure(activestyle="underline", width=35)
-        self.task_lst.pack(
-            expand="true",
-            fill="both",
-            padx=5,
-            pady=5,
-            side="top")
+        self.task_lst.pack(expand="true", fill="both", padx=5, side="top")
         self.frame4.pack(expand="true", fill="both", side="top")
         self.labelframe1.pack(
             anchor="w",
@@ -77,8 +79,19 @@ class App_Base:
         self.labelframe2.configure(height=200, text='Python Code', width=200)
         self.create_code_btn = tk.Button(self.labelframe2)
         self.create_code_btn.configure(text='Create Code')
-        self.create_code_btn.pack(fill="x", padx=5, side="top")
+        self.create_code_btn.pack(fill="x", padx=5, pady=5, side="top")
         self.labelframe2.pack(fill="x", padx=5, side="top")
+        self.labelframe4 = tk.LabelFrame(self.frame2)
+        self.labelframe4.configure(height=200, text='Settings File', width=200)
+        self.load_settings_btn = tk.Button(self.labelframe4)
+        self.load_settings_btn.configure(text='Load')
+        self.load_settings_btn.pack(
+            expand="true", fill="x", padx=5, pady=5, side="left")
+        self.save_settings_btn = tk.Button(self.labelframe4)
+        self.save_settings_btn.configure(text='Save')
+        self.save_settings_btn.pack(
+            expand="true", fill="x", padx=5, pady=5, side="left")
+        self.labelframe4.pack(fill="x", padx=5, pady=5, side="top")
         self.frame2.pack(fill="y", side="left")
         self.dummy_frame = tk.LabelFrame(self.split_frame)
         self.dummy_frame.configure(height=200, text='settings', width=200)
@@ -114,6 +127,9 @@ class App_Base:
         self.create_code_btn.bind('<1>', self.__onClick_create_code)
         self.task_lst.bind("<<ListboxSelect>>", self.__onSelectListBox_Events)
         self.run_btn.bind("<1>", self.__onClick_run_task)
+        self.load_settings_btn.bind("<1>", self.__onClick_load_settings)
+        self.save_settings_btn.bind("<1>", self.__onClick_save_settings)
+        self.list_clear_btn.bind("<1>", self.__onClick_list_clear)
 
     def set_menu(self, menu, items):
         for item in items:
@@ -214,15 +230,27 @@ class App_Base:
             self.__img_names = param[1]
 
     def __onClick_run_task(self, event):
-        self.__run_flag = True
+        self.appwindow.after(1, self.__run_task)
 
-        for index, proc in enumerate(self.__proc_list):
+    def __run_task(self):
+        self.__run_flag = True
+        rows = 0
+        for index, _ in enumerate(self.__proc_list):
             self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
             self.task_lst.select_set(index)
             self.__onSelectListBox_Events(None)
             self.__onSetParam_Events(None)
-
+            rows = index
         self.__run_flag = False
+
+        if (self.__proc_list[-1] == 'ファイル開く(Open File)' or
+            self.__proc_list[-1] == 'ファイル保存(Save File)' or
+            self.__proc_list[-1] == '画像メモリ作成(Create IMG Memory)' or
+                self.__proc_list[-1] == '画像メモリI/O(MemoryIO)'):
+            rows -= 1
+        self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
+        self.task_lst.select_set(rows)
+        self.__onSelectListBox_Events(None)
 
     def __onDelBtn_Events(self, event):
         if self.task_lst.curselection() == () or self.task_lst.curselection()[0] == 0:
@@ -237,6 +265,9 @@ class App_Base:
         del self.__code_list[index]
 
     def __onClick_create_code(self, event):
+        self.appwindow.after(1, self.__create_sourcecode)
+
+    def __create_sourcecode(self):
         memory_mode = 0
 
         pycode = ''
@@ -282,15 +313,79 @@ class App_Base:
         root = tk.Tk()
         root.withdraw()
         dir = './'
-        file = tk.filedialog.asksaveasfilename(initialdir=dir)
+        typ = [("Python", ".py")]
+        file = tk.filedialog.asksaveasfilename(initialdir=dir, filetypes=typ)
         root.destroy()
         if len(file) == 0:
-            path = ''
+            return
+        if not '.py' in file:
+            file += '.py'
+
+        f = open(file, 'w', encoding='utf-8')
+        f.write(pycode)
+        f.close()
+
+    def __onClick_save_settings(self, event):
+        self.appwindow.after(1, self.__save_settings)
+
+    def __save_settings(self):
+        root = tk.Tk()
+        root.withdraw()
+        dir = './'
+        typ = [("DATA", ".data")]
+        file = tk.filedialog.asksaveasfilename(
+            initialdir=dir, filetypes=typ)
+        root.destroy()
+        if len(file) == 0:
+            return
+        if not '.data' in file:
+            file += '.data'
+
+        data = []
+        data.append(self.__proc_list)
+        data.append(self.__param_list)
+        data.append(self.__code_list)
+        data.append(self.__dstimg_list)
+        f = open(file, 'wb')
+        pickle.dump(data, f)
+        f.close
+
+    def __onClick_load_settings(self, event):
+        self.appwindow.after(1, self.__load_settings)
+
+    def __load_settings(self):
+        root = tk.Tk()
+        root.withdraw()
+        typ = [("DATA", ".data")]
+        dir = './'
+        file = tk.filedialog.askopenfilenames(
+            filetypes=typ, initialdir=dir)
+        root.destroy()
+        if len(file) == 0:
+            return
         else:
-            path = file
-            f = open(path, 'w', encoding='utf-8')
-            f.write(pycode)
-            f.close()
+            path = file[0]
+
+        data = []
+        f = open(path, 'rb')
+        data = pickle.load(f)
+        f.close()
+        self.__proc_list = data[0]
+        self.__param_list = data[1]
+        self.__code_list = data[2]
+        self.__dstimg_list = data[3]
+
+        self.task_lst.delete(0, tk.END)
+        for proc in self.__proc_list:
+            self.task_lst.insert(tk.END, proc)
+
+    def __onClick_list_clear(self,event):
+        self.task_lst.delete(0, tk.END)
+        self.__proc_list = []
+        self.__param_list = []
+        self.__dstimg_list = []
+        self.__code_list = []
+        self.__init_gui()
         pass
 
     def run(self):
