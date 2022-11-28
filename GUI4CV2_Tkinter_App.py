@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from functools import partial
 
+
 from lib.app.cls_app_base import App_Base
 from lib.cls_lib import *
 
@@ -20,6 +21,7 @@ class App(App_Base):
         labels_image = ['回転 (Rotate)',
                         '位置合わせ (PhaseCorrelate_XY)',
                         '位置合わせ (PhaseCorrelate)',
+                        'マスク処理 (Mask)',
                         '射影変換 (warpPerspective)',
                         '切り抜き (Trim)',
                         '画像結合(ImageCombine)']
@@ -234,6 +236,10 @@ class App(App_Base):
         proc_code_list.append(['位置合わせ (PhaseCorrelate_XY)',
                                'PhaseCorrelate_XY(img, param, gui=False)'])
         fnc__list.append(partial(PhaseCorrelate_XY))
+
+        proc_code_list.append(['マスク処理 (Mask)',
+                               'Mask(img, param, gui=False)'])
+        fnc__list.append(partial(Mask))
 
         self.set_proc_code(proc_code_list, fnc__list)
 
