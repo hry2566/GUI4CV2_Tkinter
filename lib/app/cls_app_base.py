@@ -228,6 +228,7 @@ class App_Base:
         if self.task_lst.get(index) == '画像メモリ作成(Create IMG Memory)':
             self.__img_array = param[0]
             self.__img_names = param[1]
+    
 
     def __onClick_run_task(self, event):
         self.appwindow.after(1, self.__run_task)
