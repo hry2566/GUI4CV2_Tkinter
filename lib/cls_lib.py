@@ -16,6 +16,7 @@ from lib.cls_gaussian_blur import Gaussian_Blur
 from lib.cls_image_combine import ImageCombine
 from lib.cls_inrange import InRange
 from lib.cls_laplacian import Laplacian
+from lib.cls_mask import Mask
 from lib.cls_median_blur import Median_Blur
 from lib.cls_memory_io import MemoryIO
 from lib.cls_morphology import Morphology
