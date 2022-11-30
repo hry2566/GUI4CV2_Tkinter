@@ -4,6 +4,7 @@ from lib.cls_bilateral_filter import Bilateral_Filter
 from lib.cls_bitwise_not import Bitwise_Not
 from lib.cls_blur import Blur
 from lib.cls_canny import Canny
+from lib.cls_circle_detection import CircleDetection
 from lib.cls_convert_scale_abs import ConvertScaleAbs
 from lib.cls_create_img_memory import Create_Img_Memory
 from lib.cls_dilate import Dilate
