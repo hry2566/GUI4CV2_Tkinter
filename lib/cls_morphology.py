@@ -16,6 +16,7 @@ class Morphology(EditWindow):
         self.__type_list = [cv2.MORPH_OPEN,
                             cv2.MORPH_CLOSE,
                             cv2.MORPH_GRADIENT]
+        self.__values = ['OPEN', 'CLOSE', 'GRADIENT']
 
         if len(param) == 3:
             self.__type_index = param[0]
@@ -34,9 +35,9 @@ class Morphology(EditWindow):
         self.none_label.destroy()
 
         self.__tkvar = tk.StringVar(value='OPEN')
-        __values = ['OPEN', 'CLOSE', 'GRADIENT']
+        self.__values = ['OPEN', 'CLOSE', 'GRADIENT']
         self.__optionmenu2 = tk.OptionMenu(
-            self.settings_frame, self.__tkvar, *__values, command=self.__onSelect)
+            self.settings_frame, self.__tkvar, *self.__values, command=self.__onSelect)
         self.__optionmenu2.pack(fill='x', side='top')
 
         self.__scale1 = tk.Scale(self.settings_frame)
@@ -49,6 +50,7 @@ class Morphology(EditWindow):
                                 label='kernel_y', orient='horizontal', command=self.__onScale)
         self.__scale2.pack(side='top')
 
+        self.__tkvar.set(self.__values[self.__type_index])
         self.__scale1.set(self.__kernel_x)
         self.__scale2.set(self.__kernel_y)
         pass
