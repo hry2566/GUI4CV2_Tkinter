@@ -228,7 +228,6 @@ class App_Base:
         if self.task_lst.get(index) == '画像メモリ作成(Create IMG Memory)':
             self.__img_array = param[0]
             self.__img_names = param[1]
-    
 
     def __onClick_run_task(self, event):
         self.appwindow.after(1, self.__run_task)
@@ -277,6 +276,8 @@ class App_Base:
                 memory_mode = 1
             elif code == 'MemoryIO(img, param, gui=False)':
                 memory_mode = 2
+            elif code == 'CircleDetection(img, param, gui=False)':
+                memory_mode = 3
             else:
                 memory_mode = 0
 
@@ -295,7 +296,6 @@ class App_Base:
                         f'memIO = {str(self.__param_list[index][2])}\n'
                     pycode += f'param = [img_array, img_names, memIO]\n'
                     pycode += f'imgLib = {code}'
-                    pass
                 else:
                     pycode += '\n' + \
                         f'param = {str(self.__param_list[index])}\nimgLib = {code}'
@@ -306,6 +306,9 @@ class App_Base:
                 pycode += 'img_names = param[1]\n'
             elif memory_mode == 2:
                 pycode += 'img_array = param[0]\n'
+            elif memory_mode == 3:
+                pycode += 'center = param[-1][0]\n'
+                pycode += 'radius = param[-1][1]\n'
 
         str_import = 'from lib.cls_lib import * \n'
 
@@ -347,6 +350,7 @@ class App_Base:
         data.append(self.__param_list)
         data.append(self.__code_list)
         data.append(self.__dstimg_list)
+        data.append(self.__img_names)
         f = open(file, 'wb')
         pickle.dump(data, f)
         f.close
@@ -375,17 +379,20 @@ class App_Base:
         self.__param_list = data[1]
         self.__code_list = data[2]
         self.__dstimg_list = data[3]
+        self.__img_names = data[4]
 
         self.task_lst.delete(0, tk.END)
         for proc in self.__proc_list:
             self.task_lst.insert(tk.END, proc)
 
-    def __onClick_list_clear(self,event):
+    def __onClick_list_clear(self, event):
         self.task_lst.delete(0, tk.END)
         self.__proc_list = []
         self.__param_list = []
         self.__dstimg_list = []
         self.__code_list = []
+        self.__img_array = []
+        self.__img_names = []
         self.__init_gui()
         pass
 
