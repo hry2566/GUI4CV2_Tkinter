@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 from functools import partial
 
-
 from lib.app.cls_app_base import App_Base
 from lib.cls_lib import *
 
@@ -24,7 +23,8 @@ class App(App_Base):
                         'マスク処理 (Mask)',
                         '射影変換 (warpPerspective)',
                         '切り抜き (Trim)',
-                        '画像結合(ImageCombine)']
+                        '画像結合 (ImageCombine)',
+                        '最小外接円計測 (CircleDetection)']
 
         labels_color = ['明るさ／コントラスト (ConvertScaleAbs)',
                         'ガンマ補正 (Gamma)',
@@ -221,7 +221,7 @@ class App(App_Base):
                                'MemoryIO(img, param, gui=False)'])
         fnc__list.append(partial(MemoryIO))
 
-        proc_code_list.append(['画像結合(ImageCombine)',
+        proc_code_list.append(['画像結合 (ImageCombine)',
                                'ImageCombine(img, param, gui=False)'])
         fnc__list.append(partial(ImageCombine))
 
@@ -240,6 +240,10 @@ class App(App_Base):
         proc_code_list.append(['マスク処理 (Mask)',
                                'Mask(img, param, gui=False)'])
         fnc__list.append(partial(Mask))
+
+        proc_code_list.append(['最小外接円計測 (CircleDetection)',
+                               'CircleDetection(img, param, gui=False)'])
+        fnc__list.append(partial(CircleDetection))
 
         self.set_proc_code(proc_code_list, fnc__list)
 
