@@ -77,196 +77,196 @@ class App(App_Base):
 
     def __init_proc_code(self):
         proc_code_list = []
-        fnc__list = []
+        fnc_list = []
         proc_code_list.append(['ファイル開く(Open File)',
                                'OpenFile(param, gui=False)'])
-        fnc__list.append(partial(OpenFile))
+        fnc_list.append(partial(OpenFile))
 
         proc_code_list.append(['ファイル保存(Save File)',
                                'SaveFile(img, param, gui=False)'])
-        fnc__list.append(partial(SaveFile))
+        fnc_list.append(partial(SaveFile))
 
         proc_code_list.append(['ぼかし (Average)',
                                'Average(img, param, gui=False)'])
-        fnc__list.append(partial(Average))
+        fnc_list.append(partial(Average))
 
         proc_code_list.append(['二値化 (Adaptive_Thresholed)',
                                'Adaptive_Thresholed(img, param, gui=False)'])
-        fnc__list.append(partial(Adaptive_Thresholed))
+        fnc_list.append(partial(Adaptive_Thresholed))
 
         proc_code_list.append(['ぼかし (Bilateral_Filter)',
                                'Bilateral_Filter(img, param, gui=False)'])
-        fnc__list.append(partial(Bilateral_Filter))
+        fnc_list.append(partial(Bilateral_Filter))
 
         proc_code_list.append(['ぼかし (Blur)',
                                'Blur(img, param, gui=False)'])
-        fnc__list.append(partial(Blur))
+        fnc_list.append(partial(Blur))
 
         proc_code_list.append(['輪郭抽出 (Canny)',
                                'Canny(img, param, gui=False)'])
-        fnc__list.append(partial(Canny))
+        fnc_list.append(partial(Canny))
 
         proc_code_list.append(['膨張 (Dilate)',
                                'Dilate(img, param, gui=False)'])
-        fnc__list.append(partial(Dilate))
+        fnc_list.append(partial(Dilate))
 
         proc_code_list.append(['収縮 (Erode)',
                                'Erode(img, param, gui=False)'])
-        fnc__list.append(partial(Erode))
+        fnc_list.append(partial(Erode))
 
         proc_code_list.append(['シャープ (Filter2D)',
                                'Fillter2D(img, param, gui=False)'])
-        fnc__list.append(partial(Fillter2D))
+        fnc_list.append(partial(Fillter2D))
 
         proc_code_list.append(['ぼかし (Gaussian_Blur)',
                                'Gaussian_Blur(img, param, gui=False)'])
-        fnc__list.append(partial(Gaussian_Blur))
+        fnc_list.append(partial(Gaussian_Blur))
 
         proc_code_list.append(['二値化 (inRange)',
                                'InRange(img, param, gui=False)'])
-        fnc__list.append(partial(InRange))
+        fnc_list.append(partial(InRange))
 
         proc_code_list.append(['輪郭抽出 (Laplacian)',
                                'Laplacian(img, param, gui=False)'])
-        fnc__list.append(partial(Laplacian))
+        fnc_list.append(partial(Laplacian))
 
         proc_code_list.append(['ぼかし (Median Blur)',
                                'Median_Blur(img, param, gui=False)'])
-        fnc__list.append(partial(Median_Blur))
+        fnc_list.append(partial(Median_Blur))
 
         proc_code_list.append(['モルフォロジー (Morphology)',
                                'Morphology(img, param, gui=False)'])
-        fnc__list.append(partial(Morphology))
+        fnc_list.append(partial(Morphology))
 
         proc_code_list.append(['回転 (Rotate)',
                                'Rotate(img, param, gui=False)'])
-        fnc__list.append(partial(Rotate))
+        fnc_list.append(partial(Rotate))
 
         proc_code_list.append(['輪郭抽出 (Sobel)',
                                'Sobel(img, param, gui=False)'])
-        fnc__list.append(partial(Sobel))
+        fnc_list.append(partial(Sobel))
 
         proc_code_list.append(['二値化 (Threshold)',
                                'Threshold(img, param, gui=False)'])
-        fnc__list.append(partial(Threshold))
+        fnc_list.append(partial(Threshold))
 
         proc_code_list.append(['切り抜き (Trim)',
                                'Trim(img, param, gui=False)'])
-        fnc__list.append(partial(Trim))
+        fnc_list.append(partial(Trim))
 
         proc_code_list.append(['シャープ (UnSharp)',
                                'UnSharp(img, param, gui=False)'])
-        fnc__list.append(partial(UnSharp))
+        fnc_list.append(partial(UnSharp))
 
         proc_code_list.append(['明るさ／コントラスト (ConvertScaleAbs)',
                                'ConvertScaleAbs(img, param, gui=False)'])
-        fnc__list.append(partial(ConvertScaleAbs))
+        fnc_list.append(partial(ConvertScaleAbs))
 
         proc_code_list.append(['ぼかし (FastNlMeansDenoisingColored)',
                                'FastNlMeansDenoisingColored(img, param, gui=False)'])
-        fnc__list.append(partial(FastNlMeansDenoisingColored))
+        fnc_list.append(partial(FastNlMeansDenoisingColored))
 
         proc_code_list.append(['ガンマ補正 (Gamma)',
                                'Gamma(img, param, gui=False)'])
-        fnc__list.append(partial(Gamma))
+        fnc_list.append(partial(Gamma))
 
         proc_code_list.append(['ホワイトバランス (WhiteBalance)',
                                'WhiteBalance(img, param, gui=False)'])
-        fnc__list.append(partial(WhiteBalance))
+        fnc_list.append(partial(WhiteBalance))
 
         proc_code_list.append(['平坦化 (EqualizeHist)',
                                'EqualizeHist(img, param, gui=False)'])
-        fnc__list.append(partial(EqualizeHist))
+        fnc_list.append(partial(EqualizeHist))
 
         proc_code_list.append(['色反転 (Bitwise Not)',
                                'Bitwise_Not(img, param, gui=False)'])
-        fnc__list.append(partial(Bitwise_Not))
+        fnc_list.append(partial(Bitwise_Not))
 
         proc_code_list.append(['明度反転 (Reverse Brightness)',
                                'ReverseBrightness(img, param, gui=False)'])
-        fnc__list.append(partial(ReverseBrightness))
+        fnc_list.append(partial(ReverseBrightness))
 
         proc_code_list.append(['濃淡補正 (MovingAve)',
                                'Shading_MovingAve(img, param, gui=False)'])
-        fnc__list.append(partial(Shading_MovingAve))
+        fnc_list.append(partial(Shading_MovingAve))
 
         proc_code_list.append(['濃淡補正 (MovingAveColor)',
                                'Shading_Color_MovingAve(img, param, gui=False)'])
-        fnc__list.append(partial(Shading_Color_MovingAve))
+        fnc_list.append(partial(Shading_Color_MovingAve))
 
         proc_code_list.append(['濃淡補正 (ShadingApproximate)',
                                'Shading_Approximate(img, param, gui=False)'])
-        fnc__list.append(partial(Shading_Approximate))
+        fnc_list.append(partial(Shading_Approximate))
 
         proc_code_list.append(['濃淡補正 (ShadingBlur)',
                                'Shading_Blur(img, param, gui=False)'])
-        fnc__list.append(partial(Shading_Blur))
+        fnc_list.append(partial(Shading_Blur))
 
         proc_code_list.append(['濃淡補正 (ShadingMediaBlur)',
                                'Shading_MedianBlur(img, param, gui=False)'])
-        fnc__list.append(partial(Shading_MedianBlur))
+        fnc_list.append(partial(Shading_MedianBlur))
 
         proc_code_list.append(['濃淡補正 (ShadingColorMedianBlur)',
                                'Shading_Color_MedianBlur(img, param, gui=False)'])
-        fnc__list.append(partial(Shading_Color_MedianBlur))
+        fnc_list.append(partial(Shading_Color_MedianBlur))
 
         proc_code_list.append(['濃淡補正 (ShadingCustomFillter)',
                                'Shading_CustomFillter(img, param, gui=False)'])
-        fnc__list.append(partial(Shading_CustomFillter))
+        fnc_list.append(partial(Shading_CustomFillter))
 
         proc_code_list.append(['画像メモリ作成(Create IMG Memory)',
                                'imgLib = Create_Img_Memory(img, [img_array, img_names], gui=False)'])
-        fnc__list.append(partial(Create_Img_Memory))
+        fnc_list.append(partial(Create_Img_Memory))
 
         proc_code_list.append(['射影変換 (warpPerspective)',
                                'Rotate3D(img, param, gui=False)'])
-        fnc__list.append(partial(Rotate3D))
+        fnc_list.append(partial(Rotate3D))
 
         proc_code_list.append(['画像メモリI/O(MemoryIO)',
                                'MemoryIO(img, param, gui=False)'])
-        fnc__list.append(partial(MemoryIO))
+        fnc_list.append(partial(MemoryIO))
 
         proc_code_list.append(['画像結合 (ImageCombine)',
                                'ImageCombine(img, param, gui=False)'])
-        fnc__list.append(partial(ImageCombine))
+        fnc_list.append(partial(ImageCombine))
 
         proc_code_list.append(['濃淡補正 (ShadingMediaBlurColor)',
                                'Shading_Color_MedianBlur(img, param, gui=False)'])
-        fnc__list.append(partial(Shading_Color_MedianBlur))
+        fnc_list.append(partial(Shading_Color_MedianBlur))
 
         proc_code_list.append(['位置合わせ (PhaseCorrelate)',
                                'PhaseCorrelate(img, param, gui=False)'])
-        fnc__list.append(partial(PhaseCorrelate))
+        fnc_list.append(partial(PhaseCorrelate))
 
         proc_code_list.append(['位置合わせ (PhaseCorrelate_XY)',
                                'PhaseCorrelate_XY(img, param, gui=False)'])
-        fnc__list.append(partial(PhaseCorrelate_XY))
+        fnc_list.append(partial(PhaseCorrelate_XY))
 
         proc_code_list.append(['マスク処理 (Mask)',
                                'Mask(img, param, gui=False)'])
-        fnc__list.append(partial(Mask))
+        fnc_list.append(partial(Mask))
 
         proc_code_list.append(['最小外接円計測 (CircleDetection)',
                                'CircleDetection(img, param, gui=False)'])
-        fnc__list.append(partial(CircleDetection))
+        fnc_list.append(partial(CircleDetection))
 
         proc_code_list.append(['エッジ位置計測 (EdgeMeasurement)',
                                'EdgeMeasurement(img, param, gui=False)'])
-        fnc__list.append(partial(EdgeMeasurement))
+        fnc_list.append(partial(EdgeMeasurement))
 
         proc_code_list.append(['輪郭抽出 (Laplacian_Custom)',
                                'Laplacian_Custom(img, param, gui=False)'])
-        fnc__list.append(partial(Laplacian_Custom))
+        fnc_list.append(partial(Laplacian_Custom))
 
         proc_code_list.append(['エッジ位置_カスタム (Edge_Custom)',
                                'EdgeCustom(img, param, gui=False)'])
-        fnc__list.append(partial(EdgeCustom))
+        fnc_list.append(partial(EdgeCustom))
 
         proc_code_list.append(['エッジ円周 (Edge_Arc)',
                                'Edge_Arc(img, param, gui=False)'])
-        fnc__list.append(partial(Edge_Arc))
+        fnc_list.append(partial(Edge_Arc))
 
-        self.set_proc_code(proc_code_list, fnc__list)
+        self.set_proc_code(proc_code_list, fnc_list)
 
     def run(self):
         self.appwindow.mainloop()
