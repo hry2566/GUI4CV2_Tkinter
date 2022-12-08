@@ -11,8 +11,8 @@ class MemoryIO(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.img_bk = img
-        self.__img_array = []
-        self.__img_names = []
+        self.__img_array_buf2 = []
+        self.__img_names_buf2 = []
         self.__memIO = []
         # self.__proc_flag = False
 
@@ -20,8 +20,8 @@ class MemoryIO(EditWindow):
             img = self.img_bk[0]
 
         if len(param) == 3:
-            self.__img_array = param[0]
-            self.__img_names = param[1]
+            self.__img_array_buf2 = param[0]
+            self.__img_names_buf2 = param[1]
             self.__memIO = param[2]
             pass
         else:
@@ -46,7 +46,7 @@ class MemoryIO(EditWindow):
         self.frame6 = tk.Frame(self.frame3)
         self.__tkvar = tk.StringVar(value='source_IMG')
         __values = []
-        for name in self.__img_names:
+        for name in self.__img_names_buf2:
             __values.append(name)
         self.optionmenu1 = tk.OptionMenu(
             self.frame6, self.__tkvar, self.__tkvar.get(), *__values, command=self.__onSelectedMenu)
@@ -88,7 +88,7 @@ class MemoryIO(EditWindow):
         else:
             self.listbox2.insert(tk.END, 'source_IMG')
 
-        for name in self.__img_names:
+        for name in self.__img_names_buf2:
             self.listbox2.insert(tk.END, name)
 
         # self.listbox2.select_set(0)
@@ -177,8 +177,9 @@ class MemoryIO(EditWindow):
             if name.startswith('source_IMG'):
                 self.dst_img = self.img_bk
             else:
-                name_index = self.__img_names.index(name)
-                self.dst_img = self.__img_array[name_index]
+                name_index = self.__img_names_buf2.index(name)
+                self.dst_img = self.__img_array_buf2[name_index]
+                # cv2.imwrite(f'{name}.png',self.dst_img)
         self.Draw()
         pass
 
@@ -196,16 +197,16 @@ class MemoryIO(EditWindow):
                 elif set_name== 'source_IMG':
                     img.append(self.img_bk)
                 else:
-                    set_index = self.__img_names.index(set_name)
-                    img.append(self.__img_array[set_index])
+                    set_index = self.__img_names_buf2.index(set_name)
+                    img.append(self.__img_array_buf2[set_index])
         else:
             set_name = self.__memIO[1][0]
             if set_name.startswith('source_IMG['):
                 set_index = int(set_name.replace('source_IMG[', '').replace(']', ''))
-                targer_index = self.__img_names.index(target_name)
-                self.__img_array[targer_index] = self.img_bk[set_index]
+                targer_index = self.__img_names_buf2.index(target_name)
+                self.__img_array_buf2[targer_index] = self.img_bk[set_index]
             else:
-                self.__img_array[self.__img_names.index(target_name)]=self.img_bk
+                self.__img_array_buf2[self.__img_names_buf2.index(target_name)]=self.img_bk
 
         if type(img) == list:
             if len(img) == 1:
@@ -215,7 +216,7 @@ class MemoryIO(EditWindow):
 
     def get_data(self):
         param = []
-        param = [self.__img_array, self.__img_names,self.__memIO]
+        param = [self.__img_array_buf2, self.__img_names_buf2,self.__memIO]
         print('Proc : MemoryIO')
         print(f'param = {param[2]}')
         return param, self.img_bk
