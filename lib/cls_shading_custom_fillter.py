@@ -133,7 +133,36 @@ class Shading_CustomFillter(EditWindow):
         kernel[posy1][0] = -self.__k
         kernel[posy2][-1] = self.__k
 
+        # [[0. - 1.  0.]
+        #  [-1.  0.  1.]
+        #  [0.  1.  0.]]
+        # print(kernel)
+
+        # kernel = np.array([[0, 0, 0],
+        #                    [1, -2, 1],
+        #                    [0, 0, 0]
+        #                    ])
+
+        # kernel = np.array([[0, 0, 0, 0, 0],
+        #                    [0, 0, 0, 0, 0],
+        #                    [1, 0, -2, 0, 1],
+        #                    [0, 0, 0, 0, 0],
+        #                    [0, 0, 0, 0, 0]
+        #                    ])
+
         img = cv2.filter2D(img, -1, kernel, delta=128)
+
+        # kernel = np.array([[0, 0, 1],
+        #                    [0, -2, 0],
+        #                    [1, 0, 0]
+        #                    ])
+        # img = cv2.filter2D(img, -1, kernel, delta=128)
+
+        # kernel = np.array([[1, 0, 0],
+        #                    [0, -2, 0],
+        #                    [0, 0, 1]
+        #                    ])
+        # img = cv2.filter2D(img, -1, kernel, delta=128)
 
         if not self.__select_menu == 0:
             for index in range(height):
