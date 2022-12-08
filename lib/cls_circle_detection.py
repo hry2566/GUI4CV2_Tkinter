@@ -150,8 +150,11 @@ class CircleDetection(EditWindow):
                     img_origin, center, rad_int, (255, 0, 0), 3)
         else:
             zero = np.zeros(img_origin.shape, dtype="uint8")
-            img_origin = cv2.circle(
-                zero, center, rad_int, (255, 255, 255), -1)
+            # img_origin = cv2.circle(
+            #     zero, center, rad_int, (255, 255, 255), -1)
+            ellipse = cv2.fitEllipse(cnt)
+            img_origin = cv2.ellipse(zero, ellipse, (255, 255, 255), -1)
+
             img_origin = cv2.drawContours(
                 img_origin, [cnt], 0, (0, 0, 0), -1)
 
@@ -176,7 +179,7 @@ if __name__ == "__main__":
     img_base = cv2.imread('./0000_img/ECU/ECUlow_1.jpg')
     mask_img = cv2.imread('./circle1.png')
     img = [img_base, mask_img]
-    param = [False, False, True,[]]
+    param = [False, False, True, []]
     app = CircleDetection(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./CircleDetection.jpg', dst_img)
