@@ -42,6 +42,7 @@ class Edge_Arc(EditWindow):
         self.dst_img = self.__edge_arc()
 
         if gui:
+            self.__draw_list()
             self.Draw()
             self.run()
 
