@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from functools import partial
 
+
 from lib.app.cls_app_base import App_Base
 from lib.cls_lib import *
 
@@ -24,7 +25,10 @@ class App(App_Base):
                         '射影変換 (warpPerspective)',
                         '切り抜き (Trim)',
                         '画像結合 (ImageCombine)',
-                        '最小外接円計測 (CircleDetection)']
+                        '最小外接円計測 (CircleDetection)',
+                        'エッジ位置計測 (EdgeMeasurement)',
+                        'エッジ位置_カスタム (Edge_Custom)',
+                        'エッジ円周 (Edge_Arc)']
 
         labels_color = ['明るさ／コントラスト (ConvertScaleAbs)',
                         'ガンマ補正 (Gamma)',
@@ -56,7 +60,8 @@ class App(App_Base):
                         '二値化 (Adaptive_Thresholed)',
                         '輪郭抽出 (Canny)',
                         '輪郭抽出 (Laplacian)',
-                        '輪郭抽出 (Sobel)']
+                        '輪郭抽出 (Sobel)',
+                        '輪郭抽出 (Laplacian_Custom)']
 
         menu_memory = ['画像メモリ作成(Create IMG Memory)',
                        '画像メモリI/O(MemoryIO)']
@@ -244,6 +249,22 @@ class App(App_Base):
         proc_code_list.append(['最小外接円計測 (CircleDetection)',
                                'CircleDetection(img, param, gui=False)'])
         fnc__list.append(partial(CircleDetection))
+
+        proc_code_list.append(['エッジ位置計測 (EdgeMeasurement)',
+                               'EdgeMeasurement(img, param, gui=False)'])
+        fnc__list.append(partial(EdgeMeasurement))
+
+        proc_code_list.append(['輪郭抽出 (Laplacian_Custom)',
+                               'Laplacian_Custom(img, param, gui=False)'])
+        fnc__list.append(partial(Laplacian_Custom))
+
+        proc_code_list.append(['エッジ位置_カスタム (Edge_Custom)',
+                               'EdgeCustom(img, param, gui=False)'])
+        fnc__list.append(partial(EdgeCustom))
+
+        proc_code_list.append(['エッジ円周 (Edge_Arc)',
+                               'Edge_Arc(img, param, gui=False)'])
+        fnc__list.append(partial(Edge_Arc))
 
         self.set_proc_code(proc_code_list, fnc__list)
 
