@@ -8,6 +8,9 @@ from lib.cls_circle_detection import CircleDetection
 from lib.cls_convert_scale_abs import ConvertScaleAbs
 from lib.cls_create_img_memory import Create_Img_Memory
 from lib.cls_dilate import Dilate
+from lib.cls_edge_arc import Edge_Arc
+from lib.cls_edge_custom import EdgeCustom
+from lib.cls_edge_measurement import EdgeMeasurement
 from lib.cls_equalize_hist import EqualizeHist
 from lib.cls_erode import Erode
 from lib.cls_fast_nl_means_denoising_colored import FastNlMeansDenoisingColored
@@ -17,6 +20,7 @@ from lib.cls_gaussian_blur import Gaussian_Blur
 from lib.cls_image_combine import ImageCombine
 from lib.cls_inrange import InRange
 from lib.cls_laplacian import Laplacian
+from lib.cls_laplacian_custom import Laplacian_Custom
 from lib.cls_mask import Mask
 from lib.cls_median_blur import Median_Blur
 from lib.cls_memory_io import MemoryIO
