@@ -278,6 +278,10 @@ class App_Base:
                 memory_mode = 2
             elif code == 'CircleDetection(img, param, gui=False)':
                 memory_mode = 3
+            elif code == 'EdgeMeasurement(img, param, gui=False)' or code == 'EdgeCustom(img, param, gui=False)':
+                memory_mode = 4
+            elif code == 'Edge_Arc(img, param, gui=False)':
+                memory_mode = 5
             else:
                 memory_mode = 0
 
@@ -309,6 +313,12 @@ class App_Base:
             elif memory_mode == 3:
                 pycode += 'center = param[-1][0]\n'
                 pycode += 'radius = param[-1][1]\n'
+            elif memory_mode == 4:
+                pycode += 'for line in param[5]:\n'
+                pycode += '    print(f\'x1={line[0]}, y1={line[1]}, x2={line[2]}, y2={line[3]}, \')\n'
+            elif memory_mode == 5:
+                pycode += 'center = param[0][0]\n'
+                pycode += 'ang = param[2]\n'
 
         str_import = 'from lib.cls_lib import * \n'
 
