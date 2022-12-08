@@ -10,14 +10,14 @@ class Create_Img_Memory(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = np.zeros((1, 1, 3), np.uint8)
         self.through_img = img
-        self.__img_array = []
-        self.__img_names = []
+        self.__img_array_buf1 = []
+        self.__img_names_buf1 = []
         # self.__proc_flag = False
 
         if len(param) == 2:
-            self.__img_names = param[1]
+            self.__img_names_buf1 = param[1]
             for i in param[1]:
-                self.__img_array.append(self.origin_img)
+                self.__img_array_buf1.append(self.origin_img)
         else:
             exit()
 
@@ -87,24 +87,24 @@ class Create_Img_Memory(EditWindow):
             index += 1
         if not flag:
             self.listbox1.insert(tk.END, add_name)
-            self.__img_array.append(self.origin_img)
-            self.__img_names.append(add_name)
+            self.__img_array_buf1.append(self.origin_img)
+            self.__img_names_buf1.append(add_name)
         pass
 
     def __onDelBtn(self, event):
         if not self.listbox1.curselection() == ():
             select_index = self.listbox1.curselection()[0]
-            self.__img_array.pop(select_index)
-            self.__img_names.pop(select_index)
+            self.__img_array_buf1.pop(select_index)
+            self.__img_names_buf1.pop(select_index)
             self.listbox1.delete(select_index)
         pass
 
     def get_data(self):
         param = []
-        param.append(self.__img_array)
-        param.append(self.__img_names)
+        param.append(self.__img_array_buf1)
+        param.append(self.__img_names_buf1)
         print('Proc : Create IMG Memory')
-        print(f'len(img_array) = {len(self.__img_array)}')
+        print(f'len(img_array) = {len(self.__img_array_buf1)}')
         print(f'img_names = {param[1]}')
         print('param = [img_array, img_names]')
         return param, self.through_img
