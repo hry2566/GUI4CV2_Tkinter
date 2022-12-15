@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow, even2odd
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Canny(EditWindow):
@@ -23,48 +24,45 @@ class Canny(EditWindow):
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
+
+        self.dst_img = self.__canny()
+
+        if gui:
+            self.Draw()
             self.run()
-        else:
-            self.dst_img = self.__canny()
 
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__scale1 = tk.Scale(self.settings_frame)
-        self.__scale1.configure(from_=1, to=50,
-                                label="kernel", orient="horizontal", command=self.__onScale)
-        self.__scale1.pack(side="top")
-        self.__scale2 = tk.Scale(self.settings_frame)
-        self.__scale2.configure(from_=0, to=500,
-                                label="max_val", orient="horizontal", command=self.__onScale)
-        self.__scale2.pack(side="top")
-        self.__scale3 = tk.Scale(self.settings_frame)
-        self.__scale3.configure(from_=0, to=500,
-                                label="min_val", orient="horizontal", command=self.__onScale)
-        self.__scale3.pack(side="top")
+        self.__scale1 = Parts_Scale(self.settings_frame)
+        self.__scale1.configure(label='kernel', side='top', from_=1, to=50)
+
+        self.__scale2 = Parts_Scale(self.settings_frame)
+        self.__scale2.configure(label='max_val', side='top', from_=1, to=500)
+
+        self.__scale3 = Parts_Scale(self.settings_frame)
+        self.__scale3.configure(label='min_val', side='top', from_=1, to=500)
 
         self.__scale1.set(self.__kernel)
         self.__scale2.set(self.__max_val)
         self.__scale3.set(self.__min_val)
-        pass
 
     def __init_events(self):
+        self.__scale1.bind(changed=self.__onScale)
+        self.__scale2.bind(changed=self.__onScale)
+        self.__scale3.bind(changed=self.__onScale)
         pass
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
-
+        self.__proc_flag = True
         self.__kernel = self.__scale1.get()
         self.__max_val = self.__scale2.get()
         self.__min_val = self.__scale3.get()
-
         self.dst_img = self.__canny()
         self.Draw()
         self.__proc_flag = False
-        pass
 
     def __canny(self):
         img_copy = self.origin_img.copy()
@@ -76,11 +74,11 @@ class Canny(EditWindow):
             img_gray, (self.__kernel, self.__kernel), None)
 
         # 輪郭抽出
-        img = cv2.Canny(img_blur,
-                        threshold1=self.__max_val,
-                        threshold2=self.__min_val)
+        img_copy = cv2.Canny(img_blur,
+                             threshold1=self.__max_val,
+                             threshold2=self.__min_val)
 
-        return img
+        return img_copy
 
     def get_data(self):
         param = []
@@ -97,6 +95,6 @@ if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
     param = [3, 74, 59]
-    app = Canny(img, param, gui=True)
+    app = Canny(img, param, gui=False)
     param, dst_img = app.get_data()
     cv2.imwrite('./canny.jpg', dst_img)
