@@ -3,6 +3,7 @@ import tkinter as tk
 import cv2
 
 from lib.gui.cls_edit_window import EditWindow, even2odd
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Adaptive_Thresholed(EditWindow):
@@ -26,9 +27,12 @@ class Adaptive_Thresholed(EditWindow):
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
+
+        self.dst_img = self.__adaptive_thresholed()
+
+        if gui:
+            self.Draw()
             self.run()
-        else:
-            self.dst_img = self.__adaptive_thresholed()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -44,25 +48,24 @@ class Adaptive_Thresholed(EditWindow):
             self.settings_frame, self.__tkvar, *__values, command=self.__onSelect)
         self.__optionmenu2.pack(fill='x', side='top')
 
-        self.__scale1 = tk.Scale(self.settings_frame)
-        self.__scale1.configure(from_=0, to=255,
-                                label='Value', orient='horizontal', command=self.__onScale)
-        self.__scale1.pack(side='top')
-        self.__scale2 = tk.Scale(self.settings_frame)
-        self.__scale2.configure(from_=3, to=255,
-                                label='block_size', orient='horizontal', command=self.__onScale)
-        self.__scale2.pack(side='top')
-        self.__scale3 = tk.Scale(self.settings_frame)
-        self.__scale3.configure(from_=1, to=255,
-                                label='c', orient='horizontal', command=self.__onScale)
-        self.__scale3.pack(side='top')
+        self.__scale1 = Parts_Scale(self.settings_frame)
+        self.__scale1.configure(label='value', side='top', from_=1, to=255)
+
+        self.__scale2 = Parts_Scale(self.settings_frame)
+        self.__scale2.configure(
+            label='block_size', side='top', from_=1, to=255)
+
+        self.__scale3 = Parts_Scale(self.settings_frame)
+        self.__scale3.configure(label='c', side='top', from_=1, to=255)
 
         self.__scale1.set(self.__Value)
         self.__scale2.set(self.__block_size)
         self.__scale3.set(self.__c)
-        pass
 
     def __init_events(self):
+        self.__scale1.bind(changed=self.__onScale)
+        self.__scale2.bind(changed=self.__onScale)
+        self.__scale3.bind(changed=self.__onScale)
         pass
 
     def __onSelect(self, event):
@@ -80,7 +83,7 @@ class Adaptive_Thresholed(EditWindow):
         self.Draw()
         self.__proc_flag = False
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
         else:
@@ -98,15 +101,15 @@ class Adaptive_Thresholed(EditWindow):
         img_copy = self.origin_img.copy()
         img_copy = cv2.medianBlur(img_copy, 5)
         img_copy = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
-        self.__block_size = even2odd(self.__block_size)
+        self.__block_size = int(even2odd(self.__block_size))
 
-        img = cv2.adaptiveThreshold(img_copy,
-                                    self.__Value,
-                                    self.__adaptiveMethod[self.__method_index],
-                                    cv2.THRESH_BINARY,
-                                    self.__block_size,
-                                    self.__c)
-        return img
+        img_copy = cv2.adaptiveThreshold(img_copy,
+                                         self.__Value,
+                                         self.__adaptiveMethod[self.__method_index],
+                                         cv2.THRESH_BINARY,
+                                         self.__block_size,
+                                         self.__c)
+        return img_copy
 
     def get_data(self):
         param = []
@@ -121,9 +124,10 @@ class Adaptive_Thresholed(EditWindow):
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
+    # img = cv2.imread('./0000_img/opencv_logo.jpg')
+    img = cv2.imread('./0000_img/ECU/ECUlow_1.jpg')
     param = []
-    param = [0, 255, 7, 2]
+    param = [1, 255, 33, 31]
     app = Adaptive_Thresholed(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./adaptive_thresholed.jpg', dst_img)
