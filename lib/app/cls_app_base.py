@@ -137,6 +137,8 @@ class App_Base:
                 self.__submenu_selected, item))
 
     def __submenu_selected(self, proc):
+        if self.__dstimg_list[self.task_lst.size()-1] == []:
+            return
         self.task_lst.insert(tk.END, proc)
         self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
         self.task_lst.select_set(self.task_lst.size()-1)
