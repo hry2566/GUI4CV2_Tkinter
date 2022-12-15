@@ -26,8 +26,8 @@ class Parts_Scale():
         self.__entry = tk.Entry(self.__frame)
         self.__entry.configure(width=6, justify="right")
         self.__entry.pack(padx=5, side="left")
-        self.__frame.pack(side="top", fill='x',padx=5, pady=5)
-        self.__lblframe.pack(side="top", expand="true", fill='x', padx=5)
+        self.__frame.pack(side="top", fill='x', padx=5, pady=5)
+        self.__lblframe.pack(side="top",  fill='x', padx=5)
         self.__init_gui()
         self.__init_events()
 
