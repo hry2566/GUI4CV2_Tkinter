@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Mask(EditWindow):
@@ -64,72 +65,27 @@ class Mask(EditWindow):
         self.frame9.configure(height=200, width=200)
         self.rect_frame = tk.LabelFrame(self.frame9)
         self.rect_frame.configure(height=200, text='rect', width=200)
-        self.frame10 = tk.Frame(self.rect_frame)
-        self.frame10.configure(height=200, width=200)
-        self.scale_x1 = tk.Scale(self.frame10)
-        self.scale_x1.configure(label='x1', orient="horizontal")
-        self.scale_x1.pack(fill="x", side="left")
-        self.entry_x1 = tk.Entry(self.frame10)
-        self.entry_x1.configure(width=6)
-        self.entry_x1.pack(side="bottom")
-        self.frame10.pack(side="top")
-        self.frame11 = tk.Frame(self.rect_frame)
-        self.frame11.configure(height=200, width=200)
-        self.scale_y1 = tk.Scale(self.frame11)
-        self.scale_y1.configure(label='y1', orient="horizontal")
-        self.scale_y1.pack(fill="x", side="left")
-        self.entry_y1 = tk.Entry(self.frame11)
-        self.entry_y1.configure(width=6)
-        self.entry_y1.pack(side="bottom")
-        self.frame11.pack(side="top")
-        self.frame12 = tk.Frame(self.rect_frame)
-        self.frame12.configure(height=200, width=200)
-        self.scale_x2 = tk.Scale(self.frame12)
-        self.scale_x2.configure(label='x2', orient="horizontal")
-        self.scale_x2.pack(fill="x", side="left")
-        self.entry_x2 = tk.Entry(self.frame12)
-        self.entry_x2.configure(width=6)
-        self.entry_x2.pack(side="bottom")
-        self.frame12.pack(side="top")
-        self.frame13 = tk.Frame(self.rect_frame)
-        self.frame13.configure(height=200, width=200)
-        self.scale_y2 = tk.Scale(self.frame13)
-        self.scale_y2.configure(label='y2', orient="horizontal")
-        self.scale_y2.pack(fill="x", side="left")
-        self.entry_y2 = tk.Entry(self.frame13)
-        self.entry_y2.configure(width=6)
-        self.entry_y2.pack(side="bottom")
-        self.frame13.pack(side="top")
+        self.scale_x1 = Parts_Scale(self.rect_frame)
+        self.scale_x1.configure(label='x1', side='top', from_=0, to=255)
+        self.scale_y1 = Parts_Scale(self.rect_frame)
+        self.scale_y1.configure(label='y1', side='top', from_=0, to=255)
+        self.scale_x2 = Parts_Scale(self.rect_frame)
+        self.scale_x2.configure(label='x2', side='top', from_=0, to=255)
+        self.scale_y2 = Parts_Scale(self.rect_frame)
+        self.scale_y2.configure(label='y2', side='top', from_=0, to=255)
         self.rect_frame.pack(expand="true", fill="both", side="top")
         self.circle_frame = tk.LabelFrame(self.frame9)
         self.circle_frame.configure(height=200, text='circle', width=200)
         self.frame14 = tk.Frame(self.circle_frame)
         self.frame14.configure(height=200, width=200)
-        self.scale_x = tk.Scale(self.frame14)
-        self.scale_x.configure(label='x', orient="horizontal")
-        self.scale_x.pack(fill="x", side="left")
-        self.entry_x = tk.Entry(self.frame14)
-        self.entry_x.configure(width=6)
-        self.entry_x.pack(side="bottom")
+        self.scale_x = Parts_Scale(self.frame14)
+        self.scale_x.configure(label='x', side='top', from_=0, to=255)
+        self.scale_y = Parts_Scale(self.frame14)
+        self.scale_y.configure(label='y', side='top', from_=0, to=255)
+        self.scale_radius = Parts_Scale(self.frame14)
+        self.scale_radius.configure(
+            label='radius', side='top', from_=0, to=255)
         self.frame14.pack(side="top")
-        self.frame15 = tk.Frame(self.circle_frame)
-        self.frame15.configure(height=200, width=200)
-        self.scale_y = tk.Scale(self.frame15)
-        self.scale_y.configure(label='y', orient="horizontal")
-        self.scale_y.pack(fill="x", side="left")
-        self.entry_y = tk.Entry(self.frame15)
-        self.entry_y.configure(width=6)
-        self.entry_y.pack(side="bottom")
-        self.frame15.pack(side="top")
-        self.frame16 = tk.Frame(self.circle_frame)
-        self.frame16.configure(height=200, width=200)
-        self.scale_radius = tk.Scale(self.frame16)
-        self.scale_radius.configure(label='radius', orient="horizontal")
-        self.scale_radius.pack(fill="x", side="left")
-        self.entry_radius = tk.Entry(self.frame16)
-        self.entry_radius.configure(width=6)
-        self.entry_radius.pack(side="bottom")
-        self.frame16.pack(side="top")
         self.circle_frame.pack(expand="true", fill="both", side="top")
         self.com_frame = tk.LabelFrame(self.frame9)
         self.com_frame.configure(height=200, text='com', width=200)
@@ -142,7 +98,6 @@ class Mask(EditWindow):
         self.com_frame.pack(expand="true", fill="both", side="top")
         self.frame9.pack(side="top")
         self.frame8.pack(expand="true", fill="y", side="top")
-
         self.and_radio_btn.configure(value=1, variable=self.radio_var)
         self.or_radio_btn.configure(value=0, variable=self.radio_var)
         self.param_frame_show(0)
@@ -153,18 +108,14 @@ class Mask(EditWindow):
         self.mask_list.bind("<<ListboxSelect>>", self.__onSelectListBox_Events)
         self.and_radio_btn.configure(command=self.__onCkick_radio)
         self.or_radio_btn.configure(command=self.__onCkick_radio)
-        self.scale_x1.configure(command=self.__onScale_rect)
-        self.scale_y1.configure(command=self.__onScale_rect)
-        self.scale_x2.configure(command=self.__onScale_rect)
-        self.scale_y2.configure(command=self.__onScale_rect)
-        self.entry_x1.bind('<Return>', self.__onEnter_rect)
-        self.entry_y1.bind('<Return>', self.__onEnter_rect)
-        self.entry_x2.bind('<Return>', self.__onEnter_rect)
-        self.entry_y2.bind('<Return>', self.__onEnter_rect)
         self.del_btn.bind('<1>', self.__onClick_del)
-        self.scale_x.configure(command=self.__onScale_circle)
-        self.scale_y.configure(command=self.__onScale_circle)
-        self.scale_radius.configure(command=self.__onScale_circle)
+        self.scale_x.bind(changed=self.__onScale_circle)
+        self.scale_y.bind(changed=self.__onScale_circle)
+        self.scale_radius.bind(changed=self.__onScale_circle)
+        self.scale_x1.bind(changed=self.__onScale_rect)
+        self.scale_y1.bind(changed=self.__onScale_rect)
+        self.scale_x2.bind(changed=self.__onScale_rect)
+        self.scale_y2.bind(changed=self.__onScale_rect)
 
     def param_frame_show(self, mode):
         if mode == 0:
@@ -194,18 +145,6 @@ class Mask(EditWindow):
         self.__draw_mask_list()
         self.__redraw()
 
-    def __onEnter_rect(self, event):
-        x1, y1, x2, y2 = self.__get_entry_rect()
-        self.__set_scale_rect([x1, y1, x2, y2])
-        self.__onScale_rect(None)
-
-    def __get_entry_rect(self):
-        x1 = self.entry_x1.get()
-        y1 = self.entry_y1.get()
-        x2 = self.entry_x2.get()
-        y2 = self.entry_y2.get()
-        return x1, y1, x2, y2
-
     def __set_scale_rect(self, param):
         self.scale_x1.set(param[0])
         self.scale_y1.set(param[1])
@@ -218,7 +157,7 @@ class Mask(EditWindow):
         radius = self.scale_radius.get()
         return x, y, radius
 
-    def __onScale_circle(self, event):
+    def __onScale_circle(self):
         if self.__proc_flag:
             return
         self.__proc_flag = True
@@ -227,16 +166,10 @@ class Mask(EditWindow):
         self.__mask_array[index][2] = x
         self.__mask_array[index][3] = y
         self.__mask_array[index][4] = radius
-        self.entry_x.delete("0", "end")
-        self.entry_x.insert("0", x)
-        self.entry_y.delete("0", "end")
-        self.entry_y.insert("0", y)
-        self.entry_radius.delete("0", "end")
-        self.entry_radius.insert("0", radius)
         self.__redraw()
         self.__proc_flag = False
 
-    def __onScale_rect(self, event):
+    def __onScale_rect(self):
         if self.__proc_flag:
             return
         self.__proc_flag = True
@@ -245,18 +178,14 @@ class Mask(EditWindow):
         y1 = self.scale_y1.get()
         x2 = self.scale_x2.get()
         y2 = self.scale_y2.get()
+        self.scale_x1.configure(to=x2)
+        self.scale_y1.configure(to=y2)
+        self.scale_x2.configure(from_=x1)
+        self.scale_y2.configure(from_=y1)
         self.__mask_array[index][2] = x1
         self.__mask_array[index][3] = y1
         self.__mask_array[index][4] = x2
         self.__mask_array[index][5] = y2
-        self.entry_x1.delete("0", "end")
-        self.entry_x1.insert("0", x1)
-        self.entry_y1.delete("0", "end")
-        self.entry_y1.insert("0", y1)
-        self.entry_x2.delete("0", "end")
-        self.entry_x2.insert("0", x2)
-        self.entry_y2.delete("0", "end")
-        self.entry_y2.insert("0", y2)
         self.__redraw()
         self.__proc_flag = False
 
@@ -301,9 +230,11 @@ class Mask(EditWindow):
             y = self.__mask_array[index][3]
             radius = self.__mask_array[index][4]
             height, width, _ = self.origin_img.shape
+
             self.scale_x.configure(from_=0, to=width)
             self.scale_y.configure(from_=0, to=height)
             self.scale_radius.configure(from_=0, to=width)
+            self.__proc_flag = True
             self.scale_x.set(x)
             self.scale_y.set(y)
             self.scale_radius.set(radius)
@@ -312,6 +243,7 @@ class Mask(EditWindow):
             else:
                 self.radio_var.set(1)
             pass
+            self.__proc_flag = False
         self.__redraw()
 
     def __add_circle(self):
@@ -342,11 +274,7 @@ class Mask(EditWindow):
         self.__add_mask(params, 1)
 
     def __add_mask(self, params, mode):
-        mask = []
-        for param in params:
-            mask.append(param)
-
-        self.__mask_array.append(mask)
+        self.__mask_array.append(params)
         self.__rect_index += 1
         self.__draw_mask_list()
         self.mask_list.select_set(len(self.__mask_array)-1)
@@ -429,6 +357,6 @@ if __name__ == "__main__":
     param = []
     param = [[['circle', 'circle0', 1280, 957, 787, True, False],
               ['circle', 'circle1', 1287, 955, 137, False, False]]]
-    app = Mask(img, param, gui=True)
+    app = Mask(img, param, gui=False)
     param, dst_img = app.get_data()
     cv2.imwrite('./Mask.jpg', dst_img)
