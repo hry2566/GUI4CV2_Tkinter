@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Edge_Arc(EditWindow):
@@ -66,32 +67,37 @@ class Edge_Arc(EditWindow):
         self.radiobutton4.configure(text='laplacian')
         self.radiobutton4.pack(anchor="w", side="top")
         self.labelframe1.pack(fill="x", padx=5, side="top")
+
+        h, w, _ = self.origin_img.shape
+        if h > w:
+            r = h
+        else:
+            r = w
+
         self.labelframe2 = tk.LabelFrame(self.settings_frame)
         self.labelframe2.configure(height=200, text='area', width=200)
-        self.scale_x = tk.Scale(self.labelframe2)
-        self.scale_x.configure(label='x', orient="horizontal")
-        self.scale_x.pack(fill="x", side="top")
-        self.scale_y = tk.Scale(self.labelframe2)
-        self.scale_y.configure(label='y', orient="horizontal")
-        self.scale_y.pack(fill="x", side="top")
-        self.scale_radius = tk.Scale(self.labelframe2)
-        self.scale_radius.configure(label='radius', orient="horizontal")
-        self.scale_radius.pack(fill="x", side="top")
-        self.scale_length = tk.Scale(self.labelframe2)
-        self.scale_length.configure(label='length', orient="horizontal")
-        self.scale_length.pack(fill="x", side="top")
+        self.scale_x = Parts_Scale(self.labelframe2)
+        self.scale_x.configure(label='x', side='top', from_=0, to=w)
+        self.scale_y = Parts_Scale(self.labelframe2)
+        self.scale_y.configure(label='y', side='top', from_=0, to=h)
+        self.scale_radius = Parts_Scale(self.labelframe2)
+        self.scale_radius.configure(label='radius', side='top', from_=0, to=r)
+        self.scale_length = Parts_Scale(self.labelframe2)
+        self.scale_length.configure(label='length', side='top', from_=0, to=r)
         self.labelframe2.pack(fill="x", padx=5, side="top")
+
         self.labelframe3 = tk.LabelFrame(self.settings_frame)
         self.labelframe3.configure(height=200, text='threshold1', width=200)
-        self.scale_threshold1 = tk.Scale(self.labelframe3)
-        self.scale_threshold1.configure(orient="horizontal")
-        self.scale_threshold1.pack(fill="x", side="top")
+        self.scale_threshold1 = Parts_Scale(self.labelframe3)
+        self.scale_threshold1.configure(
+            label='threshold', side='top', from_=0, to=255)
         self.labelframe3.pack(fill="x", padx=5, side="top")
+
         self.labelframe4 = tk.LabelFrame(self.settings_frame)
         self.labelframe4.configure(height=200, text='morphology', width=200)
-        self.scale_morpholory = tk.Scale(self.labelframe4)
-        self.scale_morpholory.configure(orient="horizontal")
-        self.scale_morpholory.pack(fill="x", side="top")
+        self.scale_morpholory = Parts_Scale(self.labelframe4)
+        self.scale_morpholory.configure(
+            label='threshold', side='top', from_=0, to=20)
         self.labelframe4.pack(fill="x", padx=5, side="top")
 
         self.labelframe8 = tk.LabelFrame(self.settings_frame)
@@ -130,24 +136,6 @@ class Edge_Arc(EditWindow):
         self.radiobutton4.configure(variable=self.radio_value,
                                     value=3, command=self.onClick_radio)
 
-        h, w, _ = self.origin_img.shape
-
-        self.scale_x.configure(from_=0, to=w, command=self.__onScale)
-        self.scale_y.configure(from_=0, to=h, command=self.__onScale)
-
-        if h > w:
-            r = h
-        else:
-            r = w
-        self.scale_radius.configure(from_=0, to=r, command=self.__onScale)
-        self.scale_length.configure(from_=0, to=r, command=self.__onScale)
-
-        self.scale_threshold1.configure(from_=0,
-                                        to=255,
-                                        command=self.__onScale)
-        self.scale_morpholory.configure(from_=0,
-                                        to=20,
-                                        command=self.__onScale)
         self.button1.configure(command=self.__onClick_exec)
 
         self.__proc_flag = True
@@ -164,6 +152,13 @@ class Edge_Arc(EditWindow):
         self.__proc_flag = False
 
     def __init_events(self):
+        self.scale_x.bind(changed=self.__onScale)
+        self.scale_y.bind(changed=self.__onScale)
+        self.scale_radius.bind(changed=self.__onScale)
+        self.scale_length.bind(changed=self.__onScale)
+        self.scale_threshold1.bind(changed=self.__onScale)
+        self.scale_morpholory.bind(changed=self.__onScale)
+
         self.entry1.bind('<Return>', self.__onEnter)
         pass
 
@@ -197,7 +192,7 @@ class Edge_Arc(EditWindow):
             self.dst_img = self.__set_laplacian_param()
         self.Draw()
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
 
@@ -372,7 +367,7 @@ class Edge_Arc(EditWindow):
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/bush/b1.jpg')
     param = []
-    # param = [[(1215, 1037), 320, 54], [239, 7, 0.5], [173, 170]]
+    param = [[(1215, 1037), 320, 54], [239, 7, 0.5], [173, 170]]
     app = Edge_Arc(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./Edge_Arc.jpg', dst_img)
