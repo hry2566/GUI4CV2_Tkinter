@@ -122,15 +122,19 @@ class EditWindow(GuiBase):
         if 1 < canvas_width and 1 < canvas_height:
             cv_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             pil_image = Image.fromarray(cv_image)
-            pil_image = ImageOps.pad(pil_image, (canvas_width, canvas_height))
+            try:
+                pil_image = ImageOps.pad(
+                    pil_image, (canvas_width, canvas_height))
 
-            self.__canvas_img = ImageTk.PhotoImage(image=pil_image)
+                self.__canvas_img = ImageTk.PhotoImage(image=pil_image)
 
-            self.canvas1.delete()
-            self.canvas1.create_image(
-                canvas_width / 2+self.__imgpos_x,
-                canvas_height / 2+self.__imgpos_y,
-                image=self.__canvas_img)
+                self.canvas1.delete()
+                self.canvas1.create_image(
+                    canvas_width / 2+self.__imgpos_x,
+                    canvas_height / 2+self.__imgpos_y,
+                    image=self.__canvas_img)
+            except:
+                pass
 
         self.__draw_flag = False
 
