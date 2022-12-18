@@ -12,6 +12,7 @@ class Bilateral_Filter(EditWindow):
         self.__sigma_color = 0
         self.__sigma_space = 0
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 3:
             self.__d = param[0]
@@ -77,8 +78,9 @@ class Bilateral_Filter(EditWindow):
         param.append(self.__d)
         param.append(self.__sigma_color)
         param.append(self.__sigma_space)
-        print('Proc : Bilateral_Filter')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Bilateral_Filter')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
