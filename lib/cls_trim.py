@@ -14,6 +14,7 @@ class Trim(EditWindow):
         self.__x2 = self.origin_img.shape[1]
         self.__y2 = self.origin_img.shape[0]
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 4:
             self.__x1 = param[0]
@@ -92,8 +93,9 @@ class Trim(EditWindow):
         param.append(self.__y1)
         param.append(self.__x2)
         param.append(self.__y2)
-        print('Proc : Trim')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Trim')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
