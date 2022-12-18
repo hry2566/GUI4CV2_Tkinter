@@ -14,7 +14,7 @@ class MemoryIO(EditWindow):
         self.__img_array_buf2 = []
         self.__img_names_buf2 = []
         self.__memIO = []
-        # self.__proc_flag = False
+        self.__gui=gui
 
         if type(self.img_bk) == list:
             img = self.img_bk[0]
@@ -217,8 +217,9 @@ class MemoryIO(EditWindow):
     def get_data(self):
         param = []
         param = [self.__img_array_buf2, self.__img_names_buf2,self.__memIO]
-        print('Proc : MemoryIO')
-        print(f'param = {param[2]}')
+        if self.__gui:
+            print('Proc : MemoryIO')
+            print(f'param = {param[2]}')
         return param, self.img_bk
 
 
