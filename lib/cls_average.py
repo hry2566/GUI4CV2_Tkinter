@@ -13,6 +13,7 @@ class Average(EditWindow):
         self.__kernel_x = 1
         self.__kernel_y = 1
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 2:
             self.__kernel_x = param[0]
@@ -67,8 +68,9 @@ class Average(EditWindow):
         param = []
         param.append(self.__kernel_x)
         param.append(self.__kernel_y)
-        print('Proc : Average')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Average')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
