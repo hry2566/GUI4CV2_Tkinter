@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Gamma(EditWindow):
@@ -11,6 +12,7 @@ class Gamma(EditWindow):
         self.origin_img = img
         self.__gamma = 1
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 1:
             self.__gamma = param[0]
@@ -26,18 +28,17 @@ class Gamma(EditWindow):
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__scale = tk.Scale(self.settings_frame)
-        self.__scale.configure(from_=0, to=2,
-                               label="gamma", orient="horizontal", resolution=0.1, command=self.__onScale)
-        self.__scale.pack(side="top")
-
+        self.__scale = Parts_Scale(self.settings_frame)
+        self.__scale.configure(label='gamma', side='top',
+                               resolution=0.1, from_=0, to=2)
         self.__scale.set(self.__gamma)
         pass
 
     def __init_events(self):
+        self.__scale.bind(changed=self.__onScale)
         pass
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
         else:
@@ -59,13 +60,15 @@ class Gamma(EditWindow):
     def get_data(self):
         param = []
         param.append(self.__gamma)
-        print('Proc : Gamma')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Gamma')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
 if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
+    img = cv2.imread('./0000_img/I.jpg')
+    # img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
     param = [0.5]
     app = Gamma(img, param, gui=True)
