@@ -22,6 +22,7 @@ class Edge_Arc(EditWindow):
         self.__index = 0
         self.__result = []
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 3:
             self.__center_x = param[0][0][0]
@@ -359,8 +360,9 @@ class Edge_Arc(EditWindow):
                      self.__radius, self.__length])
         param.append([self.__thresh1, self.__kernel, self.__gain])
         param.append(self.__result)
-        print('Proc : Edge_Arc')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Edge_Arc')
+            print(f'param = {param}')
         return param, self.__result_view()
 
 
