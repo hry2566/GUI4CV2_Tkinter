@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Fillter2D(EditWindow):
@@ -11,6 +12,7 @@ class Fillter2D(EditWindow):
         self.origin_img = img
         self.__kernel = 0
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 1:
             self.__kernel = param[0]
@@ -19,23 +21,31 @@ class Fillter2D(EditWindow):
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
+
+        self.dst_img = self.__fillter2d()
+
+        if gui:
+            self.Draw()
             self.run()
-        else:
-            self.dst_img = self.__fillter2d()
 
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__scale1 = tk.Scale(self.settings_frame)
-        self.__scale1.configure(from_=0, to=10,
-                                label="kernel", orient="horizontal", resolution=0.1, command=self.__onScale)
-        self.__scale1.pack(side="top")
+        self.__scale1 = Parts_Scale(self.settings_frame)
+        self.__scale1.configure(
+            label='kernel', side='top', resolution=0.1, from_=1, to=10)
+
+        # self.__scale1 = tk.Scale(self.settings_frame)
+        # self.__scale1.configure(from_=0, to=10,
+        #                         label="kernel", orient="horizontal", resolution=0.1, command=self.__onScale)
+        # self.__scale1.pack(side="top")
         self.__scale1.set(self.__kernel)
 
     def __init_events(self):
+        self.__scale1.bind(changed=self.__onScale)
         pass
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
         else:
@@ -59,8 +69,9 @@ class Fillter2D(EditWindow):
     def get_data(self):
         param = []
         param.append(self.__kernel)
-        print('Proc : Fillter2D')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Fillter2D')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
