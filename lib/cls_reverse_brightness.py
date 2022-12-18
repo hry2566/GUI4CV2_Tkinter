@@ -9,7 +9,7 @@ from lib.gui.cls_edit_window import EditWindow
 class ReverseBrightness(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
-        # self.__proc_flag = False
+        self.__gui=gui
 
         if gui:
             super().__init__(img, master)
@@ -53,8 +53,9 @@ class ReverseBrightness(EditWindow):
 
     def get_data(self):
         param = []
-        print('Proc : ReverseBrightness')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : ReverseBrightness')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
