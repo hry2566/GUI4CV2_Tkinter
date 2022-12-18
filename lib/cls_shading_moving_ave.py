@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Shading_MovingAve(EditWindow):
@@ -15,6 +16,7 @@ class Shading_MovingAve(EditWindow):
         self.__noise_cut = 0
         self.__select_menu = 0
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 4:
             self.__kernel_x = param[0]
@@ -26,28 +28,22 @@ class Shading_MovingAve(EditWindow):
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
+        self.dst_img = self.__shading_moving_ave()
+
+        if gui:
+            self.Draw()
             self.run()
-        else:
-            self.dst_img = self.__shading_moving_ave()
 
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__scale1 = tk.Scale(self.settings_frame)
-        self.__scale1.configure(from_=1, to=100,
-                                label='kernel x', orient='horizontal', command=self.__onScale)
-        self.__scale1.pack(side='top')
-
-        self.__scale2 = tk.Scale(self.settings_frame)
-        self.__scale2.configure(from_=1, to=100,
-                                label='kernel y', orient='horizontal', command=self.__onScale)
-        self.__scale2.pack(side='top')
-
-        self.__scale3 = tk.Scale(self.settings_frame)
-        self.__scale3.configure(from_=0, to=128,
-                                label='remove noise', orient='horizontal', command=self.__onScale)
-        self.__scale3.pack(side='top')
-
+        self.__scale1 = Parts_Scale(self.settings_frame)
+        self.__scale1.configure(label='kernel_x', side='top', from_=1, to=100)
+        self.__scale2 = Parts_Scale(self.settings_frame)
+        self.__scale2.configure(label='kernel_y', side='top', from_=1, to=100)
+        self.__scale3 = Parts_Scale(self.settings_frame)
+        self.__scale3.configure(label='remove noise',
+                                side='top', from_=0, to=128)
         self.__tkvar = tk.StringVar(value=None)
         __values = ['明', '暗', '明＋暗']
         self.optionmenu1 = tk.OptionMenu(
@@ -68,9 +64,11 @@ class Shading_MovingAve(EditWindow):
             self.__tkvar.set('明＋暗')
 
     def __init_events(self):
-        pass
+        self.__scale1.bind(changed=self.__onScale)
+        self.__scale2.bind(changed=self.__onScale)
+        self.__scale3.bind(changed=self.__onScale)
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
         else:
@@ -155,8 +153,9 @@ class Shading_MovingAve(EditWindow):
         param.append(self.__kernel_y)
         param.append(self.__noise_cut)
         param.append(self.__select_menu)
-        print('Proc : Shading_MovingAve')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Shading_MovingAve')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
@@ -166,6 +165,6 @@ if __name__ == "__main__":
 
     param = []
     param = [100, 39, 55, 2]
-    app = Shading_MovingAve(img, param, gui=True)
+    app = Shading_MovingAve(img, param, gui=False)
     param, dst_img = app.get_data()
     cv2.imwrite('./Shading_MovingAve.jpg', dst_img)
