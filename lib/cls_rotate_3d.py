@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Rotate3D(EditWindow):
@@ -20,6 +21,7 @@ class Rotate3D(EditWindow):
         self.__set_mode = 0
         self.__proc_flag = False
         self.cnt = 0
+        self.__gui = gui
 
         if len(param) == 5:
             self.__p1 = param[0]
@@ -97,13 +99,10 @@ class Rotate3D(EditWindow):
         self.labelframe4.configure(
             height='200', text='right_bottom (x, y)', width='200')
         self.labelframe4.pack(fill='x', padx='5', pady='5', side='top')
-
         self.labelframe5 = tk.LabelFrame(self.settings_frame)
-        self.__scale1 = tk.Scale(self.labelframe5)
-        self.__scale1.configure(from_=0.1, to=5,
-                                label="ratio_xy", orient="horizontal", resolution=0.01, command=self.__onScale)
-        self.__scale1.pack(side="top")
-
+        self.__scale1 = Parts_Scale(self.labelframe5)
+        self.__scale1.configure(
+            label='ratio_xy', side='top', resolution=0.01, from_=0.1, to=5)
         self.setbtn5 = tk.Button(self.labelframe5)
         self.setbtn5.configure(text='show', command=self.__onBtn5Click)
         self.setbtn5.pack(expand='true', fill='x', side='top')
@@ -125,6 +124,7 @@ class Rotate3D(EditWindow):
 
     def __init_events(self):
         self.canvas1.bind("<1>", self.__OnClick)
+        self.__scale1.bind(changed=self.__onScale)
         pass
 
     def __onBtn1Click(self):
@@ -208,7 +208,7 @@ class Rotate3D(EditWindow):
         self.dst_img = img
         self.Draw()
 
-    def __onScale(self, events):
+    def __onScale(self):
         self.__w_ratio = self.__scale1.get()
         self.dst_img = self.__rotate_3d()
         self.Draw()
@@ -253,8 +253,9 @@ class Rotate3D(EditWindow):
         param.append(self.__p4)
         param.append(self.__w_ratio)
 
-        print('Proc : Rotate3D')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Rotate3D')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
@@ -265,6 +266,6 @@ if __name__ == "__main__":
 
     param = [[45, 158], [421, 63], [36, 247], [427, 174], 1.0]
 
-    app = Rotate3D(img, param, gui=True)
+    app = Rotate3D(img, param, gui=False)
     param, dst_img = app.get_data()
     cv2.imwrite('./Rotate3D.jpg', dst_img)
