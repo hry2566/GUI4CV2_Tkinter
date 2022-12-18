@@ -12,6 +12,7 @@ class ConvertScaleAbs(EditWindow):
         self.__alpha = 1
         self.__beta = 0
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 2:
             self.__alpha = param[0]
@@ -64,8 +65,9 @@ class ConvertScaleAbs(EditWindow):
         param = []
         param.append(self.__alpha)
         param.append(self.__beta)
-        print('Proc : ConvertScaleAbs')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : ConvertScaleAbs')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
