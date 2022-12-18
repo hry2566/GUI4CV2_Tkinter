@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow, even2odd
+from lib.parts.parts_scale import Parts_Scale
 
 
 class UnSharp(EditWindow):
@@ -15,6 +16,7 @@ class UnSharp(EditWindow):
         self.__amount = 1
         self.__threshold = 1
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 5:
             self.__kernel_x = param[0]
@@ -27,37 +29,25 @@ class UnSharp(EditWindow):
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
+        self.dst_img = self.__unsharp_fillter()
+
+        if gui:
+            self.Draw()
             self.run()
-        else:
-            self.dst_img = self.__unsharp_fillter()
 
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__scale1 = tk.Scale(self.settings_frame)
-        self.__scale1.configure(from_=1, to=30,
-                                label="kernel x", orient="horizontal", command=self.__onScale)
-        self.__scale1.pack(side="top")
-
-        self.__scale2 = tk.Scale(self.settings_frame)
-        self.__scale2.configure(from_=1, to=30,
-                                label="kernel y", orient="horizontal", command=self.__onScale)
-        self.__scale2.pack(side="top")
-
-        self.__scale3 = tk.Scale(self.settings_frame)
-        self.__scale3.configure(from_=0, to=100,
-                                label="sigma", orient="horizontal", command=self.__onScale)
-        self.__scale3.pack(side="top")
-
-        self.__scale4 = tk.Scale(self.settings_frame)
-        self.__scale4.configure(from_=0, to=100,
-                                label="amount", orient="horizontal", command=self.__onScale)
-        self.__scale4.pack(side="top")
-
-        self.__scale5 = tk.Scale(self.settings_frame)
-        self.__scale5.configure(from_=0, to=100,
-                                label="threshold", orient="horizontal", command=self.__onScale)
-        self.__scale5.pack(side="top")
+        self.__scale1 = Parts_Scale(self.settings_frame)
+        self.__scale1.configure(label='kernel_x', side='top', from_=1, to=30)
+        self.__scale2 = Parts_Scale(self.settings_frame)
+        self.__scale2.configure(label='kernel_y', side='top', from_=1, to=30)
+        self.__scale3 = Parts_Scale(self.settings_frame)
+        self.__scale3.configure(label='sigma', side='top', from_=1, to=100)
+        self.__scale4 = Parts_Scale(self.settings_frame)
+        self.__scale4.configure(label='amount', side='top', from_=1, to=100)
+        self.__scale5 = Parts_Scale(self.settings_frame)
+        self.__scale5.configure(label='threshold', side='top', from_=1, to=100)
 
         self.__scale1.set(self.__kernel_x)
         self.__scale2.set(self.__kernel_y)
@@ -67,9 +57,13 @@ class UnSharp(EditWindow):
         pass
 
     def __init_events(self):
-        pass
+        self.__scale1.bind(changed=self.__onScale)
+        self.__scale2.bind(changed=self.__onScale)
+        self.__scale3.bind(changed=self.__onScale)
+        self.__scale4.bind(changed=self.__onScale)
+        self.__scale5.bind(changed=self.__onScale)
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
         else:
@@ -113,15 +107,16 @@ class UnSharp(EditWindow):
         param.append(self.__sigma)
         param.append(self.__amount)
         param.append(self.__threshold)
-        print('Proc : UnSharp')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : UnSharp')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/opencv_logo.jpg')
     param = []
-    param = [17, 19, 37, 43, 26]
+    param = [31, 31, 12, 100, 80]
     app = UnSharp(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./UnSharp.jpg', dst_img)
