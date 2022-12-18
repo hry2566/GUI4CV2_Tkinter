@@ -13,6 +13,7 @@ class OpenFile(EditWindow):
     def __init__(self, param, master=None, gui=False):
         self.dst_img = []
         self.__file_path = ''
+        self.__gui = gui
 
         if len(param) == 1:
             self.__file_path = param[0]
@@ -73,7 +74,7 @@ class OpenFile(EditWindow):
 
     def get_data(self):
         param = []
-        img=[]
+        img = []
         param.append(self.__file_path)
         if self.__file_path == '':
             self.dst_img = []
@@ -81,8 +82,9 @@ class OpenFile(EditWindow):
             # 日本語ファイル／パス対応
             img = self.__imread(self.__file_path)
 
-        print('Proc : Open File')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Open File')
+            print(f'param = {param}')
         return param, img
 
 
