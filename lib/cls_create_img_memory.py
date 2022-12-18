@@ -12,7 +12,7 @@ class Create_Img_Memory(EditWindow):
         self.through_img = img
         self.__img_array_buf1 = []
         self.__img_names_buf1 = []
-        # self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 2:
             self.__img_names_buf1 = param[1]
@@ -103,10 +103,11 @@ class Create_Img_Memory(EditWindow):
         param = []
         param.append(self.__img_array_buf1)
         param.append(self.__img_names_buf1)
-        print('Proc : Create IMG Memory')
-        print(f'len(img_array) = {len(self.__img_array_buf1)}')
-        print(f'img_names = {param[1]}')
-        print('param = [img_array, img_names]')
+        if self.__gui:
+            print('Proc : Create IMG Memory')
+            print(f'len(img_array) = {len(self.__img_array_buf1)}')
+            print(f'img_names = {param[1]}')
+            print('param = [img_array, img_names]')
         return param, self.through_img
 
 
