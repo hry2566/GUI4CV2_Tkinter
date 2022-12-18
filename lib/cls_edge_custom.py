@@ -20,14 +20,14 @@ class EdgeCustom(EditWindow):
         self.__line_array = []
         self.__gui = gui
         self.direction_mode = 0
-        # self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 6:
             self.__start_x = param[0]
             self.__start_y = param[1]
             self.__finish_x = param[2]
             self.__finish_y = param[3]
-            self.direction_mode= param[4]
+            self.direction_mode = param[4]
             self.__line_array = param[5]
         else:
             pass
@@ -254,7 +254,7 @@ class EdgeCustom(EditWindow):
         if self.__gui:
             self.resoult_list.delete(0, self.resoult_list.size())
         self.__line_array = []
-        
+
         img_copy = self.origin_img.copy()
         for cont in contours:
             vx, vy, x0, y0 = cv2.fitLine(cont, cv2.DIST_L2, 10, 0.01, 0.01)
@@ -312,8 +312,9 @@ class EdgeCustom(EditWindow):
         param.append(self.__finish_y)
         param.append(self.direction_mode)
         param.append(self.__line_array)
-        print('Proc : EdgeCustom')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : EdgeCustom')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
