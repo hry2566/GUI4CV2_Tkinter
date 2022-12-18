@@ -12,7 +12,7 @@ class EqualizeHist(EditWindow):
         self.__h_flag = True
         self.__s_flag = True
         self.__v_flag = True
-        # self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 3:
             self.__h_flag = param[0]
@@ -93,8 +93,9 @@ class EqualizeHist(EditWindow):
         param.append(self.__h_flag)
         param.append(self.__s_flag)
         param.append(self.__v_flag)
-        print('Proc : EqualizeHist')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : EqualizeHist')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
