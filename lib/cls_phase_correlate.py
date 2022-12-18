@@ -13,6 +13,7 @@ class PhaseCorrelate(EditWindow):
         self.origin_img = img
         self.base_img_path = ''
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 1:
             self.base_img_path = param[0]
@@ -136,8 +137,9 @@ class PhaseCorrelate(EditWindow):
     def get_data(self):
         param = []
         param.append(self.base_img_path)
-        print('Proc : PhaseCorrelate')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : PhaseCorrelate')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
