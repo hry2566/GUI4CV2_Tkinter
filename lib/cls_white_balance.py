@@ -9,7 +9,7 @@ from lib.gui.cls_edit_window import EditWindow
 class WhiteBalance(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
-        # self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 1:
             pass
@@ -34,7 +34,7 @@ class WhiteBalance(EditWindow):
     def __init_events(self):
         pass
 
-    def __onScale(self, events):
+    def __onScale(self):
         pass
 
     def __white_balance(self):
@@ -53,8 +53,9 @@ class WhiteBalance(EditWindow):
 
     def get_data(self):
         param = []
-        print('Proc : WhiteBalance')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : WhiteBalance')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
