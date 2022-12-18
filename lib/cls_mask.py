@@ -16,6 +16,7 @@ class Mask(EditWindow):
         self.__selected_index = -1
         self.return_img = img
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 1:
             self.__mask_array = param[0]
@@ -347,8 +348,9 @@ class Mask(EditWindow):
     def get_data(self):
         param = []
         param = [self.__mask_array]
-        print('Proc : Mask')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Mask')
+            print(f'param = {param}')
         return param, self.return_img
 
 
