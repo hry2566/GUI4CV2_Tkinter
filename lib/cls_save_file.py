@@ -9,6 +9,7 @@ class SaveFile():
     def __init__(self, img, param, master=None, gui=False):
         self.dst_img = img
         self.__file_path = ''
+        self.__gui = gui
 
         if len(param) == 1:
             self.__file_path = param[0]
@@ -49,8 +50,9 @@ class SaveFile():
     def get_data(self):
         param = []
         param.append(self.__file_path)
-        print('Proc : Save File')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Save File')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
