@@ -18,7 +18,7 @@ class InRange(EditWindow):
         self.__P3min = 0
         self.__P3max = 255
         self.__flag = False
-        # self.__master = master
+        self.__gui = gui
 
         if len(param) == 7:
             self.__P1min = param[0]
@@ -224,8 +224,9 @@ class InRange(EditWindow):
         img = self.dst_img
         if len(self.dst_img.shape) == 2:
             img = cv2.cvtColor(self.dst_img, cv2.COLOR_GRAY2BGR)
-        print('Proc : inRange')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : inRange')
+            print(f'param = {param}')
         return param, img
 
 
