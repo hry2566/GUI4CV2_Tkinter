@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Laplacian_Custom(EditWindow):
@@ -15,6 +16,7 @@ class Laplacian_Custom(EditWindow):
         self.__select_menu = 0
         self.direction_mode = 0
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 4:
             self.__k = param[0]
@@ -26,9 +28,12 @@ class Laplacian_Custom(EditWindow):
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
+
+        self.dst_img = self.Laplacian_Custom()
+
+        if gui:
+            self.Draw()
             self.run()
-        else:
-            self.dst_img = self.Laplacian_Custom()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -47,14 +52,12 @@ class Laplacian_Custom(EditWindow):
             text='virtical', command=self.__onClick_radio)
         self.redio_virtical.pack(anchor="w", side="top")
 
-        self.__scale3 = tk.Scale(self.settings_frame)
-        self.__scale3.configure(from_=0.1, to=2,
-                                label="k", orient="horizontal", resolution=0.1, command=self.__onScale)
-        self.__scale3.pack(side="top")
-        self.__scale4 = tk.Scale(self.settings_frame)
-        self.__scale4.configure(from_=0, to=128,
-                                label='remove noise', orient='horizontal', command=self.__onScale)
-        self.__scale4.pack(side='top')
+        self.__scale3 = Parts_Scale(self.settings_frame)
+        self.__scale3.configure(label='k', side='top',
+                                resolution=0.1, from_=0.1, to=2)
+        self.__scale4 = Parts_Scale(self.settings_frame)
+        self.__scale4.configure(label='remove noise',
+                                side='top', from_=0, to=128)
 
         self.__tkvar = tk.StringVar(value=None)
         __values = ['明', '暗', '明＋暗']
@@ -77,9 +80,10 @@ class Laplacian_Custom(EditWindow):
         pass
 
     def __init_events(self):
-        pass
+        self.__scale3.bind(changed=self.__onScale)
+        self.__scale4.bind(changed=self.__onScale)
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
         else:
@@ -150,15 +154,16 @@ class Laplacian_Custom(EditWindow):
         param.append(self.__noise_cut)
         param.append(self.__select_menu)
         param.append(self.direction_mode)
-        print('Proc : Laplacian_Custom')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Laplacian_Custom')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
 if __name__ == "__main__":
     img = cv2.imread('./0000_img/edge2.png')
     param = []
-    # param = [4, 5, 0.9, 105, 2]
+    param = [4, 5, 0.9, 105, 2]
     app = Laplacian_Custom(img, param, gui=True)
     param, dst_img = app.get_data()
     cv2.imwrite('./Laplacian_Custom.jpg', dst_img)
