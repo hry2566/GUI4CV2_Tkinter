@@ -9,6 +9,7 @@ class ImageCombine(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.img_bk = img
         self.__radio_index = 0
+        self.__gui = gui
 
         if not type(img) == list:
             self.dst_img = img
@@ -72,8 +73,9 @@ class ImageCombine(EditWindow):
     def get_data(self):
         param = []
         param.append(self.__radio_index)
-        print('Proc : ImageCombine')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : ImageCombine')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
