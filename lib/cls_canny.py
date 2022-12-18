@@ -14,6 +14,7 @@ class Canny(EditWindow):
         self.__max_val = 0
         self.__min_val = 0
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 3:
             self.__kernel = param[0]
@@ -85,8 +86,9 @@ class Canny(EditWindow):
         param.append(self.__kernel)
         param.append(self.__max_val)
         param.append(self.__min_val)
-        print('Proc : Canny')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Canny')
+            print(f'param = {param}')
         img = cv2.cvtColor(self.dst_img, cv2.COLOR_GRAY2BGR)
         return param, img
 
