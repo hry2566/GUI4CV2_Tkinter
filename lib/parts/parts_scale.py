@@ -42,13 +42,20 @@ class Parts_Scale():
         self.__rightbtn.bind('<1>', self.__onClick_right)
 
     def __onClick_right(self, event):
-        val = int(self.__val.get())+1
+        if self.__scale['resolution'] == 1.0:
+            val = int(self.__val.get())+int(self.__scale['resolution'])
+        else:
+            val = float(self.__val.get())+float(self.__scale['resolution'])
+
         if val > self.__max:
             val = self.__max
         self.set(val)
 
     def __onClick_left(self, event):
-        val = int(self.__val.get())-1
+        if self.__scale['resolution'] == 1.0:
+            val = int(self.__val.get())-int(self.__scale['resolution'])
+        else:
+            val = float(self.__val.get())-float(self.__scale['resolution'])
         if val < self.__min:
             val = self.__min
         self.set(val)
