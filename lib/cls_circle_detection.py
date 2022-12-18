@@ -170,8 +170,9 @@ class CircleDetection(EditWindow):
         param.append(self.__draw_edge)
         param.append(self.__image_bond)
         param.append(self.__circle_info)
-        print('Proc : CircleDetection')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : CircleDetection')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
