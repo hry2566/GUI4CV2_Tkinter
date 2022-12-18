@@ -9,6 +9,7 @@ from lib.gui.cls_edit_window import EditWindow
 class Bitwise_Not(EditWindow):
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
+        self.__gui = gui
         # self.__proc_flag = False
 
         if len(param) == 0:
@@ -44,8 +45,9 @@ class Bitwise_Not(EditWindow):
 
     def get_data(self):
         param = []
-        print('Proc : Bitwise_Not')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Bitwise_Not')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
