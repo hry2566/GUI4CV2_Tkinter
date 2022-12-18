@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow, even2odd
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Sobel(EditWindow):
@@ -12,6 +13,7 @@ class Sobel(EditWindow):
         self.origin_img = img
         self.__kernel = 1
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 1:
             self.__kernel = param[0]
@@ -20,25 +22,24 @@ class Sobel(EditWindow):
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
+
+        self.dst_img = self.__sobel()
+
+        if gui:
+            self.Draw()
             self.run()
-        else:
-            self.dst_img = self.__sobel()
 
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__scale = tk.Scale(self.settings_frame)
-        self.__scale.configure(from_=1, to=30,
-                               label="kernel", orient="horizontal", command=self.__onScale)
-        self.__scale.pack(side="top")
-
+        self.__scale = Parts_Scale(self.settings_frame)
+        self.__scale.configure(label='kernel', side='top', from_=1, to=30)
         self.__scale.set(self.__kernel)
-        pass
 
     def __init_events(self):
-        pass
+        self.__scale.bind(changed=self.__onScale)
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
         else:
@@ -65,8 +66,9 @@ class Sobel(EditWindow):
     def get_data(self):
         param = []
         param.append(self.__kernel)
-        print('Proc : Sobel')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Sobel')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
