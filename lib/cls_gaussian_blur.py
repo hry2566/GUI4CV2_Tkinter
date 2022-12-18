@@ -3,6 +3,7 @@ import tkinter as tk
 import cv2
 
 from lib.gui.cls_edit_window import EditWindow, even2odd
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Gaussian_Blur(EditWindow):
@@ -12,6 +13,7 @@ class Gaussian_Blur(EditWindow):
         self.__kernel_y = 1
         self.__std = 1
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 3:
             self.__kernel_x = param[0]
@@ -22,37 +24,33 @@ class Gaussian_Blur(EditWindow):
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
+
+        self.dst_img = self.__gaussian_blur()
+
+        if gui:
+            self.Draw()
             self.run()
-        else:
-            self.dst_img = self.__gaussian_blur()
 
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__scale1 = tk.Scale(self.settings_frame)
-        self.__scale1.configure(from_=1, to=50,
-                                label="kernel x", orient="horizontal", command=self.__onScale)
-        self.__scale1.pack(side="top")
-
-        self.__scale2 = tk.Scale(self.settings_frame)
-        self.__scale2.configure(from_=1, to=50,
-                                label="kernel y", orient="horizontal", command=self.__onScale)
-        self.__scale2.pack(side="top")
-
-        self.__scale3 = tk.Scale(self.settings_frame)
-        self.__scale3.configure(from_=1, to=50,
-                                label="std", orient="horizontal", command=self.__onScale)
-        self.__scale3.pack(side="top")
+        self.__scale1 = Parts_Scale(self.settings_frame)
+        self.__scale1.configure(label='kernel_x', side='top', from_=1, to=50)
+        self.__scale2 = Parts_Scale(self.settings_frame)
+        self.__scale2.configure(label='kernel', side='top', from_=1, to=50)
+        self.__scale3 = Parts_Scale(self.settings_frame)
+        self.__scale3.configure(label='std', side='top', from_=1, to=50)
 
         self.__scale1.set(self.__kernel_x)
         self.__scale2.set(self.__kernel_y)
         self.__scale3.set(self.__std)
-        pass
 
     def __init_events(self):
-        pass
+        self.__scale1.bind(changed=self.__onScale)
+        self.__scale2.bind(changed=self.__onScale)
+        self.__scale3.bind(changed=self.__onScale)
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
         else:
@@ -81,8 +79,9 @@ class Gaussian_Blur(EditWindow):
         param.append(self.__kernel_x)
         param.append(self.__kernel_y)
         param.append(self.__std)
-        print('Proc : Gaussian Blur')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Gaussian Blur')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
