@@ -3,6 +3,7 @@ import tkinter as tk
 import cv2
 
 from lib.gui.cls_edit_window import EditWindow
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Threshold(EditWindow):
@@ -11,6 +12,7 @@ class Threshold(EditWindow):
         self.__thresh = 1
         self.__val = 255
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 2:
             self.__thresh = param[0]
@@ -20,31 +22,39 @@ class Threshold(EditWindow):
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
+        self.dst_img = self.__threshold()
+
+        if gui:
+            self.Draw()
             self.run()
-        else:
-            self.dst_img = self.__threshold()
 
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__scale1 = tk.Scale(self.settings_frame)
-        self.__scale1.configure(from_=1, to=255,
-                                label="thresh", orient="horizontal", command=self.__onScale)
-        self.__scale1.pack(side="top")
+        self.__scale1 = Parts_Scale(self.settings_frame)
+        self.__scale1.configure(label='thresh', side='top', from_=1, to=255)
+        self.__scale2 = Parts_Scale(self.settings_frame)
+        self.__scale2.configure(label='val', side='top', from_=1, to=255)
 
-        self.__scale2 = tk.Scale(self.settings_frame)
-        self.__scale2.configure(from_=1, to=255,
-                                label="val", orient="horizontal", command=self.__onScale)
-        self.__scale2.pack(side="top")
+        # self.__scale1 = tk.Scale(self.settings_frame)
+        # self.__scale1.configure(from_=1, to=255,
+        #                         label="thresh", orient="horizontal", command=self.__onScale)
+        # self.__scale1.pack(side="top")
+
+        # self.__scale2 = tk.Scale(self.settings_frame)
+        # self.__scale2.configure(from_=1, to=255,
+        #                         label="val", orient="horizontal", command=self.__onScale)
+        # self.__scale2.pack(side="top")
 
         self.__scale1.set(self.__thresh)
         self.__scale2.set(self.__val)
         pass
 
     def __init_events(self):
-        pass
+        self.__scale1.bind(changed=self.__onScale)
+        self.__scale2.bind(changed=self.__onScale)
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
         else:
@@ -71,8 +81,9 @@ class Threshold(EditWindow):
         param = []
         param.append(self.__thresh)
         param.append(self.__val)
-        print('Proc : Threshold')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Threshold')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
