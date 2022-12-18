@@ -16,6 +16,7 @@ class Adaptive_Thresholed(EditWindow):
         self.__proc_flag = False
         self.__adaptiveMethod = [cv2.ADAPTIVE_THRESH_MEAN_C,
                                  cv2.ADAPTIVE_THRESH_GAUSSIAN_C]
+        self.__gui = gui
 
         if len(param) == 4:
             self.__method_index = param[0]
@@ -118,8 +119,9 @@ class Adaptive_Thresholed(EditWindow):
         param.append(self.__block_size)
         param.append(self.__c)
         img = cv2.cvtColor(self.dst_img, cv2.COLOR_GRAY2BGR)
-        print('Proc : Average')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Average')
+            print(f'param = {param}')
         return param, img
 
 
