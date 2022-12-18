@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Rotate(EditWindow):
@@ -12,6 +13,7 @@ class Rotate(EditWindow):
         self.__ang = 0
         self.__scale = 1.0
         self.__proc_flag = False
+        self.__gui = gui
 
         if len(param) == 2:
             self.__ang = param[0]
@@ -21,31 +23,30 @@ class Rotate(EditWindow):
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
+
+        self.dst_img = self.__rotate()
+
+        if gui:
+            self.Draw()
             self.run()
-        else:
-            self.dst_img = self.__rotate()
 
     def __init_gui(self):
         self.none_label.destroy()
 
-        self.__scale1 = tk.Scale(self.settings_frame)
-        self.__scale1.configure(from_=0, to=359,
-                                label="angle", orient="horizontal", command=self.__onScale)
-        self.__scale1.pack(side="top")
-
-        self.__scale2 = tk.Scale(self.settings_frame)
-        self.__scale2.configure(from_=0.1, to=2.0,
-                                label="scale", orient="horizontal", resolution=0.1, command=self.__onScale)
-        self.__scale2.pack(side="top")
+        self.__scale1 = Parts_Scale(self.settings_frame)
+        self.__scale1.configure(label='angle', side='top', from_=0, to=359)
+        self.__scale2 = Parts_Scale(self.settings_frame)
+        self.__scale2.configure(label='scale', side='top',
+                                resolution=0.1, from_=0.1, to=2.0)
 
         self.__scale1.set(self.__ang)
         self.__scale2.set(self.__scale)
-        pass
 
     def __init_events(self):
-        pass
+        self.__scale1.bind(changed=self.__onScale)
+        self.__scale2.bind(changed=self.__onScale)
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
         else:
@@ -78,8 +79,9 @@ class Rotate(EditWindow):
         param = []
         param.append(self.__ang)
         param.append(self.__scale)
-        print('Proc : Rotate')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Rotate')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
