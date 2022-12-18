@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow, even2odd
+from lib.parts.parts_scale import Parts_Scale
 
 
 class Morphology(EditWindow):
@@ -17,6 +18,7 @@ class Morphology(EditWindow):
                             cv2.MORPH_CLOSE,
                             cv2.MORPH_GRADIENT]
         self.__values = ['OPEN', 'CLOSE', 'GRADIENT']
+        self.__gui = gui
 
         if len(param) == 3:
             self.__type_index = param[0]
@@ -27,9 +29,12 @@ class Morphology(EditWindow):
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
+
+        self.dst_img = self.__morphology()
+
+        if gui:
+            self.Draw()
             self.run()
-        else:
-            self.dst_img = self.__morphology()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -40,15 +45,20 @@ class Morphology(EditWindow):
             self.settings_frame, self.__tkvar, *self.__values, command=self.__onSelect)
         self.__optionmenu2.pack(fill='x', side='top')
 
-        self.__scale1 = tk.Scale(self.settings_frame)
-        self.__scale1.configure(from_=1, to=30,
-                                label='kernel_x', orient='horizontal', command=self.__onScale)
-        self.__scale1.pack(side='top')
+        self.__scale1 = Parts_Scale(self.settings_frame)
+        self.__scale1.configure(label='kernel_x', side='top', from_=1, to=30)
+        self.__scale2 = Parts_Scale(self.settings_frame)
+        self.__scale2.configure(label='kernel_y', side='top', from_=1, to=30)
 
-        self.__scale2 = tk.Scale(self.settings_frame)
-        self.__scale2.configure(from_=1, to=30,
-                                label='kernel_y', orient='horizontal', command=self.__onScale)
-        self.__scale2.pack(side='top')
+        # self.__scale1 = tk.Scale(self.settings_frame)
+        # self.__scale1.configure(from_=1, to=30,
+        #                         label='kernel_x', orient='horizontal', command=self.__onScale)
+        # self.__scale1.pack(side='top')
+
+        # self.__scale2 = tk.Scale(self.settings_frame)
+        # self.__scale2.configure(from_=1, to=30,
+        #                         label='kernel_y', orient='horizontal', command=self.__onScale)
+        # self.__scale2.pack(side='top')
 
         self.__tkvar.set(self.__values[self.__type_index])
         self.__scale1.set(self.__kernel_x)
@@ -56,7 +66,8 @@ class Morphology(EditWindow):
         pass
 
     def __init_events(self):
-        pass
+        self.__scale1.bind(changed=self.__onScale)
+        self.__scale2.bind(changed=self.__onScale)
 
     def __onSelect(self, event):
         if self.__proc_flag:
@@ -75,7 +86,7 @@ class Morphology(EditWindow):
         self.Draw()
         self.__proc_flag = False
 
-    def __onScale(self, events):
+    def __onScale(self):
         if self.__proc_flag:
             return
         else:
@@ -100,8 +111,9 @@ class Morphology(EditWindow):
         param.append(self.__type_index)
         param.append(self.__kernel_x)
         param.append(self.__kernel_y)
-        print('Proc : Morphology')
-        print(f'param = {param}')
+        if self.__gui:
+            print('Proc : Morphology')
+            print(f'param = {param}')
         return param, self.dst_img
 
 
