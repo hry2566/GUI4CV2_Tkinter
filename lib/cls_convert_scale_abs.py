@@ -1,5 +1,4 @@
-import tkinter as tk
-
+"""明るさ／コントラスト"""
 import cv2
 
 from lib.gui.cls_edit_window import EditWindow
@@ -7,6 +6,8 @@ from lib.parts.parts_scale import Parts_Scale
 
 
 class ConvertScaleAbs(EditWindow):
+    """明るさ／コントラストクラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__alpha = 1
@@ -22,9 +23,12 @@ class ConvertScaleAbs(EditWindow):
             super().__init__(img, master)
             self.__init_gui()
             self.__init_events()
+
+        self.dst_img = self.__convert_scale_abs()
+
+        if gui:
+            self.draw()
             self.run()
-        else:
-            self.dst_img = self.__convert_scale_abs()
 
     def __init_gui(self):
         self.none_label.destroy()
@@ -41,19 +45,17 @@ class ConvertScaleAbs(EditWindow):
         self.__scale2.set(self.__beta)
 
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale2.bind(changed=self.__onScale)
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale2.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
-
+        self.__proc_flag = True
         self.__alpha = self.__scale1.get()
         self.__beta = self.__scale2.get()
         self.dst_img = self.__convert_scale_abs()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
 
     def __convert_scale_abs(self):
@@ -61,7 +63,11 @@ class ConvertScaleAbs(EditWindow):
             self.origin_img, alpha=self.__alpha, beta=self.__beta)
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__alpha)
         param.append(self.__beta)
@@ -71,10 +77,10 @@ class ConvertScaleAbs(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [2.12, -34]
-    app = ConvertScaleAbs(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./ConvertScaleAbs.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [3.0, 128]
+#     app = ConvertScaleAbs(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./ConvertScaleAbs.jpg', dst_img)
