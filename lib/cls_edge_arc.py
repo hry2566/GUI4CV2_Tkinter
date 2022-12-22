@@ -1,3 +1,4 @@
+"""エッジ位置計測（円弧）"""
 import tkinter as tk
 
 import cv2
@@ -7,7 +8,9 @@ from lib.gui.cls_edit_window import EditWindow
 from lib.parts.parts_scale import Parts_Scale
 
 
-class Edge_Arc(EditWindow):
+class EdgeArc(EditWindow):
+    """エッジ位置計測（円弧）クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__center_x = int(img.shape[1]/2)
@@ -32,9 +35,6 @@ class Edge_Arc(EditWindow):
             self.__thresh1 = param[1][0]
             self.__kernel = param[1][1]
             self.__gain = param[1][2]
-            pass
-        else:
-            pass
 
         if gui:
             super().__init__(img, master)
@@ -45,7 +45,7 @@ class Edge_Arc(EditWindow):
 
         if gui:
             self.__draw_list()
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -69,22 +69,24 @@ class Edge_Arc(EditWindow):
         self.radiobutton4.pack(anchor="w", side="top")
         self.labelframe1.pack(fill="x", padx=5, side="top")
 
-        h, w, _ = self.origin_img.shape
-        if h > w:
-            r = h
+        height, width, _ = self.origin_img.shape
+        if height > width:
+            radius = height
         else:
-            r = w
+            radius = width
 
         self.labelframe2 = tk.LabelFrame(self.settings_frame)
         self.labelframe2.configure(height=200, text='area', width=200)
         self.scale_x = Parts_Scale(self.labelframe2)
-        self.scale_x.configure(label='x', side='top', from_=0, to=w)
+        self.scale_x.configure(label='x', side='top', from_=0, to=width)
         self.scale_y = Parts_Scale(self.labelframe2)
-        self.scale_y.configure(label='y', side='top', from_=0, to=h)
+        self.scale_y.configure(label='y', side='top', from_=0, to=height)
         self.scale_radius = Parts_Scale(self.labelframe2)
-        self.scale_radius.configure(label='radius', side='top', from_=0, to=r)
+        self.scale_radius.configure(
+            label='radius', side='top', from_=0, to=radius)
         self.scale_length = Parts_Scale(self.labelframe2)
-        self.scale_length.configure(label='length', side='top', from_=0, to=r)
+        self.scale_length.configure(
+            label='length', side='top', from_=0, to=radius)
         self.labelframe2.pack(fill="x", padx=5, side="top")
 
         self.labelframe3 = tk.LabelFrame(self.settings_frame)
@@ -129,15 +131,15 @@ class Edge_Arc(EditWindow):
         self.labelframe8.pack(fill="x", padx=5, side="top")
 
         self.radiobutton1.configure(variable=self.radio_value,
-                                    value=0, command=self.onClick_radio)
+                                    value=0, command=self.__on_click_radio)
         self.radiobutton2.configure(variable=self.radio_value,
-                                    value=1, command=self.onClick_radio)
+                                    value=1, command=self.__on_click_radio)
         self.radiobutton3.configure(variable=self.radio_value,
-                                    value=2, command=self.onClick_radio)
+                                    value=2, command=self.__on_click_radio)
         self.radiobutton4.configure(variable=self.radio_value,
-                                    value=3, command=self.onClick_radio)
+                                    value=3, command=self.__on_click_radio)
 
-        self.button1.configure(command=self.__onClick_exec)
+        self.button1.configure(command=self.__on_click_exec)
 
         self.__proc_flag = True
         self.scale_x.set(self.__center_x)
@@ -153,31 +155,30 @@ class Edge_Arc(EditWindow):
         self.__proc_flag = False
 
     def __init_events(self):
-        self.scale_x.bind(changed=self.__onScale)
-        self.scale_y.bind(changed=self.__onScale)
-        self.scale_radius.bind(changed=self.__onScale)
-        self.scale_length.bind(changed=self.__onScale)
-        self.scale_threshold1.bind(changed=self.__onScale)
-        self.scale_morpholory.bind(changed=self.__onScale)
+        self.scale_x.bind(changed=self.__on_scale)
+        self.scale_y.bind(changed=self.__on_scale)
+        self.scale_radius.bind(changed=self.__on_scale)
+        self.scale_length.bind(changed=self.__on_scale)
+        self.scale_threshold1.bind(changed=self.__on_scale)
+        self.scale_morpholory.bind(changed=self.__on_scale)
 
-        self.entry1.bind('<Return>', self.__onEnter)
-        pass
+        self.entry1.bind('<Return>', self.___on_enter)
 
-    def __onEnter(self, event):
+    def ___on_enter(self, event):
         self.__gain = float(self.entry1.get())
         self.dst_img = self.__result_view()
         self.__draw_list()
-        self.Draw()
+        self.draw()
 
-    def __onClick_exec(self):
+    def __on_click_exec(self):
         self.__gain = float(self.entry1.get())
         self.radio_value.set(4)
         self.__set_param_view(self.radio_value.get())
         self.dst_img = self.__edge_arc()
         self.__draw_list()
-        self.Draw()
+        self.draw()
 
-    def onClick_radio(self):
+    def __on_click_radio(self):
         self.__index = self.radio_value.get()
         self.__set_param_view(self.__index)
         if self.__index == 0:
@@ -191,9 +192,9 @@ class Edge_Arc(EditWindow):
             self.__set_threshold1_param()
             self.__set_morphology_param()
             self.dst_img = self.__set_laplacian_param()
-        self.Draw()
+        self.draw()
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
 
@@ -212,7 +213,7 @@ class Edge_Arc(EditWindow):
             self.dst_img = self.__set_morphology_param()
         elif index == 3:
             self.dst_img = self.__set_laplacian_param()
-        self.Draw()
+        self.draw()
 
     def __draw_list(self):
         self.result_list.delete(0, tk.END)
@@ -354,22 +355,26 @@ class Edge_Arc(EditWindow):
         img_copy = self.__result_view()
         return img_copy
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append([(self.__center_x, self.__center_y),
                      self.__radius, self.__length])
         param.append([self.__thresh1, self.__kernel, self.__gain])
         param.append(self.__result)
         if self.__gui:
-            print('Proc : Edge_Arc')
+            print('Proc : EdgeArc')
             print(f'param = {param}')
         return param, self.__result_view()
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/bush/b1.jpg')
-    param = []
-    param = [[(1215, 1037), 320, 54], [239, 7, 0.5], [173, 170]]
-    app = Edge_Arc(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./Edge_Arc.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/bush/b1.jpg')
+#     param = []
+#     param = [[(1215, 1037), 320, 54], [239, 7, 0.5], [173, 170]]
+#     app = EdgeArc(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./EdgeArc.jpg', dst_img)
