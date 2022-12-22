@@ -1,6 +1,5 @@
+"""輪郭抽出（ソーベル）"""
 import os
-import tkinter as tk
-
 import cv2
 import numpy as np
 
@@ -9,6 +8,8 @@ from lib.parts.parts_scale import Parts_Scale
 
 
 class Sobel(EditWindow):
+    """輪郭抽出（ソーベル）クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__kernel = 1
@@ -26,7 +27,7 @@ class Sobel(EditWindow):
         self.dst_img = self.__sobel()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -37,19 +38,16 @@ class Sobel(EditWindow):
         self.__scale.set(self.__kernel)
 
     def __init_events(self):
-        self.__scale.bind(changed=self.__onScale)
+        self.__scale.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
-
+        self.__proc_flag = True
         self.__kernel = self.__scale.get()
         self.dst_img = self.__sobel()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
-        pass
 
     def __sobel(self):
         img_copy = self.origin_img.copy()
@@ -63,7 +61,11 @@ class Sobel(EditWindow):
         os.remove('dummy.jpg')
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__kernel)
         if self.__gui:
@@ -72,10 +74,10 @@ class Sobel(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [3]
-    app = Sobel(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./Sobel.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [3]
+#     app = Sobel(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./Sobel.jpg', dst_img)
