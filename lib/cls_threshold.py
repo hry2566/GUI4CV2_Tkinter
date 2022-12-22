@@ -1,5 +1,4 @@
-import tkinter as tk
-
+"""二値化（Threshold）"""
 import cv2
 
 from lib.gui.cls_edit_window import EditWindow
@@ -7,6 +6,8 @@ from lib.parts.parts_scale import Parts_Scale
 
 
 class Threshold(EditWindow):
+    """二値化（Threshold）クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__thresh = 1
@@ -25,7 +26,7 @@ class Threshold(EditWindow):
         self.dst_img = self.__threshold()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -35,37 +36,22 @@ class Threshold(EditWindow):
         self.__scale1.configure(label='thresh', side='top', from_=1, to=255)
         self.__scale2 = Parts_Scale(self.settings_frame)
         self.__scale2.configure(label='val', side='top', from_=1, to=255)
-
-        # self.__scale1 = tk.Scale(self.settings_frame)
-        # self.__scale1.configure(from_=1, to=255,
-        #                         label="thresh", orient="horizontal", command=self.__onScale)
-        # self.__scale1.pack(side="top")
-
-        # self.__scale2 = tk.Scale(self.settings_frame)
-        # self.__scale2.configure(from_=1, to=255,
-        #                         label="val", orient="horizontal", command=self.__onScale)
-        # self.__scale2.pack(side="top")
-
         self.__scale1.set(self.__thresh)
         self.__scale2.set(self.__val)
-        pass
 
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale2.bind(changed=self.__onScale)
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale2.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
-
+        self.__proc_flag = True
         self.__thresh = self.__scale1.get()
         self.__val = self.__scale2.get()
         self.dst_img = self.__threshold()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
-        pass
 
     def __threshold(self):
         img_copy = self.origin_img.copy()
@@ -77,7 +63,11 @@ class Threshold(EditWindow):
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__thresh)
         param.append(self.__val)
@@ -87,10 +77,10 @@ class Threshold(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [23, 255]
-    app = Threshold(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./Threshold.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [23, 255]
+#     app = Threshold(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./Threshold.jpg', dst_img)
