@@ -1,5 +1,4 @@
-import tkinter as tk
-
+"""ぼかし（移動平均）"""
 import cv2
 import numpy as np
 
@@ -8,6 +7,8 @@ from lib.parts.parts_scale import Parts_Scale
 
 
 class Average(EditWindow):
+    """ぼかし（移動平均）クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__kernel_x = 1
@@ -27,7 +28,7 @@ class Average(EditWindow):
         self.dst_img = self.__average()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -48,13 +49,11 @@ class Average(EditWindow):
     def __onScale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
-
+        self.__proc_flag = True
         self.__kernel_x = self.__scale1.get()
         self.__kernel_y = self.__scale2.get()
         self.dst_img = self.__average()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
 
     def __average(self):
@@ -64,7 +63,11 @@ class Average(EditWindow):
         img = cv2.filter2D(self.origin_img, -1, kernel)
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__kernel_x)
         param.append(self.__kernel_y)
@@ -74,10 +77,10 @@ class Average(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [15, 15]
-    app = Average(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./average.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [15, 15]
+#     app = Average(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./average.jpg', dst_img)
