@@ -1,27 +1,27 @@
-import tkinter as tk
-
+"""ぼかし(FastNlMeansDenoisingColored)"""
 import cv2
-import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow
 from lib.parts.parts_scale import Parts_Scale
 
 
 class FastNlMeansDenoisingColored(EditWindow):
+    """ぼかし(FastNlMeansDenoisingColored)クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__h = 3
-        self.__hColor = 20
-        self.__templateWindowSize = 5
-        self.__searchWindowSize = 20
+        self.__hcolor = 20
+        self.__template_window_size = 5
+        self.__search_window_size = 20
         self.__proc_flag = True
         self.__gui = gui
 
         if len(param) == 4:
             self.__h = param[0]
-            self.__hColor = param[1]
-            self.__templateWindowSize = param[2]
-            self.__searchWindowSize = param[3]
+            self.__hcolor = param[1]
+            self.__template_window_size = param[2]
+            self.__search_window_size = param[3]
 
         if gui:
             super().__init__(img, master)
@@ -31,7 +31,7 @@ class FastNlMeansDenoisingColored(EditWindow):
         self.dst_img = self.__fast_nl_means_denoising_colored()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.__proc_flag = False
             self.run()
 
@@ -50,72 +50,76 @@ class FastNlMeansDenoisingColored(EditWindow):
                                 side='top', from_=1, to=10)
 
         self.__scale1.set(self.__h)
-        self.__scale2.set(self.__hColor)
-        self.__scale3.set(self.__templateWindowSize)
-        self.__scale4.set(self.__searchWindowSize)
+        self.__scale2.set(self.__hcolor)
+        self.__scale3.set(self.__template_window_size)
+        self.__scale4.set(self.__search_window_size)
 
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale2.bind(changed=self.__onScale)
-        self.__scale3.bind(changed=self.__onScale)
-        self.__scale4.bind(changed=self.__onScale)
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale2.bind(changed=self.__on_scale)
+        self.__scale3.bind(changed=self.__on_scale)
+        self.__scale4.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
         self.__proc_flag = True
         self.__wait_msg()
-        self.settings_frame.after(10, self.__onScale_proc)
+        self.settings_frame.after(10, self.__on_scale_proc)
 
-    def __onScale_proc(self):
+    def __on_scale_proc(self):
         self.__h = self.__scale1.get()
-        self.__hColor = self.__scale2.get()
-        self.__templateWindowSize = self.__scale3.get()
-        self.__searchWindowSize = self.__scale4.get()
+        self.__hcolor = self.__scale2.get()
+        self.__template_window_size = self.__scale3.get()
+        self.__search_window_size = self.__scale4.get()
         self.dst_img = self.__fast_nl_means_denoising_colored()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
 
     def __wait_msg(self):
-        h, _, _ = self.dst_img.shape
+        height, _, _ = self.dst_img.shape
         self.dst_img = cv2.putText(self.dst_img,
                                    'wait...',
-                                   (0, int(h/2)),
+                                   (0, int(height/2)),
                                    cv2.FONT_HERSHEY_PLAIN,
-                                   h/73,
+                                   height/73,
                                    (0, 0, 255),
-                                   int(h/300),
+                                   int(height/300),
                                    cv2.LINE_AA)
-        self.Draw()
+        self.draw()
 
     def __fast_nl_means_denoising_colored(self):
         img = cv2.fastNlMeansDenoisingColored(
             self.origin_img,
             None,
             self.__h,
-            self.__hColor,
-            self.__templateWindowSize,
-            self.__searchWindowSize)
+            self.__hcolor,
+            self.__template_window_size,
+            self.__search_window_size)
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__h)
-        param.append(self.__hColor)
-        param.append(self.__templateWindowSize)
-        param.append(self.__searchWindowSize)
+        param.append(self.__hcolor)
+        param.append(self.__template_window_size)
+        param.append(self.__search_window_size)
         if self.__gui:
             print('Proc : FastNlMeansDenoisingColored')
             print(f'param = {param}')
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    # img = cv2.imread('./0000_img/I.jpg')
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    # img = cv2.imread('./0000_img/ECU/ECUlow_1.jpg')
-    param = []
-    param = [10, 20, 5, 10]
-    app = FastNlMeansDenoisingColored(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./FastNlMeansDenoisingColored.jpg', dst_img)
+# if __name__ == "__main__":
+#     # img = cv2.imread('./0000_img/I.jpg')
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     # img = cv2.imread('./0000_img/ECU/ECUlow_1.jpg')
+#     param = []
+#     param = [10, 20, 5, 10]
+#     app = FastNlMeansDenoisingColored(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./FastNlMeansDenoisingColored.jpg', dst_img)
