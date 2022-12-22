@@ -1,3 +1,4 @@
+"""位置合わせ"""
 import os
 import tkinter as tk
 from tkinter import filedialog
@@ -9,6 +10,8 @@ from lib.gui.cls_edit_window import EditWindow
 
 
 class PhaseCorrelate(EditWindow):
+    """位置合わせクラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.base_img_path = ''
@@ -17,7 +20,6 @@ class PhaseCorrelate(EditWindow):
 
         if len(param) == 1:
             self.base_img_path = param[0]
-            pass
         else:
             pass
 
@@ -29,7 +31,7 @@ class PhaseCorrelate(EditWindow):
         self.dst_img = self.__phase_correlate()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -45,15 +47,14 @@ class PhaseCorrelate(EditWindow):
 
         self.entry1.delete('0', 'end')
         self.entry1.insert('0', self.base_img_path)
-        pass
 
     def __open_file(self):
         root = tk.Tk()
         root.withdraw()
         typ = [('', '*')]
-        dir = './'
+        directory = './'
         file = filedialog.askopenfilenames(
-            filetypes=typ, initialdir=dir)
+            filetypes=typ, initialdir=directory)
         root.destroy()
         if len(file) == 0:
             path = ''
@@ -71,49 +72,48 @@ class PhaseCorrelate(EditWindow):
         self.__proc_flag = True
         path = self.__open_file()
 
-        if not path == '':
+        if path != '':
             self.base_img_path = path
             self.entry1.delete('0', 'end')
             self.entry1.insert('0', self.base_img_path)
             self.dst_img = self.__phase_correlate()
-            self.Draw()
+            self.draw()
         self.__proc_flag = False
-        pass
 
     def __init_events(self):
         pass
 
-    def __onScale(self, events):
-        pass
+    # def __onScale(self, events):
+    #     pass
 
-    def __ripoc(self, a, b, m=None):
-        g_a = np.asarray(cv2.cvtColor(a, cv2.COLOR_BGR2GRAY), 'float')
-        g_b = np.asarray(cv2.cvtColor(b, cv2.COLOR_BGR2GRAY), 'float')
+    def __ripoc(self, base, dist, m=None):
+        g_a = np.asarray(cv2.cvtColor(base, cv2.COLOR_BGR2GRAY), 'float')
+        g_b = np.asarray(cv2.cvtColor(dist, cv2.COLOR_BGR2GRAY), 'float')
 
-        h, w = g_a.shape
-        hy = np.hanning(h)
-        hx = np.hanning(w)
-        hw = hy.reshape(h, 1)*hx
+        height, width = g_a.shape
+        han_y = np.hanning(height)
+        han_x = np.hanning(width)
+        han_w = han_y.reshape(height, 1)*han_x
 
-        f_a = np.fft.fftshift(np.log(np.abs(np.fft.fft2(g_a*hw))))
-        f_b = np.fft.fftshift(np.log(np.abs(np.fft.fft2(g_b*hw))))
+        f_a = np.fft.fftshift(np.log(np.abs(np.fft.fft2(g_a*han_w))))
+        f_b = np.fft.fftshift(np.log(np.abs(np.fft.fft2(g_b*han_w))))
 
         if not m:
-            l = np.sqrt(w*w + h*h)
+            l = np.sqrt(width*width + height*height)
             m = l/np.log(l)
 
-        center = (w/2, h/2)
+        center = (width/2, height/2)
         flags = cv2.INTER_LANCZOS4 + cv2.WARP_POLAR_LOG
-        p_a = cv2.warpPolar(f_a, (w, h), center, m, flags)
-        p_b = cv2.warpPolar(f_b, (w, h), center, m, flags)
-        (x, y), e = cv2.phaseCorrelate(p_a, p_b, hw)
+        p_a = cv2.warpPolar(f_a, (width, height), center, m, flags)
+        p_b = cv2.warpPolar(f_b, (width, height), center, m, flags)
+        (pos_x, pos_y), _ = cv2.phaseCorrelate(p_a, p_b, han_w)
 
-        angle = y*360/h
-        scale = (np.e)**(x/m)
-        M = cv2.getRotationMatrix2D(center, angle, scale)
-        t_b = cv2.warpAffine((g_b), M, (w, h))
-        (x, y), e = cv2.phaseCorrelate(g_a, t_b)
-        return x, y, angle, scale
+        angle = pos_y*360/height
+        scale = (np.e)**(pos_x/m)
+        matrix = cv2.getRotationMatrix2D(center, angle, scale)
+        t_b = cv2.warpAffine((g_b), matrix, (width, height))
+        (pos_x, pos_y), _ = cv2.phaseCorrelate(g_a, t_b)
+        return pos_x, pos_y, angle, scale
 
     def __phase_correlate(self):
         img_copy = self.origin_img.copy()
@@ -122,19 +122,22 @@ class PhaseCorrelate(EditWindow):
             img = img_copy
         else:
             base_img = cv2.imread(self.base_img_path)
-            x, y, angle, scale = self.__ripoc(base_img, img_copy)
+            pos_x, pos_y, angle, scale = self.__ripoc(base_img, img_copy)
             scale = 1.0
-            # print(x, y, angle, scale)
-            h, w, ch = img_copy.shape
+            height, width, _ = img_copy.shape
 
-            M = cv2.getRotationMatrix2D((w/2, h/2), angle, scale)
-            M[0][2] -= x
-            M[1][2] -= y
+            matrix = cv2.getRotationMatrix2D((width/2, height/2), angle, scale)
+            matrix[0][2] -= pos_x
+            matrix[1][2] -= pos_y
 
-            img = cv2.warpAffine(img_copy, M, (w, h))
+            img = cv2.warpAffine(img_copy, matrix, (width, height))
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.base_img_path)
         if self.__gui:
@@ -143,11 +146,11 @@ class PhaseCorrelate(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/ECU/ECUlow_2.jpg')
-    # img = cv2.imread('./0000_img/ECU/rotate2.jpg')
-    param = ['./0000_img/ECU/ECUlow_base.jpg']
-    # param = []
-    app = PhaseCorrelate(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./PhaseCorrelate.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/ECU/ECUlow_2.jpg')
+#     # img = cv2.imread('./0000_img/ECU/rotate2.jpg')
+#     param = ['./0000_img/ECU/ECUlow_base.jpg']
+#     # param = []
+#     app = PhaseCorrelate(img, param, gui=False)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./PhaseCorrelate.jpg', dst_img)
