@@ -1,5 +1,4 @@
-from decimal import ROUND_HALF_UP, Decimal
-import random
+"""エッジ位置計測(カスタム)"""
 import tkinter as tk
 
 import cv2
@@ -9,6 +8,8 @@ from lib.gui.cls_edit_window import EditWindow
 
 
 class EdgeCustom(EditWindow):
+    """エッジ位置計測(カスタム)クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__origin_bk = img
@@ -40,7 +41,7 @@ class EdgeCustom(EditWindow):
         self.dst_img = self.__edge_custom()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -57,12 +58,12 @@ class EdgeCustom(EditWindow):
         self.radio_horizontal = tk.Radiobutton(
             self.labelframe4, value=0, variable=self.var)
         self.radio_horizontal.configure(
-            text='horizontal', command=self.__onClick_radio)
+            text='horizontal', command=self.__on_click_radio)
         self.radio_horizontal.pack(anchor="w", side="top")
         self.redio_virtical = tk.Radiobutton(
             self.labelframe4, value=1, variable=self.var)
         self.redio_virtical.configure(
-            text='virtical', command=self.__onClick_radio)
+            text='virtical', command=self.__on_click_radio)
         self.redio_virtical.pack(anchor="w", side="top")
         self.labelframe4.pack(
             expand="true",
@@ -132,45 +133,41 @@ class EdgeCustom(EditWindow):
             pady=5,
             side="top")
         self.labelframe3.pack(fill="x", padx=5, pady=5, side="top")
-        pass
 
     def __init_events(self):
-        self.canvas1.bind("<ButtonPress-1>", self.__OnMouseDown)
-        self.canvas1.bind("<ButtonRelease-1>", self.__OnMouseUp)
-        self.canvas1.bind('<B1-Motion>', self.__OnMouseMove)
-        pass
+        self.canvas1.bind("<ButtonPress-1>", self.__on_mouse_down)
+        self.canvas1.bind("<ButtonRelease-1>", self.__on_mouse_up)
+        self.canvas1.bind('<B1-Motion>', self.__on_mouse_move)
 
-    def __onClick_radio(self):
+    def __on_click_radio(self):
         self.direction_mode = self.var.get()
         self.dst_img = self.__edge_custom()
-        self.Draw()
-        pass
+        self.draw()
 
-    def __onScale(self, events):
-        pass
+    # def __onScale(self, events):
+    #     pass
 
-    def __OnMouseDown(self, event):
+    def __on_mouse_down(self, event):
         self.__drag_flag = True
-        self.__start_x, self.__start_y = self.__GetMousePos(event)
-        pass
+        self.__start_x, self.__start_y = self.__get_mouse_pos(event)
 
-    def __OnMouseUp(self, event):
+    def __on_mouse_up(self, event):
         self.__drag_flag = False
 
-        x, y = self.__GetMousePos(event)
-        if self.__start_x > x:
+        pos_x, pos_y = self.__get_mouse_pos(event)
+        if self.__start_x > pos_x:
             dummy1 = self.__start_x
-            dummy2 = x
+            dummy2 = pos_x
             self.__start_x = dummy2
-            x = dummy1
+            pos_x = dummy1
 
-        if self.__start_y > y:
+        if self.__start_y > pos_y:
             dummy1 = self.__start_y
-            dummy2 = y
+            dummy2 = pos_y
             self.__start_y = dummy2
-            y = dummy1
-        self.__finish_x = x
-        self.__finish_y = y
+            pos_y = dummy1
+        self.__finish_x = pos_x
+        self.__finish_y = pos_y
 
         self.area_x1.delete(0, tk.END)
         self.area_x1.insert(0, self.__start_x)
@@ -182,24 +179,23 @@ class EdgeCustom(EditWindow):
         self.area_y2.insert(0, self.__finish_y)
 
         self.dst_img = self.__edge_custom()
-        self.Draw()
+        self.draw()
 
-    def __OnMouseMove(self, event):
+    def __on_mouse_move(self, event):
         if self.__drag_flag:
-            x, y = self.__GetMousePos(event)
+            pos_x, pos_y = self.__get_mouse_pos(event)
             self.dst_img = self.__origin_bk.copy()
             cv2.rectangle(self.dst_img,
                           pt1=(self.__start_x, self.__start_y),
-                          pt2=(x, y),
+                          pt2=(pos_x, pos_y),
                           color=(255, 0, 0),
                           thickness=1,
                           lineType=cv2.LINE_4,
                           shift=0)
-            self.Draw()
-        pass
+            self.draw()
 
-    def __GetMousePos(self, pos):
-        view_scale = self.GetViewScale()
+    def __get_mouse_pos(self, pos):
+        view_scale = self.get_view_scale()
         canvas_width = int(self.canvas1.winfo_width()*view_scale)
         canvas_height = int(self.canvas1.winfo_height()*view_scale)
 
@@ -208,20 +204,20 @@ class EdgeCustom(EditWindow):
 
         scale_x = img_width/canvas_width
         scale_y = img_height/canvas_height
-        pos_x, pos_y = self.GetImgPos()
+        pos_x, pos_y = self.get_img_pos()
 
         if scale_x < scale_y:
             scale = scale_y
             dev = int((canvas_width-img_width/scale)/2)
-            x = int((pos.x-dev)*scale)-int(pos_x*scale)
-            y = int(pos.y*scale)-int(pos_y*scale)
+            pos_x = int((pos.x-dev)*scale)-int(pos_x*scale)
+            pos_y = int(pos.y*scale)-int(pos_y*scale)
         else:
             scale = scale_x
             dev = int((canvas_height-img_height/scale)/2)
-            x = int(pos.x*scale)-int(pos_x*scale)
-            y = int((pos.y-dev)*scale)-int(pos_y*scale)
+            pos_x = int(pos.x*scale)-int(pos_x*scale)
+            pos_y = int((pos.y-dev)*scale)-int(pos_y*scale)
 
-        return x, y
+        return pos_x, pos_y
 
     def __edge_custom(self):
         img_copy = self.origin_img.copy()
@@ -257,32 +253,33 @@ class EdgeCustom(EditWindow):
 
         img_copy = self.origin_img.copy()
         for cont in contours:
-            vx, vy, x0, y0 = cv2.fitLine(cont, cv2.DIST_L2, 10, 0.01, 0.01)
+            vec_x, vec_y, x_0, y_0 = cv2.fitLine(
+                cont, cv2.DIST_L2, 10, 0.01, 0.01)
 
             if self.direction_mode == 0:
-                vx = round(vx[0])
-                vy = round(vy[0])
-                y1 = mask_y1
-                y2 = mask_y2
-                x1 = int(y1*vx+x0)
-                x2 = int(y2*vx+x0)
+                vec_x = round(vec_x[0])
+                vec_y = round(vec_y[0])
+                y_1 = mask_y1
+                y_2 = mask_y2
+                x_1 = int(y_1*vec_x+x_0)
+                x_2 = int(y_2*vec_x+x_0)
             else:
-                vx = round(vx[0])
-                vy = round(vy[0])
-                x1 = mask_x1
-                x2 = mask_x2
-                y1 = int(x1*vy+y0)
-                y2 = int(x2*vy+y0)
+                vec_x = round(vec_x[0])
+                vec_y = round(vec_y[0])
+                x_1 = mask_x1
+                x_2 = mask_x2
+                y_1 = int(x_1*vec_y+y_0)
+                y_2 = int(x_2*vec_y+y_0)
 
-            if mask_x1 <= x1 and mask_x2 >= x2 and mask_y1 <= y1 and mask_y2 >= y2:
+            if mask_x1 <= x_1 and mask_x2 >= x_2 and mask_y1 <= y_1 and mask_y2 >= y_2:
                 img_copy = cv2.line(img_copy,
-                                    pt1=(x1, y1),
-                                    pt2=(x2, y2),
+                                    pt1=(x_1, y_1),
+                                    pt2=(x_2, y_2),
                                     color=(0, 0, 255),
                                     thickness=1)
-                add_flag = self.__add_list([x1, y1, x2, y2])
+                add_flag = self.__add_list([x_1, y_1, x_2, y_2])
                 if add_flag:
-                    self.__line_array.append([x1, y1, x2, y2])
+                    self.__line_array.append([x_1, y_1, x_2, y_2])
 
         img_copy = cv2.rectangle(img_copy,
                                  pt1=(mask_x1, mask_y1),
@@ -304,7 +301,11 @@ class EdgeCustom(EditWindow):
             self.resoult_list.insert(0, add_data)
         return True
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__start_x)
         param.append(self.__start_y)
@@ -318,12 +319,12 @@ class EdgeCustom(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    # img = cv2.imread('./0000_img/edge2.png')
-    # img = cv2.imread('./edge6_1.png')
-    # img = cv2.imread('./edge6_2.png')
-    img = cv2.imread('./horizontal.png')
-    param = []
-    app = EdgeCustom(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./EdgeCustom.jpg', dst_img)
+# if __name__ == "__main__":
+#     # img = cv2.imread('./0000_img/edge2.png')
+#     # img = cv2.imread('./edge6_1.png')
+#     # img = cv2.imread('./edge6_2.png')
+#     img = cv2.imread('./horizontal.png')
+#     param = []
+#     app = EdgeCustom(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./EdgeCustom.jpg', dst_img)
