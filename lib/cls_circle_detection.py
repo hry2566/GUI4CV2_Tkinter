@@ -1,4 +1,4 @@
-import math
+"""最小外接円計測"""
 import tkinter as tk
 
 import cv2
@@ -8,6 +8,8 @@ from lib.gui.cls_edit_window import EditWindow
 
 
 class CircleDetection(EditWindow):
+    """最小外接円計測クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         if not len(img) == 2:
             self.dst_img = img
@@ -22,15 +24,10 @@ class CircleDetection(EditWindow):
         self.__circle_info = []
         self.__gui = gui
 
-        # self.__proc_flag = False
-
         if len(param) == 4:
             self.__draw_corcle = param[0]
             self.__draw_edge = param[1]
             self.__image_bond = param[2]
-            pass
-        else:
-            pass
 
         if gui:
             super().__init__(img, master)
@@ -40,7 +37,7 @@ class CircleDetection(EditWindow):
         self.dst_img = self.__circle_detection()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -57,14 +54,14 @@ class CircleDetection(EditWindow):
         self.frame1.configure(height=200, width=200)
         self.checkbutton1 = tk.Checkbutton(self.frame1, variable=self.bln1)
         self.checkbutton1.configure(
-            text='reference circle', command=self.__onClick_check)
+            text='reference circle', command=self.__on_click_check)
         self.checkbutton1.pack(anchor="w", side="top")
         self.checkbutton2 = tk.Checkbutton(self.frame1, variable=self.bln2)
-        self.checkbutton2.configure(text='edge', command=self.__onClick_check)
+        self.checkbutton2.configure(text='edge', command=self.__on_click_check)
         self.checkbutton2.pack(anchor="w", side="top")
         self.checkbutton3 = tk.Checkbutton(self.frame1, variable=self.bln3)
         self.checkbutton3.configure(
-            text='image synthesis', command=self.__onClick_check)
+            text='image synthesis', command=self.__on_click_check)
         self.checkbutton3.pack(anchor="w", side="top")
         self.frame1.pack(side="top")
 
@@ -98,16 +95,16 @@ class CircleDetection(EditWindow):
     def __init_events(self):
         pass
 
-    def __onScale(self, events):
-        pass
+    # def __onScale(self, events):
+    #     pass
 
-    def __onClick_check(self):
+    def __on_click_check(self):
         self.__draw_corcle = self.bln1.get()
         self.__draw_edge = self.bln2.get()
         self.__image_bond = self.bln3.get()
 
         self.dst_img = self.__circle_detection()
-        self.Draw()
+        self.draw()
 
     def __circle_detection(self):
         img_origin = self.origin_img.copy()
@@ -127,8 +124,8 @@ class CircleDetection(EditWindow):
                 cnt = contour_i
 
         # 外接円
-        (x, y), rad = cv2.minEnclosingCircle(cnt)
-        center = (int(x), int(y))
+        (pos_x, pos_y), rad = cv2.minEnclosingCircle(cnt)
+        center = (int(pos_x), int(pos_y))
         rad_int = int(rad)
         self.__circle_info = []
         self.__circle_info.append(center)
@@ -160,11 +157,11 @@ class CircleDetection(EditWindow):
 
         return img_origin
 
-    def get_distance(self, x1, y1, x2, y2):
-        d = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-        return d
+    def dummy(self):
+        """パブリックダミー関数"""
 
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__draw_corcle)
         param.append(self.__draw_edge)
@@ -176,11 +173,11 @@ class CircleDetection(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img_base = cv2.imread('./0000_img/ECU/ECUlow_1.jpg')
-    mask_img = cv2.imread('./circle1.png')
-    img = [img_base, mask_img]
-    param = [False, False, True, []]
-    app = CircleDetection(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./CircleDetection.jpg', dst_img)
+# if __name__ == "__main__":
+#     img_base = cv2.imread('./0000_img/ECU/ECUlow_1.jpg')
+#     mask_img = cv2.imread('./circle1.png')
+#     img = [img_base, mask_img]
+#     param = [False, False, True, []]
+#     app = CircleDetection(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./CircleDetection.jpg', dst_img)
