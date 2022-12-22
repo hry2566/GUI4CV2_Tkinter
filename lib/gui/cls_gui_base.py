@@ -1,12 +1,14 @@
-#!/usr/bin/python3
+"""GUIベース"""
 import tkinter as tk
 
 
 class GuiBase:
+    """GUIベースクラス"""
+
     def __init__(self, master=None):
         self.master = master
         # build ui
-        if master == None:
+        if master is None:
             toplevel1 = tk.Tk() if master is None else tk.Toplevel(master)
             toplevel1.configure(height=200, width=200)
             self.image_edit_frame = tk.Frame(toplevel1)
@@ -37,16 +39,19 @@ class GuiBase:
         self.image_view_frame.pack(expand="true", fill="both", side="left")
         self.image_edit_frame.pack(expand="true", fill="both", side="top")
 
-        if master == None:
+        if master is None:
             # Main widget
             self.mainwindow = toplevel1
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def run(self):
-        if self.master == None:
+        """実行関数"""
+        if self.master is None:
             self.mainwindow.mainloop()
-        pass
 
 
-if __name__ == "__main__":
-    app = GuiBase()
-    app.run()
+# if __name__ == "__main__":
+#     app = GuiBase()
+#     app.run()
