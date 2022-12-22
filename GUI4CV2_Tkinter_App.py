@@ -1,12 +1,13 @@
-#!/usr/bin/python3
+"""GUIアプリ"""
 from functools import partial
-
 
 from lib.app.cls_app_base import App_Base
 from lib.cls_lib import *
 
 
 class App(App_Base):
+    """GUIアプリクラス"""
+
     def __init__(self, master=None):
         super().__init__(master)
         self.__init_proc_code()
@@ -28,7 +29,7 @@ class App(App_Base):
                         '最小外接円計測 (CircleDetection)',
                         'エッジ位置計測 (EdgeMeasurement)',
                         'エッジ位置_カスタム (Edge_Custom)',
-                        'エッジ円周 (Edge_Arc)']
+                        'エッジ円周 (EdgeArc)']
 
         labels_color = ['明るさ／コントラスト (ConvertScaleAbs)',
                         'ガンマ補正 (Gamma)',
@@ -46,9 +47,9 @@ class App(App_Base):
 
         menu_fillter = ['ぼかし (Average)',
                         'ぼかし (Blur)',
-                        'ぼかし (Median Blur)',
-                        'ぼかし (Gaussian_Blur)',
-                        'ぼかし (Bilateral_Filter)',
+                        'ぼかし (MedianBlur)',
+                        'ぼかし (GaussianBlur)',
+                        'ぼかし (BilateralFilter)',
                         'ぼかし (FastNlMeansDenoisingColored)',
                         'シャープ (Filter2D)',
                         'シャープ (UnSharp)',
@@ -57,11 +58,11 @@ class App(App_Base):
                         'モルフォロジー (Morphology)',
                         '二値化 (Threshold)',
                         '二値化 (inRange)',
-                        '二値化 (Adaptive_Thresholed)',
+                        '二値化 (AdaptiveThresholed)',
                         '輪郭抽出 (Canny)',
                         '輪郭抽出 (Laplacian)',
                         '輪郭抽出 (Sobel)',
-                        '輪郭抽出 (Laplacian_Custom)']
+                        '輪郭抽出 (LaplacianCustom)']
 
         menu_memory = ['画像メモリ作成(Create IMG Memory)',
                        '画像メモリI/O(MemoryIO)']
@@ -90,13 +91,13 @@ class App(App_Base):
                                'Average(img, param, gui=False)'])
         fnc_list.append(partial(Average))
 
-        proc_code_list.append(['二値化 (Adaptive_Thresholed)',
-                               'Adaptive_Thresholed(img, param, gui=False)'])
-        fnc_list.append(partial(Adaptive_Thresholed))
+        proc_code_list.append(['二値化 (AdaptiveThresholed)',
+                               'AdaptiveThresholed(img, param, gui=False)'])
+        fnc_list.append(partial(AdaptiveThresholed))
 
-        proc_code_list.append(['ぼかし (Bilateral_Filter)',
-                               'Bilateral_Filter(img, param, gui=False)'])
-        fnc_list.append(partial(Bilateral_Filter))
+        proc_code_list.append(['ぼかし (BilateralFilter)',
+                               'BilateralFilter(img, param, gui=False)'])
+        fnc_list.append(partial(BilateralFilter))
 
         proc_code_list.append(['ぼかし (Blur)',
                                'Blur(img, param, gui=False)'])
@@ -118,9 +119,9 @@ class App(App_Base):
                                'Fillter2D(img, param, gui=False)'])
         fnc_list.append(partial(Fillter2D))
 
-        proc_code_list.append(['ぼかし (Gaussian_Blur)',
-                               'Gaussian_Blur(img, param, gui=False)'])
-        fnc_list.append(partial(Gaussian_Blur))
+        proc_code_list.append(['ぼかし (GaussianBlur)',
+                               'GaussianBlur(img, param, gui=False)'])
+        fnc_list.append(partial(GaussianBlur))
 
         proc_code_list.append(['二値化 (inRange)',
                                'InRange(img, param, gui=False)'])
@@ -130,9 +131,9 @@ class App(App_Base):
                                'Laplacian(img, param, gui=False)'])
         fnc_list.append(partial(Laplacian))
 
-        proc_code_list.append(['ぼかし (Median Blur)',
-                               'Median_Blur(img, param, gui=False)'])
-        fnc_list.append(partial(Median_Blur))
+        proc_code_list.append(['ぼかし (MedianBlur)',
+                               'MedianBlur(img, param, gui=False)'])
+        fnc_list.append(partial(MedianBlur))
 
         proc_code_list.append(['モルフォロジー (Morphology)',
                                'Morphology(img, param, gui=False)'])
@@ -179,44 +180,44 @@ class App(App_Base):
         fnc_list.append(partial(EqualizeHist))
 
         proc_code_list.append(['色反転 (Bitwise Not)',
-                               'Bitwise_Not(img, param, gui=False)'])
-        fnc_list.append(partial(Bitwise_Not))
+                               'BitwiseNot(img, param, gui=False)'])
+        fnc_list.append(partial(BitwiseNot))
 
         proc_code_list.append(['明度反転 (Reverse Brightness)',
                                'ReverseBrightness(img, param, gui=False)'])
         fnc_list.append(partial(ReverseBrightness))
 
         proc_code_list.append(['濃淡補正 (MovingAve)',
-                               'Shading_MovingAve(img, param, gui=False)'])
-        fnc_list.append(partial(Shading_MovingAve))
+                               'ShadingMovingAve(img, param, gui=False)'])
+        fnc_list.append(partial(ShadingMovingAve))
 
         proc_code_list.append(['濃淡補正 (MovingAveColor)',
-                               'Shading_Color_MovingAve(img, param, gui=False)'])
-        fnc_list.append(partial(Shading_Color_MovingAve))
+                               'ShadingColorMovingAve(img, param, gui=False)'])
+        fnc_list.append(partial(ShadingColorMovingAve))
 
         proc_code_list.append(['濃淡補正 (ShadingApproximate)',
-                               'Shading_Approximate(img, param, gui=False)'])
-        fnc_list.append(partial(Shading_Approximate))
+                               'ShadingApproximate(img, param, gui=False)'])
+        fnc_list.append(partial(ShadingApproximate))
 
         proc_code_list.append(['濃淡補正 (ShadingBlur)',
-                               'Shading_Blur(img, param, gui=False)'])
-        fnc_list.append(partial(Shading_Blur))
+                               'ShadingBlur(img, param, gui=False)'])
+        fnc_list.append(partial(ShadingBlur))
 
         proc_code_list.append(['濃淡補正 (ShadingMediaBlur)',
-                               'Shading_MedianBlur(img, param, gui=False)'])
-        fnc_list.append(partial(Shading_MedianBlur))
+                               'ShadingMedianBlur(img, param, gui=False)'])
+        fnc_list.append(partial(ShadingMedianBlur))
 
         proc_code_list.append(['濃淡補正 (ShadingColorMedianBlur)',
-                               'Shading_Color_MedianBlur(img, param, gui=False)'])
-        fnc_list.append(partial(Shading_Color_MedianBlur))
+                               'ShadingColorMedianBlur(img, param, gui=False)'])
+        fnc_list.append(partial(ShadingColorMedianBlur))
 
         proc_code_list.append(['濃淡補正 (ShadingCustomFillter)',
-                               'Shading_CustomFillter(img, param, gui=False)'])
-        fnc_list.append(partial(Shading_CustomFillter))
+                               'ShadingCustomFillter(img, param, gui=False)'])
+        fnc_list.append(partial(ShadingCustomFillter))
 
         proc_code_list.append(['画像メモリ作成(Create IMG Memory)',
-                               'imgLib = Create_Img_Memory(img, [img_array, img_names], gui=False)'])
-        fnc_list.append(partial(Create_Img_Memory))
+                               'imgLib = CreateImgMemory(img, [img_array, img_names], gui=False)'])
+        fnc_list.append(partial(CreateImgMemory))
 
         proc_code_list.append(['射影変換 (warpPerspective)',
                                'Rotate3D(img, param, gui=False)'])
@@ -231,16 +232,16 @@ class App(App_Base):
         fnc_list.append(partial(ImageCombine))
 
         proc_code_list.append(['濃淡補正 (ShadingMediaBlurColor)',
-                               'Shading_Color_MedianBlur(img, param, gui=False)'])
-        fnc_list.append(partial(Shading_Color_MedianBlur))
+                               'ShadingColorMedianBlur(img, param, gui=False)'])
+        fnc_list.append(partial(ShadingColorMedianBlur))
 
         proc_code_list.append(['位置合わせ (PhaseCorrelate)',
                                'PhaseCorrelate(img, param, gui=False)'])
         fnc_list.append(partial(PhaseCorrelate))
 
         proc_code_list.append(['位置合わせ (PhaseCorrelate_XY)',
-                               'PhaseCorrelate_XY(img, param, gui=False)'])
-        fnc_list.append(partial(PhaseCorrelate_XY))
+                               'PhaseCorrelateXY(img, param, gui=False)'])
+        fnc_list.append(partial(PhaseCorrelateXY))
 
         proc_code_list.append(['マスク処理 (Mask)',
                                'Mask(img, param, gui=False)'])
@@ -254,17 +255,17 @@ class App(App_Base):
                                'EdgeMeasurement(img, param, gui=False)'])
         fnc_list.append(partial(EdgeMeasurement))
 
-        proc_code_list.append(['輪郭抽出 (Laplacian_Custom)',
-                               'Laplacian_Custom(img, param, gui=False)'])
-        fnc_list.append(partial(Laplacian_Custom))
+        proc_code_list.append(['輪郭抽出 (LaplacianCustom)',
+                               'LaplacianCustom(img, param, gui=False)'])
+        fnc_list.append(partial(LaplacianCustom))
 
         proc_code_list.append(['エッジ位置_カスタム (Edge_Custom)',
                                'EdgeCustom(img, param, gui=False)'])
         fnc_list.append(partial(EdgeCustom))
 
-        proc_code_list.append(['エッジ円周 (Edge_Arc)',
-                               'Edge_Arc(img, param, gui=False)'])
-        fnc_list.append(partial(Edge_Arc))
+        proc_code_list.append(['エッジ円周 (EdgeArc)',
+                               'EdgeArc(img, param, gui=False)'])
+        fnc_list.append(partial(EdgeArc))
 
         self.set_proc_code(proc_code_list, fnc_list)
 
