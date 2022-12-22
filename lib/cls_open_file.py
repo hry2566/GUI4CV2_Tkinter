@@ -1,15 +1,16 @@
-import os
+"""ファイルを開く"""
 import tkinter
 from tkinter import filedialog
 
 import cv2
 import numpy as np
-from PIL import Image
 
 from lib.gui.cls_edit_window import EditWindow
 
 
 class OpenFile(EditWindow):
+    """ファイルを開くクラス"""
+
     def __init__(self, param, master=None, gui=False):
         self.dst_img = []
         self.__file_path = ''
@@ -25,22 +26,21 @@ class OpenFile(EditWindow):
                 img = self.__imread(self.__file_path)
 
                 super().__init__(img, master)
-                if master == None:
+                if master is None:
                     self.__init_gui()
                 self.run()
 
     def __init_gui(self):
         self.none_label.destroy()
         self.mainwindow.title('Open File')
-        pass
 
     def __open_file(self):
         root = tkinter.Tk()
         root.withdraw()
         typ = [('', '*')]
-        dir = './'
+        directory = './'
         file = filedialog.askopenfilenames(
-            filetypes=typ, initialdir=dir)
+            filetypes=typ, initialdir=directory)
         root.destroy()
         if len(file) == 0:
             path = ''
@@ -50,29 +50,18 @@ class OpenFile(EditWindow):
 
     def __imread(self, filename, flags=cv2.IMREAD_COLOR, dtype=np.uint8):
         try:
-            n = np.fromfile(filename, dtype)
-            img = cv2.imdecode(n, flags)
+            np_file = np.fromfile(filename, dtype)
+            img = cv2.imdecode(np_file, flags)
             return img
-        except Exception as e:
-            print(e)
+        except Exception as error:
+            print(error)
             return None
 
-    def __imwrite(self, filename, img, params=None):
-        try:
-            ext = os.path.splitext(filename)[1]
-            result, n = cv2.imencode(ext, img, params)
-
-            if result:
-                with open(filename, mode='w+b') as f:
-                    n.tofile(f)
-                return True
-            else:
-                return False
-        except Exception as e:
-            print(e)
-            return False
+    def dummy(self):
+        """パブリックダミー関数"""
 
     def get_data(self):
+        """パラメータ取得"""
         param = []
         img = []
         param.append(self.__file_path)
@@ -88,10 +77,10 @@ class OpenFile(EditWindow):
         return param, img
 
 
-if __name__ == "__main__":
-    param = []
-    # param = ['./0000_img/opencv_logo.jpg']
-    # param = ['./0000_img/opencv_logo.jpg']
-    app = OpenFile(param, gui=True)
-    param, dst_img = app.get_data()
-    # cv2.imwrite('./open.jpg', dst_img)
+# if __name__ == "__main__":
+#     param = []
+#     # param = ['./0000_img/opencv_logo.jpg']
+#     # param = ['./0000_img/opencv_logo.jpg']
+#     app = OpenFile(param, gui=True)
+#     param, dst_img = app.get_data()
+#     # cv2.imwrite('./open.jpg', dst_img)
