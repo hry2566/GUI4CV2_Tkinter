@@ -1,13 +1,14 @@
-import tkinter as tk
-
+"""輪郭抽出(canny)"""
 import cv2
-import numpy as np
+
 
 from lib.gui.cls_edit_window import EditWindow, even2odd
 from lib.parts.parts_scale import Parts_Scale
 
 
 class Canny(EditWindow):
+    """輪郭抽出(canny)クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__kernel = 0
@@ -29,7 +30,7 @@ class Canny(EditWindow):
         self.dst_img = self.__canny()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -49,12 +50,11 @@ class Canny(EditWindow):
         self.__scale3.set(self.__min_val)
 
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale2.bind(changed=self.__onScale)
-        self.__scale3.bind(changed=self.__onScale)
-        pass
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale2.bind(changed=self.__on_scale)
+        self.__scale3.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
         self.__proc_flag = True
@@ -62,7 +62,7 @@ class Canny(EditWindow):
         self.__max_val = self.__scale2.get()
         self.__min_val = self.__scale3.get()
         self.dst_img = self.__canny()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
 
     def __canny(self):
@@ -81,7 +81,11 @@ class Canny(EditWindow):
 
         return img_copy
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__kernel)
         param.append(self.__max_val)
@@ -93,10 +97,10 @@ class Canny(EditWindow):
         return param, img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [3, 74, 59]
-    app = Canny(img, param, gui=False)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./canny.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [3, 74, 59]
+#     app = Canny(img, param, gui=False)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./canny.jpg', dst_img)
