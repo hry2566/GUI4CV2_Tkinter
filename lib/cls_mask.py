@@ -1,3 +1,4 @@
+"""マスク処理"""
 import tkinter as tk
 
 import cv2
@@ -8,6 +9,8 @@ from lib.parts.parts_scale import Parts_Scale
 
 
 class Mask(EditWindow):
+    """マスク処理クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__mask_array = []
@@ -20,9 +23,6 @@ class Mask(EditWindow):
 
         if len(param) == 1:
             self.__mask_array = param[0]
-            pass
-        else:
-            pass
 
         if gui:
             super().__init__(img, master)
@@ -33,7 +33,7 @@ class Mask(EditWindow):
 
         if gui:
             self.__draw_mask_list()
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -104,19 +104,19 @@ class Mask(EditWindow):
         self.param_frame_show(0)
 
     def __init_events(self):
-        self.add_rect_btn.bind('<1>', self.__onClick_add_rect)
-        self.add_circle_btn.bind('<1>', self.__onClick_add_circle)
-        self.mask_list.bind("<<ListboxSelect>>", self.__onSelectListBox_Events)
-        self.and_radio_btn.configure(command=self.__onCkick_radio)
-        self.or_radio_btn.configure(command=self.__onCkick_radio)
-        self.del_btn.bind('<1>', self.__onClick_del)
-        self.scale_x.bind(changed=self.__onScale_circle)
-        self.scale_y.bind(changed=self.__onScale_circle)
-        self.scale_radius.bind(changed=self.__onScale_circle)
-        self.scale_x1.bind(changed=self.__onScale_rect)
-        self.scale_y1.bind(changed=self.__onScale_rect)
-        self.scale_x2.bind(changed=self.__onScale_rect)
-        self.scale_y2.bind(changed=self.__onScale_rect)
+        self.add_rect_btn.bind('<1>', self.__on_click_add_rect)
+        self.add_circle_btn.bind('<1>', self.__on_click_add_circle)
+        self.mask_list.bind("<<ListboxSelect>>", self.__on_select_listbox)
+        self.and_radio_btn.configure(command=self.__on_click_radio)
+        self.or_radio_btn.configure(command=self.__on_click_radio)
+        self.del_btn.bind('<1>', self.__on_click_del)
+        self.scale_x.bind(changed=self.__on_scale_circle)
+        self.scale_y.bind(changed=self.__on_scale_circle)
+        self.scale_radius.bind(changed=self.__on_scale_circle)
+        self.scale_x1.bind(changed=self.__on_scale_rect)
+        self.scale_y1.bind(changed=self.__on_scale_rect)
+        self.scale_x2.bind(changed=self.__on_scale_rect)
+        self.scale_y2.bind(changed=self.__on_scale_rect)
 
     def param_frame_show(self, mode):
         if mode == 0:
@@ -135,7 +135,7 @@ class Mask(EditWindow):
             self.circle_frame.pack(expand="true", fill="both", side="top")
             self.com_frame.pack(expand="true", fill="both", side="top")
 
-    def __onClick_del(self, event):
+    def __on_click_del(self, event):
         index = self.__selected_index
         if index == -1:
             return
@@ -153,44 +153,44 @@ class Mask(EditWindow):
         self.scale_y2.set(param[3])
 
     def __get_scale_circle(self):
-        x = self.scale_x.get()
-        y = self.scale_y.get()
+        pos_x = self.scale_x.get()
+        pos_y = self.scale_y.get()
         radius = self.scale_radius.get()
-        return x, y, radius
+        return pos_x, pos_y, radius
 
-    def __onScale_circle(self):
+    def __on_scale_circle(self):
         if self.__proc_flag:
             return
         self.__proc_flag = True
         index = self.__selected_index
-        x, y, radius = self.__get_scale_circle()
-        self.__mask_array[index][2] = x
-        self.__mask_array[index][3] = y
+        pos_x, pos_y, radius = self.__get_scale_circle()
+        self.__mask_array[index][2] = pos_x
+        self.__mask_array[index][3] = pos_y
         self.__mask_array[index][4] = radius
         self.__redraw()
         self.__proc_flag = False
 
-    def __onScale_rect(self):
+    def __on_scale_rect(self):
         if self.__proc_flag:
             return
         self.__proc_flag = True
         index = self.__selected_index
-        x1 = self.scale_x1.get()
-        y1 = self.scale_y1.get()
-        x2 = self.scale_x2.get()
-        y2 = self.scale_y2.get()
-        self.scale_x1.configure(to=x2)
-        self.scale_y1.configure(to=y2)
-        self.scale_x2.configure(from_=x1)
-        self.scale_y2.configure(from_=y1)
-        self.__mask_array[index][2] = x1
-        self.__mask_array[index][3] = y1
-        self.__mask_array[index][4] = x2
-        self.__mask_array[index][5] = y2
+        x_1 = self.scale_x1.get()
+        y_1 = self.scale_y1.get()
+        x_2 = self.scale_x2.get()
+        y_2 = self.scale_y2.get()
+        self.scale_x1.configure(to=x_2)
+        self.scale_y1.configure(to=y_2)
+        self.scale_x2.configure(from_=x_1)
+        self.scale_y2.configure(from_=y_1)
+        self.__mask_array[index][2] = x_1
+        self.__mask_array[index][3] = y_1
+        self.__mask_array[index][4] = x_2
+        self.__mask_array[index][5] = y_2
         self.__redraw()
         self.__proc_flag = False
 
-    def __onCkick_radio(self):
+    def __on_click_radio(self):
         index = self.__selected_index
         col = 0
         if self.__mask_array[index][0] == 'rect':
@@ -203,7 +203,7 @@ class Mask(EditWindow):
             self.__mask_array[index][col] = False   # OR
         self.__redraw()
 
-    def __onSelectListBox_Events(self, event):
+    def __on_select_listbox(self, event):
         if self.mask_list.curselection() == ():
             return
 
@@ -211,24 +211,24 @@ class Mask(EditWindow):
         index = self.__selected_index
         if self.__mask_array[index][0] == 'rect':
             self.param_frame_show(1)
-            x1 = self.__mask_array[index][2]
-            y1 = self.__mask_array[index][3]
-            x2 = self.__mask_array[index][4]
-            y2 = self.__mask_array[index][5]
+            x_1 = self.__mask_array[index][2]
+            y_1 = self.__mask_array[index][3]
+            x_2 = self.__mask_array[index][4]
+            y_2 = self.__mask_array[index][5]
             height, width, _ = self.origin_img.shape
             self.scale_x1.configure(from_=0, to=width)
             self.scale_y1.configure(from_=0, to=height)
-            self.scale_x2.configure(from_=x1, to=width)
-            self.scale_y2.configure(from_=y1, to=height)
-            self.__set_scale_rect([x1, y1, x2, y2])
+            self.scale_x2.configure(from_=x_1, to=width)
+            self.scale_y2.configure(from_=y_1, to=height)
+            self.__set_scale_rect([x_1, y_1, x_2, y_2])
             if not self.__mask_array[index][6]:
                 self.radio_var.set(0)
             else:
                 self.radio_var.set(1)
         elif self.__mask_array[index][0] == 'circle':
             self.param_frame_show(2)
-            x = self.__mask_array[index][2]
-            y = self.__mask_array[index][3]
+            pos_x = self.__mask_array[index][2]
+            pos_y = self.__mask_array[index][3]
             radius = self.__mask_array[index][4]
             height, width, _ = self.origin_img.shape
 
@@ -236,25 +236,24 @@ class Mask(EditWindow):
             self.scale_y.configure(from_=0, to=height)
             self.scale_radius.configure(from_=0, to=width)
             self.__proc_flag = True
-            self.scale_x.set(x)
-            self.scale_y.set(y)
+            self.scale_x.set(pos_x)
+            self.scale_y.set(pos_y)
             self.scale_radius.set(radius)
             if not self.__mask_array[index][5]:
                 self.radio_var.set(0)
             else:
                 self.radio_var.set(1)
-            pass
             self.__proc_flag = False
         self.__redraw()
 
     def __add_circle(self):
         height, width, _ = self.origin_img.shape
-        x = int(width/2)
-        y = int(height/2)
+        pos_x = int(width/2)
+        pos_y = int(height/2)
         radius = int(width/3)
         params = ['circle',                         # mode          0
                   f'circle{self.__circle_index}',   # name          1
-                  x, y, radius,                     # rect          2-4
+                  pos_x, pos_y, radius,                     # rect          2-4
                   False,                            # AND/OR        5
                   False]                            # select_flag   6
         self.__circle_index += 1
@@ -262,13 +261,13 @@ class Mask(EditWindow):
 
     def __add_rect(self):
         height, width, _ = self.origin_img.shape
-        x1 = 0
-        y1 = 0
-        x2 = int(width/2)
-        y2 = int(height/2)
+        x_1 = 0
+        y_1 = 0
+        x_2 = int(width/2)
+        y_2 = int(height/2)
         params = ['rect',                       # mode          0
                   f'rect{self.__rect_index}',   # name          1
-                  x1, y1, x2, y2,               # rect          2-5
+                  x_1, y_1, x_2, y_2,           # rect          2-5
                   False,                        # AND/OR        6
                   False]                        # select_flag   7
         self.__rect_index += 1
@@ -280,14 +279,14 @@ class Mask(EditWindow):
         self.__draw_mask_list()
         self.mask_list.select_set(len(self.__mask_array)-1)
         self.param_frame_show(mode)
-        self.__onSelectListBox_Events(None)
+        self.__on_select_listbox(None)
         self.__redraw()
 
-    def __onClick_add_circle(self, event):
+    def __on_click_add_circle(self, event):
         # self.mainwindow.after(1, self.__add_circle)
         self.settings_frame.after(1, self.__add_circle)
 
-    def __onClick_add_rect(self, event):
+    def __on_click_add_rect(self, event):
         # self.mainwindow.after(1, self.__add_rect)
         self.settings_frame.after(1, self.__add_rect)
 
@@ -298,7 +297,7 @@ class Mask(EditWindow):
 
     def __redraw(self):
         self.dst_img = self.__mask()
-        self.Draw()
+        self.draw()
 
     def __mask(self):
         img_copy = self.origin_img.copy()
@@ -327,25 +326,29 @@ class Mask(EditWindow):
         if index == -1:
             return img_copy
         if self.__mask_array[index][0] == 'rect':
-            x1 = self.__mask_array[index][2]
-            y1 = self.__mask_array[index][3]
-            x2 = self.__mask_array[index][4]
-            y2 = self.__mask_array[index][5]
+            x_1 = self.__mask_array[index][2]
+            y_1 = self.__mask_array[index][3]
+            x_2 = self.__mask_array[index][4]
+            y_2 = self.__mask_array[index][5]
             img_copy = cv2.rectangle(img_copy,
-                                     (x1, y1),
-                                     (x2, y2),
+                                     (x_1, y_1),
+                                     (x_2, y_2),
                                      (0, 0, 255), 5)
         elif self.__mask_array[index][0] == 'circle':
-            x = self.__mask_array[index][2]
-            y = self.__mask_array[index][3]
+            pos_x = self.__mask_array[index][2]
+            pos_y = self.__mask_array[index][3]
             radius = self.__mask_array[index][4]
             img_copy = cv2.circle(img_copy,
-                                  (x, y),
+                                  (pos_x, pos_y),
                                   radius,
                                   (0, 0, 255), 5)
         return img_copy
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param = [self.__mask_array]
         if self.__gui:
@@ -354,11 +357,11 @@ class Mask(EditWindow):
         return param, self.return_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/ECU/ECUlow_base.jpg')
-    param = []
-    param = [[['circle', 'circle0', 1280, 957, 787, True, False],
-              ['circle', 'circle1', 1287, 955, 137, False, False]]]
-    app = Mask(img, param, gui=False)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./Mask.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/ECU/ECUlow_base.jpg')
+#     param = []
+#     param = [[['circle', 'circle0', 1280, 957, 787, True, False],
+#               ['circle', 'circle1', 1287, 955, 137, False, False]]]
+#     app = Mask(img, param, gui=False)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./Mask.jpg', dst_img)
