@@ -1,19 +1,17 @@
+"""画像メモリ操作"""
 import tkinter as tk
 
-import cv2
-
-from lib.cls_create_img_memory import Create_Img_Memory
-from lib.cls_open_file import OpenFile
 from lib.gui.cls_edit_window import EditWindow
 
 
 class MemoryIO(EditWindow):
+    """画像メモリ操作クラス"""
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.img_bk = img
         self.__img_array_buf2 = []
         self.__img_names_buf2 = []
-        self.__memIO = []
+        self.__mem_io = []
         self.__gui=gui
 
         if type(self.img_bk) == list:
@@ -22,8 +20,7 @@ class MemoryIO(EditWindow):
         if len(param) == 3:
             self.__img_array_buf2 = param[0]
             self.__img_names_buf2 = param[1]
-            self.__memIO = param[2]
-            pass
+            self.__mem_io = param[2]
         else:
             exit()
 
@@ -35,7 +32,7 @@ class MemoryIO(EditWindow):
            self.img_bk = self.__memory_io()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -48,8 +45,8 @@ class MemoryIO(EditWindow):
         __values = []
         for name in self.__img_names_buf2:
             __values.append(name)
-        self.optionmenu1 = tk.OptionMenu(
-            self.frame6, self.__tkvar, self.__tkvar.get(), *__values, command=self.__onSelectedMenu)
+        self.optionmenu1 = tk.OptionMenu(self.frame6, self.__tkvar, self.__tkvar.get(
+        ), *__values, command=self.__on_selected_menu)
         self.optionmenu1.pack(fill='x', side='top')
         self.listbox1 = tk.Listbox(self.frame6)
         self.listbox1.pack(expand='true', fill='both', side='top')
@@ -57,10 +54,10 @@ class MemoryIO(EditWindow):
         self.frame6.pack(expand='true', fill='both', side='left')
         self.frame7 = tk.Frame(self.frame3)
         self.button2 = tk.Button(self.frame7)
-        self.button2.configure(text='add', command=self.__onBtn2Click)
+        self.button2.configure(text='add', command=self.__on_btn2_click)
         self.button2.pack(fill='x', side='top')
         self.button3 = tk.Button(self.frame7)
-        self.button3.configure(text='del', command=self.__onBtn3Click)
+        self.button3.configure(text='del', command=self.__on_btn3_click)
         self.button3.pack(fill='x', side='top')
         self.frame7.configure(height='200', width='200')
         self.frame7.pack(side='left')
@@ -77,7 +74,7 @@ class MemoryIO(EditWindow):
         self.frame1.pack(expand='true', fill='both', side='top')
         self.frame2 = tk.Frame(self.settings_frame)
         self.button1 = tk.Button(self.frame2)
-        self.button1.configure(text='exec', command=self.__onBtn1Click)
+        self.button1.configure(text='exec', command=self.__on_btn1_click)
         self.button1.pack(fill='x', side='top')
         self.frame2.configure(height='200', width='200')
         self.frame2.pack(fill='x', side='top')
@@ -91,39 +88,34 @@ class MemoryIO(EditWindow):
         for name in self.__img_names_buf2:
             self.listbox2.insert(tk.END, name)
 
-        # self.listbox2.select_set(0)
-
-        if not len(self.__memIO) == 0:
-            if self.__memIO[0] == '':
+        if not len(self.__mem_io) == 0:
+            if self.__mem_io[0] == '':
                 self.__tkvar.set('source_IMG')
-                self.__memIO[0] = 'source_IMG'
+                self.__mem_io[0] = 'source_IMG'
             else:
-                self.__tkvar.set(self.__memIO[0])
+                self.__tkvar.set(self.__mem_io[0])
 
-            for name in self.__memIO[1]:
+            for name in self.__mem_io[1]:
                 self.listbox1.insert(tk.END, name)
 
     def __init_events(self):
-        self.listbox2.bind('<<ListboxSelect>>', self.__onLst2Select)
-        pass
+        self.listbox2.bind('<<ListboxSelect>>', self.__on_lst2_select)
 
-    def __onScale(self, events):
-        pass
+    # def __onScale(self, events):
+    #     pass
 
-    def __onSelectedMenu(self, event):
-        self.__memIO[0] = self.__tkvar.get()
+    def __on_selected_menu(self, event):
+        self.__mem_io[0] = self.__tkvar.get()
 
         while(True):
             if self.listbox1.get(0) == '':
                 break
             self.listbox1.delete(0)
-        pass
 
-    def __onBtn1Click(self):
+    def __on_btn1_click(self):
         self.img_bk = self.__memory_io()
-        pass
 
-    def __onBtn2Click(self):
+    def __on_btn2_click(self):
         if self.listbox2.curselection() == ():
             return
 
@@ -132,12 +124,11 @@ class MemoryIO(EditWindow):
             index = self.listbox2.curselection()[0]
             name = self.listbox2.get(index)
             if self.listbox1.get(0) == '' and name.startswith('source_IMG'):
-                self.__addLst1()
+                self.__add_lst1()
         else:
-            self.__addLst1()
-        pass
+            self.__add_lst1()
 
-    def __addLst1(self):
+    def __add_lst1(self):
         index = self.listbox2.curselection()[0]
         name = self.listbox2.get(index)
         flag = False
@@ -151,25 +142,23 @@ class MemoryIO(EditWindow):
 
         if not flag:
             self.listbox1.insert(tk.END, name)
-            self.__memIO[1].append(name)
-        pass
+            self.__mem_io[1].append(name)
 
-    def __onBtn3Click(self):
+    def __on_btn3_click(self):
         if self.listbox1.curselection() == ():
             return
 
         index = self.listbox1.curselection()[0]
         self.listbox1.delete(index)
-        self.__memIO[1].pop(index)
-        pass
+        self.__mem_io[1].pop(index)
 
-    def __onLst2Select(self, event):
+    def __on_lst2_select(self, event):
         if self.listbox2.curselection() == ():
             return
 
         index = self.listbox2.curselection()[0]
         name = self.listbox2.get(index)
-        
+
         if name.startswith('source_IMG['):
             name_index = int(name.replace('source_IMG[', '').replace(']', ''))
             self.dst_img = self.img_bk[name_index]
@@ -180,33 +169,35 @@ class MemoryIO(EditWindow):
                 name_index = self.__img_names_buf2.index(name)
                 self.dst_img = self.__img_array_buf2[name_index]
                 # cv2.imwrite(f'{name}.png',self.dst_img)
-        self.Draw()
-        pass
+        self.draw()
 
     def __memory_io(self):
         img = self.img_bk.copy()
-        target_name = self.__memIO[0]
-        set_name_array = self.__memIO[1]
+        target_name = self.__mem_io[0]
+        set_name_array = self.__mem_io[1]
 
         if target_name == 'source_IMG':
             img = []
             for set_name in set_name_array:
                 if set_name.startswith('source_IMG['):
-                    set_index = int(set_name.replace('source_IMG[', '').replace(']', ''))
+                    set_index = int(set_name.replace(
+                        'source_IMG[', '').replace(']', ''))
                     img.append(self.img_bk[set_index])
-                elif set_name== 'source_IMG':
+                elif set_name == 'source_IMG':
                     img.append(self.img_bk)
                 else:
                     set_index = self.__img_names_buf2.index(set_name)
                     img.append(self.__img_array_buf2[set_index])
         else:
-            set_name = self.__memIO[1][0]
+            set_name = self.__mem_io[1][0]
             if set_name.startswith('source_IMG['):
-                set_index = int(set_name.replace('source_IMG[', '').replace(']', ''))
+                set_index = int(set_name.replace(
+                    'source_IMG[', '').replace(']', ''))
                 targer_index = self.__img_names_buf2.index(target_name)
                 self.__img_array_buf2[targer_index] = self.img_bk[set_index]
             else:
-                self.__img_array_buf2[self.__img_names_buf2.index(target_name)]=self.img_bk
+                self.__img_array_buf2[self.__img_names_buf2.index(
+                    target_name)] = self.img_bk
 
         if type(img) == list:
             if len(img) == 1:
@@ -214,51 +205,52 @@ class MemoryIO(EditWindow):
 
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
-        param = [self.__img_array_buf2, self.__img_names_buf2,self.__memIO]
+        param = [self.__img_array_buf2, self.__img_names_buf2,self.__mem_io]
         if self.__gui:
             print('Proc : MemoryIO')
             print(f'param = {param[2]}')
         return param, self.img_bk
 
 
-if __name__ == "__main__":
-    param = ['C:/Users/2566haraya/Desktop/GitHub/OpenCV-GUI/0000_img/opencv_logo2.jpg']
-    imgLib = OpenFile(param, gui=False)
-    param, img = imgLib.get_data()
+# if __name__ == "__main__":
+#     param = ['C:/Users/2566haraya/Desktop/GitHub/OpenCV-GUI/0000_img/opencv_logo2.jpg']
+#     imgLib = OpenFile(param, gui=False)
+#     param, img = imgLib.get_data()
 
-    img_array = []
-    img_names = ['img1', 'img2']
-    param = [img_array, img_names]
-    imgLib = Create_Img_Memory(img, [img_array, img_names], gui=False)
-    param, img = imgLib.get_data()
-    img_array = param[0]
-    img_names = param[1]
+#     img_array = []
+#     img_names = ['img1', 'img2']
+#     param = [img_array, img_names]
+#     imgLib = Create_Img_Memory(img, [img_array, img_names], gui=False)
+#     param, img = imgLib.get_data()
+#     img_array = param[0]
+#     img_names = param[1]
+#     dummy1 = cv2.imread('C:/Users/2566haraya/Desktop/GitHub/OpenCV-GUI/0000_img/opencv_logo.jpg')
+#     dummy2 = img
+#     img=[]
+#     img.append(dummy1)
+#     img.append(dummy2)
+#     img_array[0]=dummy2
+#     img_array[1]=dummy1
+#     # memIO = ['img1', ['source_IMG']]
+#     # memIO = ['img1', ['source_IMG[0]']]
+#     memIO = ['img1', ['source_IMG[1]']]
+#     param = [img_array, img_names, memIO]
+#     imgLib = MemoryIO(img, param, gui=True)
+#     param, img = imgLib.get_data()
+#     img_array = param[0]
 
-    dummy1 = cv2.imread('C:/Users/2566haraya/Desktop/GitHub/OpenCV-GUI/0000_img/opencv_logo.jpg')
-    dummy2 = img
-    
-    img=[]
-    img.append(dummy1)
-    img.append(dummy2)
-    img_array[0]=dummy2
-    img_array[1]=dummy1
-
-    # memIO = ['img1', ['source_IMG']]
-    # memIO = ['img1', ['source_IMG[0]']]
-    memIO = ['img1', ['source_IMG[1]']]
-    param = [img_array, img_names, memIO]
-    imgLib = MemoryIO(img, param, gui=True)
-    param, img = imgLib.get_data()
-    img_array = param[0]
-
-    # cv2.imwrite('./MemoryIO10.jpg', img[0])
-    # cv2.imwrite('./MemoryIO20.jpg', img[1])
-    # cv2.imwrite('./MemoryIO10.jpg', img)
-    cv2.imwrite('./MemoryIO10.jpg', img[0])
-    cv2.imwrite('./MemoryIO20.jpg', img[1])
-    cv2.imwrite('./MemoryIO30.jpg', img_array[0])
-    cv2.imwrite('./MemoryIO40.jpg', img_array[1])
+#     # cv2.imwrite('./MemoryIO10.jpg', img[0])
+#     # cv2.imwrite('./MemoryIO20.jpg', img[1])
+#     # cv2.imwrite('./MemoryIO10.jpg', img)
+#     cv2.imwrite('./MemoryIO10.jpg', img[0])
+#     cv2.imwrite('./MemoryIO20.jpg', img[1])
+#     cv2.imwrite('./MemoryIO30.jpg', img_array[0])
+#     cv2.imwrite('./MemoryIO40.jpg', img_array[1])
 
     
