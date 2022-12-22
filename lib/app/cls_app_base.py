@@ -274,7 +274,7 @@ class App_Base:
 
         pycode = ''
         for index, code in enumerate(self.__code_list):
-            if code.endswith('imgLib = Create_Img_Memory(img, [img_array, img_names], gui=False)'):
+            if code.endswith('imgLib = CreateImgMemory(img, [img_array, img_names], gui=False)'):
                 memory_mode = 1
             elif code == 'MemoryIO(img, param, gui=False)':
                 memory_mode = 2
