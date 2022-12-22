@@ -1,13 +1,16 @@
+"""モルフォロジー"""
 import tkinter as tk
 
 import cv2
 import numpy as np
 
-from lib.gui.cls_edit_window import EditWindow, even2odd
+from lib.gui.cls_edit_window import EditWindow
 from lib.parts.parts_scale import Parts_Scale
 
 
 class Morphology(EditWindow):
+    """モルフォロジークラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__type_index = 0
@@ -33,7 +36,7 @@ class Morphology(EditWindow):
         self.dst_img = self.__morphology()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -42,7 +45,7 @@ class Morphology(EditWindow):
         self.__tkvar = tk.StringVar(value='OPEN')
         self.__values = ['OPEN', 'CLOSE', 'GRADIENT']
         self.__optionmenu2 = tk.OptionMenu(
-            self.settings_frame, self.__tkvar, *self.__values, command=self.__onSelect)
+            self.settings_frame, self.__tkvar, *self.__values, command=self.__on_select)
         self.__optionmenu2.pack(fill='x', side='top')
 
         self.__scale1 = Parts_Scale(self.settings_frame)
@@ -50,30 +53,18 @@ class Morphology(EditWindow):
         self.__scale2 = Parts_Scale(self.settings_frame)
         self.__scale2.configure(label='kernel_y', side='top', from_=1, to=30)
 
-        # self.__scale1 = tk.Scale(self.settings_frame)
-        # self.__scale1.configure(from_=1, to=30,
-        #                         label='kernel_x', orient='horizontal', command=self.__onScale)
-        # self.__scale1.pack(side='top')
-
-        # self.__scale2 = tk.Scale(self.settings_frame)
-        # self.__scale2.configure(from_=1, to=30,
-        #                         label='kernel_y', orient='horizontal', command=self.__onScale)
-        # self.__scale2.pack(side='top')
-
         self.__tkvar.set(self.__values[self.__type_index])
         self.__scale1.set(self.__kernel_x)
         self.__scale2.set(self.__kernel_y)
-        pass
 
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale2.bind(changed=self.__onScale)
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale2.bind(changed=self.__on_scale)
 
-    def __onSelect(self, event):
+    def __on_select(self, event):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
+        self.__proc_flag = True
 
         if self.__tkvar.get() == 'OPEN':
             self.__type_index = 0
@@ -83,21 +74,18 @@ class Morphology(EditWindow):
             self.__type_index = 2
 
         self.dst_img = self.__morphology()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
-
+        self.__proc_flag = True
         self.__kernel_x = self.__scale1.get()
         self.__kernel_y = self.__scale2.get()
         self.dst_img = self.__morphology()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
-        pass
 
     def __morphology(self):
         img_copy = self.origin_img.copy()
@@ -106,7 +94,11 @@ class Morphology(EditWindow):
         img = cv2.morphologyEx(img_copy, self.type, kernel)
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__type_index)
         param.append(self.__kernel_x)
@@ -117,10 +109,10 @@ class Morphology(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [2, 4, 4]
-    app = Morphology(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./Morphology.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [2, 4, 4]
+#     app = Morphology(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./Morphology.jpg', dst_img)
