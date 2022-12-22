@@ -1,5 +1,4 @@
-import tkinter as tk
-
+"""シャープ(UnSharp)"""
 import cv2
 import numpy as np
 
@@ -8,6 +7,8 @@ from lib.parts.parts_scale import Parts_Scale
 
 
 class UnSharp(EditWindow):
+    """シャープ(UnSharp)クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__kernel_x = 3
@@ -32,7 +33,7 @@ class UnSharp(EditWindow):
         self.dst_img = self.__unsharp_fillter()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -54,20 +55,18 @@ class UnSharp(EditWindow):
         self.__scale3.set(self.__sigma)
         self.__scale4.set(self.__amount)
         self.__scale5.set(self.__threshold)
-        pass
 
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale2.bind(changed=self.__onScale)
-        self.__scale3.bind(changed=self.__onScale)
-        self.__scale4.bind(changed=self.__onScale)
-        self.__scale5.bind(changed=self.__onScale)
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale2.bind(changed=self.__on_scale)
+        self.__scale3.bind(changed=self.__on_scale)
+        self.__scale4.bind(changed=self.__on_scale)
+        self.__scale5.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
+        self.__proc_flag = True
 
         self.__kernel_x = self.__scale1.get()
         self.__kernel_y = self.__scale2.get()
@@ -75,9 +74,8 @@ class UnSharp(EditWindow):
         self.__amount = self.__scale4.get()
         self.__threshold = self.__scale5.get()
         self.dst_img = self.__unsharp_fillter()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
-        pass
 
     def __unsharp_fillter(self):
         img_copy = self.origin_img.copy()
@@ -100,7 +98,11 @@ class UnSharp(EditWindow):
 
         return sharpened
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__kernel_x)
         param.append(self.__kernel_y)
@@ -113,10 +115,10 @@ class UnSharp(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [31, 31, 12, 100, 80]
-    app = UnSharp(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./UnSharp.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [31, 31, 12, 100, 80]
+#     app = UnSharp(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./UnSharp.jpg', dst_img)
