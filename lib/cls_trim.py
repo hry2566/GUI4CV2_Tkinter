@@ -1,12 +1,11 @@
-import tkinter as tk
-
-import cv2
-
+"""画像切取り"""
 from lib.gui.cls_edit_window import EditWindow
 from lib.parts.parts_scale import Parts_Scale
 
 
 class Trim(EditWindow):
+    """画像切取りクラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__x1 = 0
@@ -30,7 +29,7 @@ class Trim(EditWindow):
         self.dst_img = self.__trim()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -53,16 +52,14 @@ class Trim(EditWindow):
         self.scale_y1.set(self.__y1)
         self.scale_x2.set(self.__x2)
         self.scale_y2.set(self.__y2)
-        pass
 
     def __init_events(self):
-        self.scale_x1.bind(changed=self.__onScale)
-        self.scale_y1.bind(changed=self.__onScale)
-        self.scale_x2.bind(changed=self.__onScale)
-        self.scale_y2.bind(changed=self.__onScale)
-        pass
+        self.scale_x1.bind(changed=self.__on_scale)
+        self.scale_y1.bind(changed=self.__on_scale)
+        self.scale_x2.bind(changed=self.__on_scale)
+        self.scale_y2.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
         self.__proc_flag = True
@@ -70,16 +67,13 @@ class Trim(EditWindow):
         self.__y1 = self.scale_y1.get()
         self.__x2 = self.scale_x2.get()
         self.__y2 = self.scale_y2.get()
-
         self.scale_x2.configure(from_=self.__x1+1)
         self.scale_y2.configure(from_=self.__y1+1)
         self.scale_x1.configure(to=self.__x2-1)
         self.scale_y1.configure(to=self.__y2-1)
-
         self.dst_img = self.__trim()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
-        pass
 
     def __trim(self):
         img_copy = self.origin_img.copy()
@@ -87,7 +81,11 @@ class Trim(EditWindow):
             img_copy = img_copy[self.__y1: self.__y2, self.__x1: self.__x2]
         return img_copy
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__x1)
         param.append(self.__y1)
@@ -99,11 +97,11 @@ class Trim(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    # img = cv2.imread('./0000_img/ECU/ECUlow_1.jpg')
-    param = []
-    # param = [6, 115, 113, 227]
-    app = Trim(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./Trim.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     # img = cv2.imread('./0000_img/ECU/ECUlow_1.jpg')
+#     param = []
+#     # param = [6, 115, 113, 227]
+#     app = Trim(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./Trim.jpg', dst_img)
