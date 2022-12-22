@@ -1,3 +1,4 @@
+"""ファイルを開く"""
 import os
 import tkinter
 from tkinter import filedialog
@@ -6,6 +7,8 @@ import cv2
 
 
 class SaveFile():
+    """ファイルを開くクラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.dst_img = img
         self.__file_path = ''
@@ -23,8 +26,8 @@ class SaveFile():
     def __save_file(self):
         root = tkinter.Tk()
         root.withdraw()
-        dir = './'
-        file = filedialog.asksaveasfilename(initialdir=dir)
+        directory = './'
+        file = filedialog.asksaveasfilename(initialdir=directory)
         root.destroy()
         if len(file) == 0:
             path = ''
@@ -38,16 +41,19 @@ class SaveFile():
             result, n = cv2.imencode(ext, img, params)
 
             if result:
-                with open(filename, mode='w+b') as f:
-                    n.tofile(f)
+                with open(filename, mode='w+b') as file:
+                    n.tofile(file)
                 return True
-            else:
-                return False
-        except Exception as e:
-            print(e)
+            return False
+        except Exception as error:
+            print(error)
             return False
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__file_path)
         if self.__gui:
@@ -56,8 +62,8 @@ class SaveFile():
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = ['./save.jpg']
-    app = SaveFile(img, param, gui=True)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = ['./save.jpg']
+#     app = SaveFile(img, param, gui=True)
