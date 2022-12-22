@@ -1,13 +1,13 @@
-import tkinter as tk
-
+"""回転"""
 import cv2
-import numpy as np
 
 from lib.gui.cls_edit_window import EditWindow
 from lib.parts.parts_scale import Parts_Scale
 
 
 class Rotate(EditWindow):
+    """回転クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__ang = 0
@@ -27,7 +27,7 @@ class Rotate(EditWindow):
         self.dst_img = self.__rotate()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -43,21 +43,18 @@ class Rotate(EditWindow):
         self.__scale2.set(self.__scale)
 
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale2.bind(changed=self.__onScale)
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale2.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
-
+        self.__proc_flag = True
         self.__ang = self.__scale1.get()
         self.__scale = self.__scale2.get()
         self.dst_img = self.__rotate()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
-        pass
 
     def __rotate(self):
         img_copy = self.origin_img.copy()
@@ -72,10 +69,13 @@ class Rotate(EditWindow):
         trans = cv2.getRotationMatrix2D(center, self.__ang, self.__scale)
         # アフィン変換
         img = cv2.warpAffine(img_copy, trans, (width, height))
-
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__ang)
         param.append(self.__scale)
@@ -85,10 +85,10 @@ class Rotate(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [90, 1]
-    app = Rotate(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./rotate.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [90, 1]
+#     app = Rotate(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./rotate.jpg', dst_img)
