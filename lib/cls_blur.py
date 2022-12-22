@@ -1,5 +1,4 @@
-import tkinter as tk
-
+"""ぼかし"""
 import cv2
 
 from lib.gui.cls_edit_window import EditWindow
@@ -7,6 +6,8 @@ from lib.parts.parts_scale import Parts_Scale
 
 
 class Blur(EditWindow):
+    """ぼかしクラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__kernel_x = 1
@@ -26,7 +27,7 @@ class Blur(EditWindow):
         self.dst_img = self.__blur()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -42,17 +43,17 @@ class Blur(EditWindow):
         self.__scale2.set(self.__kernel_y)
 
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale2.bind(changed=self.__onScale)
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale2.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
         self.__proc_flag = True
         self.__kernel_x = self.__scale1.get()
         self.__kernel_y = self.__scale2.get()
         self.dst_img = self.__blur()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
 
     def __blur(self):
@@ -60,7 +61,11 @@ class Blur(EditWindow):
         img_copy = cv2.blur(img_copy, (self.__kernel_x, self.__kernel_y))
         return img_copy
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__kernel_x)
         param.append(self.__kernel_y)
@@ -70,10 +75,10 @@ class Blur(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [15, 15]
-    app = Blur(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./blur.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [15, 15]
+#     app = Blur(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./blur.jpg', dst_img)
