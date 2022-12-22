@@ -1,3 +1,4 @@
+"""濃淡補正(ShadingBlur)"""
 import tkinter as tk
 
 import cv2
@@ -7,7 +8,9 @@ from lib.gui.cls_edit_window import EditWindow
 from lib.parts.parts_scale import Parts_Scale
 
 
-class Shading_Blur(EditWindow):
+class ShadingBlur(EditWindow):
+    """濃淡補正(ShadingBlur)クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__kernel_x = 1
@@ -31,7 +34,7 @@ class Shading_Blur(EditWindow):
         self.dst_img = self.__shading_blur()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -48,7 +51,7 @@ class Shading_Blur(EditWindow):
         self.__tkvar = tk.StringVar(value=None)
         __values = ['明', '暗', '明＋暗']
         self.optionmenu1 = tk.OptionMenu(
-            self.settings_frame, self.__tkvar, 'None', *__values, command=self.__onSelect)
+            self.settings_frame, self.__tkvar, 'None', *__values, command=self.__on_select)
         self.optionmenu1.pack(side='top', fill='x')
 
         self.__scale1.set(self.__kernel_x)
@@ -64,27 +67,23 @@ class Shading_Blur(EditWindow):
         elif self.__select_menu == 3:
             self.__tkvar.set('明＋暗')
 
-        pass
-
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale2.bind(changed=self.__onScale)
-        self.__scale3.bind(changed=self.__onScale)
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale2.bind(changed=self.__on_scale)
+        self.__scale3.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
-
+        self.__proc_flag = True
         self.__kernel_x = self.__scale1.get()
         self.__kernel_y = self.__scale2.get()
         self.__noise_cut = self.__scale3.get()
         self.dst_img = self.__shading_blur()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
 
-    def __onSelect(self, event):
+    def __on_select(self, event):
         if self.__tkvar.get() == 'None':
             self.__select_menu = 0
         elif self.__tkvar.get() == '明':
@@ -95,7 +94,7 @@ class Shading_Blur(EditWindow):
             self.__select_menu = 3
 
         self.dst_img = self.__shading_blur()
-        self.Draw()
+        self.draw()
 
     def __shading_blur(self):
         img_copy = self.origin_img.copy()
@@ -108,20 +107,24 @@ class Shading_Blur(EditWindow):
 
         if not self.__select_menu == 0:
             for index in range(height):
-                v = img[index:index+1, 0:width][0]
+                val = img[index:index+1, 0:width][0]
                 if self.__select_menu == 1:  # 明
-                    v = np.where((v < 128+self.__noise_cut),  0, 255)
+                    val = np.where((val < 128+self.__noise_cut),  0, 255)
                 elif self.__select_menu == 2:  # 暗
-                    v = np.where((v > 128-self.__noise_cut),  255, 0)
+                    val = np.where((val > 128-self.__noise_cut),  255, 0)
                 elif self.__select_menu == 3:  # 明暗
-                    v = np.where((v > 128-self.__noise_cut) &
-                                 (v < 128+self.__noise_cut),  int(255/2), 255)
-                img[index:index+1, 0:width][0] = v
+                    val = np.where((val > 128-self.__noise_cut) &
+                                   (val < 128+self.__noise_cut),  int(255/2), 255)
+                img[index:index+1, 0:width][0] = val
 
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__kernel_x)
         param.append(self.__kernel_y)
@@ -133,12 +136,12 @@ class Shading_Blur(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/shading.png')
-    # img = cv2.imread('./0000_img/I.jpg')
-    # img = cv2.imread('./0000_img/10.png')
-    param = []
-    param = [43, 61, 49, 2]
-    app = Shading_Blur(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./Shading_Blur.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/shading.png')
+#     # img = cv2.imread('./0000_img/I.jpg')
+#     # img = cv2.imread('./0000_img/10.png')
+#     param = []
+#     param = [43, 61, 49, 2]
+#     app = ShadingBlur(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./ShadingBlur.jpg', dst_img)
