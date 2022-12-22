@@ -1,5 +1,4 @@
-import tkinter as tk
-
+"""膨張"""
 import cv2
 import numpy as np
 
@@ -8,6 +7,8 @@ from lib.parts.parts_scale import Parts_Scale
 
 
 class Dilate(EditWindow):
+    """膨張クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__kernel_x = 1
@@ -27,7 +28,7 @@ class Dilate(EditWindow):
         self.dst_img = self.__dilate()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -42,21 +43,18 @@ class Dilate(EditWindow):
         self.__scale2.set(self.__kernel_y)
 
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale2.bind(changed=self.__onScale)
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale2.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
-
+        self.__proc_flag = True
         self.__kernel_x = self.__scale1.get()
         self.__kernel_y = self.__scale2.get()
         self.dst_img = self.__dilate()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
-        pass
 
     def __dilate(self):
         img_copy = self.origin_img.copy()
@@ -65,7 +63,11 @@ class Dilate(EditWindow):
         img_copy = cv2.dilate(img_copy, kernel, iterations=1)
         return img_copy
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__kernel_x)
         param.append(self.__kernel_y)
@@ -75,10 +77,10 @@ class Dilate(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [13, 10]
-    app = Dilate(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./dilate.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [13, 10]
+#     app = Dilate(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./dilate.jpg', dst_img)
