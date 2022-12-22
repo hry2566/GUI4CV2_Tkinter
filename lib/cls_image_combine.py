@@ -1,3 +1,4 @@
+"""画像結合"""
 import tkinter as tk
 
 import cv2
@@ -6,12 +7,14 @@ from lib.gui.cls_edit_window import EditWindow
 
 
 class ImageCombine(EditWindow):
+    """画像結合クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.img_bk = img
         self.__radio_index = 0
         self.__gui = gui
 
-        if not type(img) == list:
+        if type(img) != list:
             self.dst_img = img
             return
 
@@ -29,7 +32,7 @@ class ImageCombine(EditWindow):
         self.dst_img = self.__image_combine()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -42,25 +45,24 @@ class ImageCombine(EditWindow):
         self.radiobutton1 = tk.Radiobutton(
             self.settings_frame, value=val1, variable=self.radio_var)
         self.radiobutton1.configure(
-            text='horizontal', command=self.__radioClick)
+            text='horizontal', command=self.__radio_click)
         self.radiobutton1.pack(side='top', anchor='w')
         self.radiobutton2 = tk.Radiobutton(
             self.settings_frame, value=val2, variable=self.radio_var)
         self.radiobutton2.configure(
-            text='virtical', command=self.__radioClick)
+            text='virtical', command=self.__radio_click)
         self.radiobutton2.pack(side='top',  anchor='w')
-        pass
 
     def __init_events(self):
         pass
 
-    def __onScale(self, events):
-        pass
+    # def __onScale(self, events):
+    #     pass
 
-    def __radioClick(self):
+    def __radio_click(self):
         self.__radio_index = self.radio_var.get()
         self.dst_img = self.__image_combine()
-        self.Draw()
+        self.draw()
 
     def __image_combine(self):
         img_copy = self.img_bk.copy()
@@ -70,7 +72,11 @@ class ImageCombine(EditWindow):
             img = cv2.vconcat(img_copy)
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__radio_index)
         if self.__gui:
@@ -79,16 +85,16 @@ class ImageCombine(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img1 = cv2.imread('./0000_img/opencv_logo.jpg')
-    img2 = cv2.imread('./0000_img/opencv_logo2.jpg')
-    # img3 = cv2.imread('./0000_img/opencv_logo2.jpg')
-    img = []
-    img.append(img1)
-    img.append(img2)
-    # img.append(img3)
-    param = [0]
-    # img = cv2.imread('./0000_img/opencv_logo.jpg')
-    app = ImageCombine(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./ImageCombine.jpg', dst_img)
+# if __name__ == "__main__":
+#     img1 = cv2.imread('./0000_img/opencv_logo.jpg')
+#     img2 = cv2.imread('./0000_img/opencv_logo2.jpg')
+#     # img3 = cv2.imread('./0000_img/opencv_logo2.jpg')
+#     img = []
+#     img.append(img1)
+#     img.append(img2)
+#     # img.append(img3)
+#     param = [0]
+#     # img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     app = ImageCombine(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./ImageCombine.jpg', dst_img)
