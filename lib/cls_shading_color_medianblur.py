@@ -1,3 +1,4 @@
+"""濃淡補正(Shading_Color_MedianBlur)"""
 import tkinter as tk
 
 import cv2
@@ -7,7 +8,9 @@ from lib.gui.cls_edit_window import EditWindow, even2odd
 from lib.parts.parts_scale import Parts_Scale
 
 
-class Shading_Color_MedianBlur(EditWindow):
+class ShadingColorMedianBlur(EditWindow):
+    """濃淡補正(Shading_Color_MedianBlur)クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__kernel = 1
@@ -29,7 +32,7 @@ class Shading_Color_MedianBlur(EditWindow):
         self.dst_img = self.__shading_color_median_blur()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -44,7 +47,7 @@ class Shading_Color_MedianBlur(EditWindow):
         self.__tkvar = tk.StringVar(value=None)
         __values = ['明', '暗', '明＋暗']
         self.optionmenu1 = tk.OptionMenu(
-            self.settings_frame, self.__tkvar, 'None', *__values, command=self.__onSelect)
+            self.settings_frame, self.__tkvar, 'None', *__values, command=self.__on_select)
         self.optionmenu1.pack(side='top', fill='x')
 
         self.__scale1.set(self.__kernel)
@@ -60,22 +63,20 @@ class Shading_Color_MedianBlur(EditWindow):
             self.__tkvar.set('明＋暗')
 
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale3.bind(changed=self.__onScale)
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale3.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
-
+        self.__proc_flag = True
         self.__kernel = self.__scale1.get()
         self.__noise_cut = self.__scale3.get()
         self.dst_img = self.__shading_color_median_blur()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
 
-    def __onSelect(self, event):
+    def __on_select(self, event):
         if self.__tkvar.get() == 'None':
             self.__select_menu = 0
         elif self.__tkvar.get() == '明':
@@ -86,36 +87,41 @@ class Shading_Color_MedianBlur(EditWindow):
             self.__select_menu = 3
 
         self.dst_img = self.__shading_color_median_blur()
-        self.Draw()
+        self.draw()
 
     def __shading_color_median_blur(self):
         img_copy = self.origin_img.copy()
 
         image = cv2.cvtColor(img_copy, cv2.COLOR_BGR2HSV)
-        h1, s1, v1 = cv2.split(image)
+        hue, saturation, value = cv2.split(image)
         height, width = image.shape[:2]
 
         kernel = even2odd(self.__kernel)
-        blur = cv2.medianBlur(v1, ksize=kernel)
-        v2 = v1/blur
-        v2 = np.clip(v2*128, 0, 255).astype(np.uint8)
+        blur = cv2.medianBlur(value, ksize=kernel)
+        value2 = value/blur
+        value2 = np.clip(value2*128, 0, 255).astype(np.uint8)
 
         if not self.__select_menu == 0:
             for index in range(height):
-                v = v2[index:index+1, 0:width][0]
+                value3 = value2[index:index+1, 0:width][0]
                 if self.__select_menu == 1:  # 明
-                    v = np.where((v < 128+self.__noise_cut),  0, 255)
+                    value3 = np.where((value3 < 128+self.__noise_cut),  0, 255)
                 elif self.__select_menu == 2:  # 暗
-                    v = np.where((v > 128-self.__noise_cut),  255, 0)
+                    value3 = np.where((value3 > 128-self.__noise_cut),  255, 0)
                 elif self.__select_menu == 3:  # 明暗
-                    v = np.where((v > 128-self.__noise_cut) &
-                                 (v < 128+self.__noise_cut),  int(255/2), 255)
-                v2[index:index+1, 0:width][0] = v
+                    value3 = np.where((value3 > 128-self.__noise_cut) &
+                                      (value3 < 128+self.__noise_cut),  int(255/2), 255)
+                value2[index:index+1, 0:width][0] = value3
 
-        img = cv2.cvtColor(cv2.merge((h1, s1, v2)), cv2.COLOR_HSV2BGR)
+        img = cv2.cvtColor(
+            cv2.merge((hue, saturation, value2)), cv2.COLOR_HSV2BGR)
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__kernel)
         param.append(self.__noise_cut)
@@ -126,11 +132,11 @@ class Shading_Color_MedianBlur(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/shading.png')
-    # img = cv2.imread('./0000_img/10.png')
-    param = []
-    param = [18, 38, 2]
-    app = Shading_Color_MedianBlur(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./Shading_MedianBlur.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cvalue2.imread('./0000_img/shading.png')
+#     # img = cvalue2.imread('./0000_img/10.png')
+#     param = []
+#     param = [18, 38, 2]
+#     app = ShadingColorMedianBlur(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cvalue2.imwrite('./Shading_MedianBlur.jpg', dst_img)
