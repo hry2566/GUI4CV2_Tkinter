@@ -1,4 +1,4 @@
-import os
+"""濃淡補正(ShadingCustomFillter)"""
 import tkinter as tk
 
 import cv2
@@ -8,7 +8,9 @@ from lib.gui.cls_edit_window import EditWindow
 from lib.parts.parts_scale import Parts_Scale
 
 
-class Shading_CustomFillter(EditWindow):
+class ShadingCustomFillter(EditWindow):
+    """濃淡補正(ShadingCustomFillter)クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__kernel_x = 2
@@ -34,7 +36,7 @@ class Shading_CustomFillter(EditWindow):
         self.dst_img = self.__custom_fillter()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -88,7 +90,7 @@ class Shading_CustomFillter(EditWindow):
         self.__k = self.__scale3.get()
         self.__noise_cut = self.__scale4.get()
         self.dst_img = self.__custom_fillter()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
         pass
 
@@ -103,7 +105,7 @@ class Shading_CustomFillter(EditWindow):
             self.__select_menu = 3
 
         self.dst_img = self.__custom_fillter()
-        self.Draw()
+        self.draw()
 
     def __custom_fillter(self):
         img_copy = self.origin_img.copy()
@@ -149,7 +151,11 @@ class Shading_CustomFillter(EditWindow):
 
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__kernel_x)
         param.append(self.__kernel_y)
@@ -157,18 +163,18 @@ class Shading_CustomFillter(EditWindow):
         param.append(self.__noise_cut)
         param.append(self.__select_menu)
         if self.__gui:
-            print('Proc : CustomFillter')
+            print('Proc : ShadingCustomFillter')
             print(f'param = {param}')
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    # img = cv2.imread('./0000_img/opencv_logo.jpg')
-    img = cv2.imread('./0000_img/shading.png')
-    # img = cv2.imread('./0000_img/test.jpg')
-    # img = cv2.imread('./0000_img/10.png')
-    param = []
-    param = [4, 5, 0.9, 105, 2]
-    app = Shading_CustomFillter(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./CustomFillter.jpg', dst_img)
+# if __name__ == "__main__":
+#     # img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     img = cv2.imread('./0000_img/shading.png')
+#     # img = cv2.imread('./0000_img/test.jpg')
+#     # img = cv2.imread('./0000_img/10.png')
+#     param = []
+#     param = [4, 5, 0.9, 105, 2]
+#     app = ShadingCustomFillter(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./ShadingCustomFillter.jpg', dst_img)
