@@ -1,3 +1,4 @@
+"""濃淡補正(ShadingColorMovingAve)"""
 import math
 import tkinter as tk
 
@@ -8,7 +9,9 @@ from lib.gui.cls_edit_window import EditWindow
 from lib.parts.parts_scale import Parts_Scale
 
 
-class Shading_Color_MovingAve(EditWindow):
+class ShadingColorMovingAve(EditWindow):
+    """濃淡補正(ShadingColorMovingAve)クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__kernel_x = 1
@@ -32,7 +35,7 @@ class Shading_Color_MovingAve(EditWindow):
         self.dst_img = self.__shading__color_moving_ave()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -49,7 +52,7 @@ class Shading_Color_MovingAve(EditWindow):
         self.__tkvar = tk.StringVar(value=None)
         __values = ['明', '暗', '明＋暗']
         self.optionmenu1 = tk.OptionMenu(
-            self.settings_frame, self.__tkvar, 'None', *__values, command=self.__onSelect)
+            self.settings_frame, self.__tkvar, 'None', *__values, command=self.__on_select)
         self.optionmenu1.pack(side='top', fill='x')
 
         self.__scale1.set(self.__kernel_x)
@@ -65,28 +68,24 @@ class Shading_Color_MovingAve(EditWindow):
         elif self.__select_menu == 3:
             self.__tkvar.set('明＋暗')
 
-        pass
-
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale2.bind(changed=self.__onScale)
-        self.__scale3.bind(changed=self.__onScale)
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale2.bind(changed=self.__on_scale)
+        self.__scale3.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
+        self.__proc_flag = True
 
         self.__kernel_x = self.__scale1.get()
         self.__kernel_y = self.__scale2.get()
         self.__noise_cut = self.__scale3.get()
         self.dst_img = self.__shading__color_moving_ave()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
 
-    def __onSelect(self, event):
-
+    def __on_select(self, event):
         if self.__tkvar.get() == 'None':
             self.__select_menu = 0
         elif self.__tkvar.get() == '明':
@@ -97,12 +96,13 @@ class Shading_Color_MovingAve(EditWindow):
             self.__select_menu = 3
 
         self.dst_img = self.__shading__color_moving_ave()
-        self.Draw()
+        self.draw()
 
     def __shading__color_moving_ave(self):
         img_copy = self.origin_img.copy()
         image = cv2.cvtColor(img_copy, cv2.COLOR_BGR2HSV)
-        h1, s1, v1 = cv2.split(image)
+        hue, saturation, value = cv2.split(image)
+        # hue, saturation, value = cv2.split(image)
         height, width = image.shape[:2]
 
         num_x = self.__kernel_x
@@ -112,67 +112,72 @@ class Shading_Color_MovingAve(EditWindow):
 
         if num_x > 1:
             for index in range(height):
-                y1 = v1[index:index+1, 0:width][0]
-                y2 = np.convolve(y1, kernel_x, mode='same')
+                y_1 = value[index:index+1, 0:width][0]
+                y_2 = np.convolve(y_1, kernel_x, mode='same')
 
                 n_conv = math.ceil(num_x/2)
-                y2[0] *= num_x/n_conv
+                y_2[0] *= num_x/n_conv
                 for i in range(1, n_conv):
-                    y2[i] *= num_x/(i+n_conv)
-                    y2[-i] *= num_x/(i + n_conv - (num_x % 2))
+                    y_2[i] *= num_x/(i+n_conv)
+                    y_2[-i] *= num_x/(i + n_conv - (num_x % 2))
 
-                dev = y1-y2
-                v1[index:index+1, 0:width][0] = dev+int(255/2)
+                dev = y_1-y_2
+                value[index:index+1, 0:width][0] = dev+int(255/2)
 
         if num_y > 1:
             for index in range(width):
-                y1 = v1[0:height, index:index+1].T[0]
-                y2 = np.convolve(y1, kernel_y, mode='same')
+                y_1 = value[0:height, index:index+1].T[0]
+                y_2 = np.convolve(y_1, kernel_y, mode='same')
 
                 n_conv = math.ceil(num_x/2)
-                y2[0] *= num_x/n_conv
+                y_2[0] *= num_x/n_conv
                 for i in range(1, n_conv):
-                    y2[i] *= num_x/(i+n_conv)
-                    y2[-i] *= num_x/(i + n_conv - (num_x % 2))
+                    y_2[i] *= num_x/(i+n_conv)
+                    y_2[-i] *= num_x/(i + n_conv - (num_x % 2))
 
-                dev = y1-y2
-                v1[0:height, index:index+1].T[0] = dev+int(255/2)
+                dev = y_1-y_2
+                value[0:height, index:index+1].T[0] = dev+int(255/2)
 
         if not self.__select_menu == 0:
             for index in range(height):
-                v = v1[index:index+1, 0:width][0]
+                val = value[index:index+1, 0:width][0]
                 if self.__select_menu == 1:  # 明
-                    v = np.where((v < 128+self.__noise_cut),  0, 255)
+                    val = np.where((val < 128+self.__noise_cut),  0, 255)
                 elif self.__select_menu == 2:  # 暗
-                    v = np.where((v > 128-self.__noise_cut),  255, 0)
+                    val = np.where((val > 128-self.__noise_cut),  255, 0)
                 elif self.__select_menu == 3:  # 明暗
-                    v = np.where((v > 128-self.__noise_cut) &
-                                 (v < 128+self.__noise_cut),  int(255/2), 255)
-                v1[index:index+1, 0:width][0] = v
+                    val = np.where((val > 128-self.__noise_cut) &
+                                   (val < 128+self.__noise_cut),  int(255/2), 255)
+                value[index:index+1, 0:width][0] = val
 
-        img = cv2.cvtColor(cv2.merge((h1, s1, v1)), cv2.COLOR_HSV2BGR)
+        img = cv2.cvtColor(
+            cv2.merge((hue, saturation, value)), cv2.COLOR_HSV2BGR)
 
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__kernel_x)
         param.append(self.__kernel_y)
         param.append(self.__noise_cut)
         param.append(self.__select_menu)
         if self.__gui:
-            print('Proc : Shading_Color_MovingAve')
+            print('Proc : ShadingColorMovingAve')
             print(f'param = {param}')
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/shading.png')
-    # img = cv2.imread('./0000_img/10.png')
-    # img = cv2.imread('./0000_img/test.jpg')
-    # img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [100, 36, 56, 2]
-    app = Shading_Color_MovingAve(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./Shading_Color_MovingAve.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/shading.png')
+#     # img = cv2.imread('./0000_img/10.png')
+#     # img = cv2.imread('./0000_img/test.jpg')
+#     # img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [100, 36, 56, 2]
+#     app = ShadingColorMovingAve(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./ShadingColorMovingAve.jpg', dst_img)
