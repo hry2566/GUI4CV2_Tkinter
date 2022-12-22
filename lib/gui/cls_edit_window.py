@@ -1,11 +1,15 @@
+"""編集画面"""
+import platform
 
 import cv2
-import platform
-from PIL import Image, ImageTk, ImageOps
+from PIL import Image, ImageOps, ImageTk
+
 from lib.gui.cls_gui_base import GuiBase
 
 
 class EditWindow(GuiBase):
+    """編集画面クラス"""
+
     def __init__(self, img, master=None):
         super().__init__(master)
         self.origin_img = img
@@ -22,19 +26,17 @@ class EditWindow(GuiBase):
 
         self.__init_gui()
         self.__init_events()
-        self.Draw()
-        pass
+        self.draw()
 
     def __init_gui(self):
         self.none_label.configure(text='')
         self.image_switch_btn.configure(text='switch view\n(src)')
         self.image_reset_btn.configure(text='reset\n(scale&pos)')
-        pass
 
     def __init_events(self):
-        self.image_edit_frame.bind('<Configure>', self.__onResize)
-        self.image_switch_btn.bind('<1>', self.__onSwitch_btn)
-        self.image_reset_btn.bind('<1>', self.__onReset_btn)
+        self.image_edit_frame.bind('<Configure>', self.__on_resize)
+        self.image_switch_btn.bind('<1>', self.__on_switch_btn)
+        self.image_reset_btn.bind('<1>', self.__on_reset_btn)
         if self.__os_type == 'Windows':
             self.canvas1.bind("<MouseWheel>", self.__mouse_wheel)
         elif self.__os_type == 'Linux':
@@ -42,22 +44,15 @@ class EditWindow(GuiBase):
             self.canvas1.bind("<ButtonPress-5>", self.__mouse_wheel)
         self.canvas1.bind('<2>', self.__mouse_wheel_down)
         self.canvas1.bind('<ButtonRelease-2>', self.__mouse_wheel_up)
-        # self.canvas1.bind("<Motion>", self.__canvas_mousemove, add='')
-        pass
 
     def __mouse_wheel_down(self, event):
         self.__start_x = event.x
         self.__start_y = event.y
-        pass
 
     def __mouse_wheel_up(self, event):
         self.__imgpos_x -= self.__start_x - event.x
         self.__imgpos_y -= self.__start_y - event.y
-        self.Draw()
-        pass
-
-    # def __canvas_mousemove(self, event):
-    #     pass
+        self.draw()
 
     def __mouse_wheel(self, event):
         wheel = True
@@ -76,36 +71,36 @@ class EditWindow(GuiBase):
             self.__view_scale += 0.05
         else:
             self.__view_scale -= 0.05
-        self.Draw()
-        pass
+        self.draw()
 
-    def __onReset_btn(self, event):
+    def __on_reset_btn(self, event):
         self.__view_scale = 1.0
         self.__imgpos_x = 0
         self.__imgpos_y = 0
-        self.Draw()
-        pass
+        self.draw()
 
-    def __onSwitch_btn(self, event):
+    def __on_switch_btn(self, event):
         if self.__img_switch:
             self.__img_switch = False
             self.image_switch_btn.configure(text='switch view\n(dst)')
         else:
             self.__img_switch = True
             self.image_switch_btn.configure(text='switch view\n(src)')
-        self.Draw()
-        pass
+        self.draw()
 
-    def __onResize(self, event):
-        self.Draw()
+    def __on_resize(self, event):
+        self.draw()
 
-    def GetViewScale(self):
+    def get_view_scale(self):
+        """画像表示倍率取得"""
         return self.__view_scale
 
-    def GetImgPos(self):
+    def get_img_pos(self):
+        """画像表示位置取得"""
         return self.__imgpos_x, self.__imgpos_y
 
-    def Draw(self):
+    def draw(self):
+        """画像更新"""
         if self.__draw_flag:
             return
         self.__draw_flag = True
@@ -139,14 +134,14 @@ class EditWindow(GuiBase):
         self.__draw_flag = False
 
 
-# 奇数化
 def even2odd(number: int):
+    """奇数化"""
     if number % 2 == 0:
         number += 1
     return number
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    app = EditWindow(img)
-    app.run()
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     app = EditWindow(img)
+#     app.run()
