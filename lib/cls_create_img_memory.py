@@ -1,3 +1,4 @@
+"""メモリ領域作成"""
 import tkinter as tk
 
 import cv2
@@ -6,7 +7,9 @@ import numpy as np
 from lib.gui.cls_edit_window import EditWindow
 
 
-class Create_Img_Memory(EditWindow):
+class CreateImgMemory(EditWindow):
+    """メモリ領域作成クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = np.zeros((1, 1, 3), np.uint8)
         self.through_img = img
@@ -64,18 +67,16 @@ class Create_Img_Memory(EditWindow):
         self.settings_frame.pack(expand='true', fill='both', side='top')
 
         self.image_view_frame.pack_forget()
-        pass
 
     def __init_events(self):
-        self.button1.bind('<1>', self.__onAddBtn)
-        self.button2.bind('<1>', self.__onDelBtn)
-        self.entry2.bind('<Return>', self.__onReturn)
-        pass
+        self.button1.bind('<1>', self.__on_add_btn)
+        self.button2.bind('<1>', self.__on_del_btn)
+        self.entry2.bind('<Return>', self.___on_return)
 
-    def __onReturn(self, event):
-        self.__onAddBtn(None)
+    def ___on_return(self, event):
+        self.__on_add_btn(None)
 
-    def __onAddBtn(self, event):
+    def __on_add_btn(self, event):
         add_name = self.entry2.get()
         index = 0
         flag = False
@@ -89,17 +90,19 @@ class Create_Img_Memory(EditWindow):
             self.listbox1.insert(tk.END, add_name)
             self.__img_array_buf1.append(self.origin_img)
             self.__img_names_buf1.append(add_name)
-        pass
 
-    def __onDelBtn(self, event):
+    def __on_del_btn(self, event):
         if not self.listbox1.curselection() == ():
             select_index = self.listbox1.curselection()[0]
             self.__img_array_buf1.pop(select_index)
             self.__img_names_buf1.pop(select_index)
             self.listbox1.delete(select_index)
-        pass
+
+    def dummy(self):
+        """パブリックダミー関数"""
 
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__img_array_buf1)
         param.append(self.__img_names_buf1)
@@ -111,10 +114,10 @@ class Create_Img_Memory(EditWindow):
         return param, self.through_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    img_array = []
-    img_names = ['img1', 'img2']
-    app = Create_Img_Memory(img, [img_array, img_names], gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./Create_Img_Memory.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     img_array = []
+#     img_names = ['img1', 'img2']
+#     app = CreateImgMemory(img, [img_array, img_names], gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./Create_Img_Memory.jpg', dst_img)
