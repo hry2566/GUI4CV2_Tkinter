@@ -1,12 +1,13 @@
-import tkinter as tk
-
+"""ぼかし(ガウシアン)"""
 import cv2
 
 from lib.gui.cls_edit_window import EditWindow, even2odd
 from lib.parts.parts_scale import Parts_Scale
 
 
-class Gaussian_Blur(EditWindow):
+class GaussianBlur(EditWindow):
+    """ぼかし(ガウシアン)クラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__kernel_x = 1
@@ -28,7 +29,7 @@ class Gaussian_Blur(EditWindow):
         self.dst_img = self.__gaussian_blur()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -46,23 +47,20 @@ class Gaussian_Blur(EditWindow):
         self.__scale3.set(self.__std)
 
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        self.__scale2.bind(changed=self.__onScale)
-        self.__scale3.bind(changed=self.__onScale)
+        self.__scale1.bind(changed=self.__on_scale)
+        self.__scale2.bind(changed=self.__on_scale)
+        self.__scale3.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
-
+        self.__proc_flag = True
         self.__kernel_x = self.__scale1.get()
         self.__kernel_y = self.__scale2.get()
         self.__std = self.__scale3.get()
         self.dst_img = self.__gaussian_blur()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
-        pass
 
     def __gaussian_blur(self):
         img_copy = self.origin_img.copy()
@@ -74,7 +72,11 @@ class Gaussian_Blur(EditWindow):
                                self.__std)
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__kernel_x)
         param.append(self.__kernel_y)
@@ -85,10 +87,10 @@ class Gaussian_Blur(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [33, 33, 3]
-    app = Gaussian_Blur(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./Gaussian_Blur.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [33, 33, 3]
+#     app = GaussianBlur(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./Gaussian_Blur.jpg', dst_img)
