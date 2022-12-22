@@ -1,5 +1,4 @@
-import tkinter as tk
-
+"""シャープ"""
 import cv2
 import numpy as np
 
@@ -8,6 +7,8 @@ from lib.parts.parts_scale import Parts_Scale
 
 
 class Fillter2D(EditWindow):
+    """シャープクラス"""
+
     def __init__(self, img, param, master=None, gui=False):
         self.origin_img = img
         self.__kernel = 0
@@ -25,7 +26,7 @@ class Fillter2D(EditWindow):
         self.dst_img = self.__fillter2d()
 
         if gui:
-            self.Draw()
+            self.draw()
             self.run()
 
     def __init_gui(self):
@@ -34,28 +35,20 @@ class Fillter2D(EditWindow):
         self.__scale1 = Parts_Scale(self.settings_frame)
         self.__scale1.configure(
             label='kernel', side='top', resolution=0.1, from_=1, to=10)
-
-        # self.__scale1 = tk.Scale(self.settings_frame)
-        # self.__scale1.configure(from_=0, to=10,
-        #                         label="kernel", orient="horizontal", resolution=0.1, command=self.__onScale)
-        # self.__scale1.pack(side="top")
         self.__scale1.set(self.__kernel)
 
     def __init_events(self):
-        self.__scale1.bind(changed=self.__onScale)
-        pass
+        self.__scale1.bind(changed=self.__on_scale)
 
-    def __onScale(self):
+    def __on_scale(self):
         if self.__proc_flag:
             return
-        else:
-            self.__proc_flag = True
+        self.__proc_flag = True
 
         self.__kernel = self.__scale1.get()
         self.dst_img = self.__fillter2d()
-        self.Draw()
+        self.draw()
         self.__proc_flag = False
-        pass
 
     def __fillter2d(self):
         img_copy = self.origin_img.copy()
@@ -66,7 +59,11 @@ class Fillter2D(EditWindow):
         img = cv2.filter2D(img_copy, ddepth=-1, kernel=kernel)
         return img
 
+    def dummy(self):
+        """パブリックダミー関数"""
+
     def get_data(self):
+        """パラメータ取得"""
         param = []
         param.append(self.__kernel)
         if self.__gui:
@@ -75,10 +72,10 @@ class Fillter2D(EditWindow):
         return param, self.dst_img
 
 
-if __name__ == "__main__":
-    img = cv2.imread('./0000_img/opencv_logo.jpg')
-    param = []
-    param = [3.2]
-    app = Fillter2D(img, param, gui=True)
-    param, dst_img = app.get_data()
-    cv2.imwrite('./fillter2d.jpg', dst_img)
+# if __name__ == "__main__":
+#     img = cv2.imread('./0000_img/opencv_logo.jpg')
+#     param = []
+#     param = [3.2]
+#     app = Fillter2D(img, param, gui=True)
+#     param, dst_img = app.get_data()
+#     cv2.imwrite('./fillter2d.jpg', dst_img)
