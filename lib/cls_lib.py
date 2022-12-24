@@ -14,7 +14,7 @@ from lib.cls_edge_measurement import EdgeMeasurement
 from lib.cls_equalize_hist import EqualizeHist
 from lib.cls_erode import Erode
 from lib.cls_fast_nl_means_denoising_colored import FastNlMeansDenoisingColored
-from lib.cls_fillter2d import Fillter2D
+from lib.cls_fillter2D import Fillter2D
 from lib.cls_gamma import Gamma
 from lib.cls_gaussian_blur import GaussianBlur
 from lib.cls_image_combine import ImageCombine
