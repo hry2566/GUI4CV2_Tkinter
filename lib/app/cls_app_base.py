@@ -1,11 +1,14 @@
-#!/usr/bin/python3
+"""App_Base"""
 import pickle
 import tkinter as tk
 from functools import partial
+
 from lib.cls_lib import *
 
 
-class App_Base:
+class AppBase:
+    """App_Baseクラス"""
+
     def __init__(self, master=None):
         self.__proc_list = []
         self.__param_list = []
@@ -122,16 +125,18 @@ class App_Base:
         self.__code_list.append(self.__create_code(proc))
 
     def __init_events(self):
-        self.set_param_btn.bind('<1>', self.__onSetParam_Events)
-        self.del_task_btn.bind('<1>', self.__onDelBtn_Events)
-        self.create_code_btn.bind('<1>', self.__onClick_create_code)
-        self.task_lst.bind("<<ListboxSelect>>", self.__onSelectListBox_Events)
-        self.run_btn.bind("<1>", self.__onClick_run_task)
-        self.load_settings_btn.bind("<1>", self.__onClick_load_settings)
-        self.save_settings_btn.bind("<1>", self.__onClick_save_settings)
-        self.list_clear_btn.bind("<1>", self.__onClick_list_clear)
+        self.set_param_btn.bind('<1>', self.__on_set_param_events)
+        self.del_task_btn.bind('<1>', self.__on_del_btn_events)
+        self.create_code_btn.bind('<1>', self.__on_click_create_code)
+        self.task_lst.bind("<<ListboxSelect>>",
+                           self.__on_select_list_box_events)
+        self.run_btn.bind("<1>", self.__on_click_run_task)
+        self.load_settings_btn.bind("<1>", self.__on_click_load_settings)
+        self.save_settings_btn.bind("<1>", self.__on_click_save_settings)
+        self.list_clear_btn.bind("<1>", self.__on_click_list_clear)
 
     def set_menu(self, menu, items):
+        """set_menu関数"""
         for item in items:
             menu.add_command(label=item, command=partial(
                 self.__submenu_selected, item))
@@ -146,9 +151,10 @@ class App_Base:
         self.__param_list.append([])
         self.__dstimg_list.append([])
         self.__code_list.append(self.__create_code(proc))
-        self.__onSelectListBox_Events(None)
+        self.__on_select_list_box_events(None)
 
     def set_proc_code(self, proc_code_list, fnc_list):
+        """set_proc_code関数"""
         self.proc_code_list = proc_code_list
         self.fnc_list = fnc_list
         self.__init_gui()
@@ -159,7 +165,7 @@ class App_Base:
         index = col1.index(proc)
         return col2[index]
 
-    def __onSelectListBox_Events(self, event):
+    def __on_select_list_box_events(self, event):
         if self.task_lst.curselection() == ():
             return
 
@@ -203,10 +209,10 @@ class App_Base:
                 img, self.__param_list[index], master=self.split_frame, gui=gui_flag)
         elif proc == '画像メモリI/O(MemoryIO)':
             if len(self.__param_list[index]) == 0:
-                memIO = ['', []]
+                mem_io = ['', []]
                 self.__param_list[index].append(self.__img_array)
                 self.__param_list[index].append(self.__img_names)
-                self.__param_list[index].append(memIO)
+                self.__param_list[index].append(mem_io)
 
             self.__app_child = self.fnc_list[fnc_index](
                 img, self.__param_list[index], master=self.split_frame, gui=gui_flag)
@@ -217,7 +223,7 @@ class App_Base:
             self.__app_child = self.fnc_list[fnc_index](
                 img, self.__param_list[index], master=self.split_frame, gui=gui_flag)
 
-    def __onSetParam_Events(self, event):
+    def __on_set_param_events(self, event):
         if self.__app_child == 0:
             print('set_param_cancel')
             return
@@ -231,7 +237,7 @@ class App_Base:
             self.__img_array = param[0]
             self.__img_names = param[1]
 
-    def __onClick_run_task(self, event):
+    def __on_click_run_task(self, event):
         self.appwindow.after(1, self.__run_task)
 
     def __run_task(self):
@@ -240,8 +246,8 @@ class App_Base:
         for index, _ in enumerate(self.__proc_list):
             self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
             self.task_lst.select_set(index)
-            self.__onSelectListBox_Events(None)
-            self.__onSetParam_Events(None)
+            self.__on_select_list_box_events(None)
+            self.__on_set_param_events(None)
             rows = index
         self.__run_flag = False
 
@@ -252,9 +258,9 @@ class App_Base:
             rows -= 1
         self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
         self.task_lst.select_set(rows)
-        self.__onSelectListBox_Events(None)
+        self.__on_select_list_box_events(None)
 
-    def __onDelBtn_Events(self, event):
+    def __on_del_btn_events(self, event):
         if self.task_lst.curselection() == () or self.task_lst.curselection()[0] == 0:
             print('del_cancel')
             return
@@ -266,7 +272,7 @@ class App_Base:
         del self.__dstimg_list[index]
         del self.__code_list[index]
 
-    def __onClick_create_code(self, event):
+    def __on_click_create_code(self, event):
         self.appwindow.after(1, self.__create_sourcecode)
 
     def __create_sourcecode(self):
@@ -292,7 +298,7 @@ class App_Base:
             else:
                 if memory_mode == 1:
                     pycode += '\n'
-                    pycode += f'img_array = []\n'
+                    pycode += 'img_array = []\n'
                     pycode += f'img_names = {self.__img_names}\n'
                     pycode += 'param = [img_array, img_names]\n'
                     pycode += f'{code}'
@@ -300,7 +306,7 @@ class App_Base:
                 elif memory_mode == 2:
                     pycode += '\n' + \
                         f'memIO = {str(self.__param_list[index][2])}\n'
-                    pycode += f'param = [img_array, img_names, memIO]\n'
+                    pycode += 'param = [img_array, img_names, memIO]\n'
                     pycode += f'imgLib = {code}'
                 else:
                     pycode += '\n' + \
@@ -328,29 +334,30 @@ class App_Base:
 
         root = tk.Tk()
         root.withdraw()
-        dir = './'
+        directory = './'
         typ = [("Python", ".py")]
-        file = tk.filedialog.asksaveasfilename(initialdir=dir, filetypes=typ)
+        file = tk.filedialog.asksaveasfilename(
+            initialdir=directory, filetypes=typ)
         root.destroy()
         if len(file) == 0:
             return
         if not '.py' in file:
             file += '.py'
 
-        f = open(file, 'w', encoding='utf-8')
-        f.write(pycode)
-        f.close()
+        code_file = open(file, 'w', encoding='utf-8')
+        code_file.write(pycode)
+        code_file.close()
 
-    def __onClick_save_settings(self, event):
+    def __on_click_save_settings(self, event):
         self.appwindow.after(1, self.__save_settings)
 
     def __save_settings(self):
         root = tk.Tk()
         root.withdraw()
-        dir = './'
+        directory = './'
         typ = [("DATA", ".data")]
         file = tk.filedialog.asksaveasfilename(
-            initialdir=dir, filetypes=typ)
+            initialdir=directory, filetypes=typ)
         root.destroy()
         if len(file) == 0:
             return
@@ -363,30 +370,30 @@ class App_Base:
         data.append(self.__code_list)
         data.append(self.__dstimg_list)
         data.append(self.__img_names)
-        f = open(file, 'wb')
-        pickle.dump(data, f)
-        f.close
+        data_file = open(file, 'wb')
+        pickle.dump(data, data_file)
+        data_file.close
 
-    def __onClick_load_settings(self, event):
+    def __on_click_load_settings(self, event):
         self.appwindow.after(1, self.__load_settings)
 
     def __load_settings(self):
         root = tk.Tk()
         root.withdraw()
         typ = [("DATA", ".data")]
-        dir = './'
+        directory = './'
         file = tk.filedialog.askopenfilenames(
-            filetypes=typ, initialdir=dir)
+            filetypes=typ, initialdir=directory)
         root.destroy()
         if len(file) == 0:
             return
-        else:
-            path = file[0]
+        path = file[0]
 
         data = []
-        f = open(path, 'rb')
-        data = pickle.load(f)
-        f.close()
+        data_file = open(path, 'rb')
+        data = pickle.load(data_file)
+        data_file.close()
+
         self.__proc_list = data[0]
         self.__param_list = data[1]
         self.__code_list = data[2]
@@ -397,7 +404,7 @@ class App_Base:
         for proc in self.__proc_list:
             self.task_lst.insert(tk.END, proc)
 
-    def __onClick_list_clear(self, event):
+    def __on_click_list_clear(self, event):
         self.task_lst.delete(0, tk.END)
         self.__proc_list = []
         self.__param_list = []
@@ -406,12 +413,12 @@ class App_Base:
         self.__img_array = []
         self.__img_names = []
         self.__init_gui()
-        pass
 
     def run(self):
+        """run関数"""
         self.appwindow.mainloop()
 
 
-if __name__ == "__main__":
-    app = App_Base()
-    app.run()
+# if __name__ == "__main__":
+#     app = AppBase()
+#     app.run()
