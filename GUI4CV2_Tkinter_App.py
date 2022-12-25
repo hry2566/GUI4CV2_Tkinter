@@ -1,11 +1,11 @@
 """GUIアプリ"""
 from functools import partial
 
-from lib.app.cls_app_base import App_Base
+from lib.app.cls_app_base import AppBase
 from lib.cls_lib import *
 
 
-class App(App_Base):
+class App(AppBase):
     """GUIアプリクラス"""
 
     def __init__(self, master=None):
