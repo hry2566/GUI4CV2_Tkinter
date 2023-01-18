@@ -43,4 +43,5 @@ from lib.cls_sobel import Sobel
 from lib.cls_threshold import Threshold
 from lib.cls_trim import Trim
 from lib.cls_unsharp import UnSharp
+from lib.cls_webcamera import WebCamera
 from lib.cls_white_balance import WhiteBalance
