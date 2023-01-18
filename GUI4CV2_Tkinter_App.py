@@ -17,7 +17,8 @@ class App(AppBase):
     def __init_gui(self):
         # ***********************************************************************
         labels_file = ['ファイル開く(Open File)',
-                       'ファイル保存(Save File)']
+                       'ファイル保存(Save File)',
+                       'Webカメラ(WebCamera)']
 
         labels_image = ['回転 (Rotate)',
                         '位置合わせ (PhaseCorrelate_XY)',
@@ -266,6 +267,10 @@ class App(AppBase):
         proc_code_list.append(['エッジ円周 (EdgeArc)',
                                'EdgeArc(img, param, gui=False)'])
         fnc_list.append(partial(EdgeArc))
+
+        proc_code_list.append(['Webカメラ(WebCamera)',
+                               'WebCamera(param, gui=False)'])
+        fnc_list.append(partial(WebCamera))
 
         self.set_proc_code(proc_code_list, fnc_list)
 
