@@ -2,6 +2,7 @@
 import platform
 
 import cv2
+import numpy as np
 from PIL import Image, ImageOps, ImageTk
 
 from lib.gui.cls_gui_base import GuiBase
@@ -115,6 +116,8 @@ class EditWindow(GuiBase):
         canvas_height = int(self.canvas1.winfo_height()*self.__view_scale)
 
         if 1 < canvas_width and 1 < canvas_height:
+            if img == []:
+                img = np.zeros((1, 1, 3), np.uint8)
             cv_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             pil_image = Image.fromarray(cv_image)
             try:
