@@ -142,16 +142,37 @@ class AppBase:
                 self.__submenu_selected, item))
 
     def __submenu_selected(self, proc):
-        if self.__dstimg_list[self.task_lst.size()-1] == []:
-            return
-        self.task_lst.insert(tk.END, proc)
-        self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
-        self.task_lst.select_set(self.task_lst.size()-1)
-        self.__proc_list.append(proc)
-        self.__param_list.append([])
-        self.__dstimg_list.append([])
-        self.__code_list.append(self.__create_code(proc))
-        self.__on_select_list_box_events(None)
+        if proc == 'Webカメラ(WebCamera)':
+            # self.__on_click_list_clear(None)
+            self.task_lst.delete(0, tk.END)
+            self.__proc_list = []
+            self.__param_list = []
+            self.__dstimg_list = []
+            self.__code_list = []
+            self.__img_array = []
+            self.__img_names = []
+
+            proc = 'Webカメラ(WebCamera)'
+            self.task_lst.insert(tk.END, proc)
+            self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
+
+            self.__proc_list.append(proc)
+            self.__param_list.append([])
+            self.__dstimg_list.append([])
+            self.__code_list.append(self.__create_code(proc))
+
+            pass
+        else:
+            if self.__dstimg_list[self.task_lst.size()-1] == []:
+                return
+            self.task_lst.insert(tk.END, proc)
+            self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
+            self.task_lst.select_set(self.task_lst.size()-1)
+            self.__proc_list.append(proc)
+            self.__param_list.append([])
+            self.__dstimg_list.append([])
+            self.__code_list.append(self.__create_code(proc))
+            self.__on_select_list_box_events(None)
 
     def set_proc_code(self, proc_code_list, fnc_list):
         """set_proc_code関数"""
@@ -216,7 +237,7 @@ class AppBase:
 
             self.__app_child = self.fnc_list[fnc_index](
                 img, self.__param_list[index], master=self.split_frame, gui=gui_flag)
-        elif proc == 'ファイル開く(Open File)':
+        elif proc == 'ファイル開く(Open File)' or proc == 'Webカメラ(WebCamera)':
             self.__app_child = self.fnc_list[fnc_index](
                 self.__param_list[index], master=self.split_frame, gui=gui_flag)
         else:
@@ -228,8 +249,13 @@ class AppBase:
             print('set_param_cancel')
             return
 
-        param, dst_img = self.__app_child.get_data()
         index = self.__task_index
+
+        if self.__proc_list[index] == 'Webカメラ(WebCamera)':
+            param, dst_img, cap = self.__app_child.get_data()
+        else:
+            param, dst_img = self.__app_child.get_data()
+
         self.__param_list[index] = param
         self.__dstimg_list[index] = dst_img
 
@@ -290,6 +316,8 @@ class AppBase:
                 memory_mode = 4
             elif code == 'Edge_Arc(img, param, gui=False)':
                 memory_mode = 5
+            elif code == 'WebCamera(param, gui=False)':
+                memory_mode = 6
             else:
                 memory_mode = 0
 
@@ -311,8 +339,11 @@ class AppBase:
                 else:
                     pycode += '\n' + \
                         f'param = {str(self.__param_list[index])}\nimgLib = {code}'
+            if memory_mode==6:
+                pycode += '\nparam, img, cap = imgLib.get_data()\n'
+            else:
+                pycode += '\nparam, img = imgLib.get_data()\n'
 
-            pycode += '\nparam, img = imgLib.get_data()\n'
             if memory_mode == 1:
                 pycode += 'img_array = param[0]\n'
                 pycode += 'img_names = param[1]\n'
