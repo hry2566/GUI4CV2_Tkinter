@@ -102,20 +102,21 @@ class ShadingBlur(EditWindow):
         height, width = image.shape[:2]
 
         blur = cv2.blur(image, (self.__kernel_x, self.__kernel_y))
-        img = image/blur
-        img = np.clip(img*128, 0, 255).astype(np.uint8)
+        img = image / (blur + 1e-10)
+        # img = image / blur
+        img = np.clip(img * 128, 0, 255).astype(np.uint8)
 
         if not self.__select_menu == 0:
             for index in range(height):
-                val = img[index:index+1, 0:width][0]
+                val = img[index:index + 1, 0:width][0]
                 if self.__select_menu == 1:  # 明
-                    val = np.where((val < 128+self.__noise_cut),  0, 255)
+                    val = np.where((val < 128 + self.__noise_cut), 0, 255)
                 elif self.__select_menu == 2:  # 暗
-                    val = np.where((val > 128-self.__noise_cut),  255, 0)
+                    val = np.where((val > 128 - self.__noise_cut), 255, 0)
                 elif self.__select_menu == 3:  # 明暗
-                    val = np.where((val > 128-self.__noise_cut) &
-                                   (val < 128+self.__noise_cut),  int(255/2), 255)
-                img[index:index+1, 0:width][0] = val
+                    val = np.where((val > 128 - self.__noise_cut) &
+                                   (val < 128 + self.__noise_cut), int(255 / 2), 255)
+                img[index:index + 1, 0:width][0] = val
 
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
         return img

@@ -117,7 +117,7 @@ class AppBase:
     def __init_gui(self):
         proc = 'ファイル開く(Open File)'
         self.task_lst.insert(tk.END, proc)
-        self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
+        self.task_lst.select_clear(first=0, last=self.task_lst.size() - 1)
 
         self.__proc_list.append(proc)
         self.__param_list.append([])
@@ -154,7 +154,7 @@ class AppBase:
 
             proc = 'Webカメラ(WebCamera)'
             self.task_lst.insert(tk.END, proc)
-            self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
+            self.task_lst.select_clear(first=0, last=self.task_lst.size() - 1)
 
             self.__proc_list.append(proc)
             self.__param_list.append([])
@@ -163,11 +163,11 @@ class AppBase:
 
             pass
         else:
-            if self.__dstimg_list[self.task_lst.size()-1] == []:
+            if self.__dstimg_list[self.task_lst.size() - 1] == []:
                 return
             self.task_lst.insert(tk.END, proc)
-            self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
-            self.task_lst.select_set(self.task_lst.size()-1)
+            self.task_lst.select_clear(first=0, last=self.task_lst.size() - 1)
+            self.task_lst.select_set(self.task_lst.size() - 1)
             self.__proc_list.append(proc)
             self.__param_list.append([])
             self.__dstimg_list.append([])
@@ -204,9 +204,9 @@ class AppBase:
 
     def __run_proc(self, proc, index, gui_flag):
         if not index == 0:
-            if self.__dstimg_list[index-1] == []:
+            if self.__dstimg_list[index - 1] == []:
                 return
-            img = self.__dstimg_list[index-1]
+            img = self.__dstimg_list[index - 1]
             if len(img) == []:
                 return
         try:
@@ -270,7 +270,7 @@ class AppBase:
         self.__run_flag = True
         rows = 0
         for index, _ in enumerate(self.__proc_list):
-            self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
+            self.task_lst.select_clear(first=0, last=self.task_lst.size() - 1)
             self.task_lst.select_set(index)
             self.__on_select_list_box_events(None)
             self.__on_set_param_events(None)
@@ -282,7 +282,7 @@ class AppBase:
             self.__proc_list[-1] == '画像メモリ作成(Create IMG Memory)' or
                 self.__proc_list[-1] == '画像メモリI/O(MemoryIO)'):
             rows -= 1
-        self.task_lst.select_clear(first=0, last=self.task_lst.size()-1)
+        self.task_lst.select_clear(first=0, last=self.task_lst.size() - 1)
         self.task_lst.select_set(rows)
         self.__on_select_list_box_events(None)
 
@@ -339,7 +339,7 @@ class AppBase:
                 else:
                     pycode += '\n' + \
                         f'param = {str(self.__param_list[index])}\nimgLib = {code}'
-            if memory_mode==6:
+            if memory_mode == 6:
                 pycode += '\nparam, img, cap = imgLib.get_data()\n'
             else:
                 pycode += '\nparam, img = imgLib.get_data()\n'

@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.3">
+  <object class="tk.Toplevel" id="toplevel1">
+    <property name="height">200</property>
+    <property name="width">200</property>
+    <child>
+      <object class="tk.Frame" id="frame1">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout manager="pack">
+          <property name="fill">x</property>
+          <property name="side">top</property>
+        </layout>
+        <child>
+          <object class="tk.Label" id="lbl" named="True">
+            <property name="text" translatable="yes">camra</property>
+            <layout manager="pack">
+              <property name="side">left</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Scale" id="scale_button" named="True">
+            <property name="activebackground">#008040</property>
+            <property name="background">#008040</property>
+            <property name="from_">0</property>
+            <property name="orient">horizontal</property>
+            <property name="showvalue">false</property>
+            <property name="sliderrelief">flat</property>
+            <property name="to">1</property>
+            <layout manager="pack">
+              <property name="expand">true</property>
+              <property name="fill">x</property>
+              <property name="side">left</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Label" id="lbl_state" named="True">
+            <property name="state">normal</property>
+            <property name="text" translatable="yes">OFF</property>
+            <layout manager="pack">
+              <property name="side">left</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

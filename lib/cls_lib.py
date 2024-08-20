@@ -45,3 +45,4 @@ from lib.cls_trim import Trim
 from lib.cls_unsharp import UnSharp
 from lib.cls_webcamera import WebCamera
 from lib.cls_white_balance import WhiteBalance
+from lib.cls_labelling_noise import LabellingNoise

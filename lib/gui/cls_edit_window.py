@@ -112,12 +112,12 @@ class EditWindow(GuiBase):
             img = self.origin_img
 
         self.image_edit_frame.update()
-        canvas_width = int(self.canvas1.winfo_width()*self.__view_scale)
-        canvas_height = int(self.canvas1.winfo_height()*self.__view_scale)
+        canvas_width = int(self.canvas1.winfo_width() * self.__view_scale)
+        canvas_height = int(self.canvas1.winfo_height() * self.__view_scale)
 
         if 1 < canvas_width and 1 < canvas_height:
-            if img == []:
-                img = np.zeros((1, 1, 3), np.uint8)
+            # if img == []:
+            #     img = np.zeros((1, 1, 3), np.uint8)
             cv_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             pil_image = Image.fromarray(cv_image)
             try:
@@ -128,8 +128,8 @@ class EditWindow(GuiBase):
 
                 self.canvas1.delete()
                 self.canvas1.create_image(
-                    canvas_width / 2+self.__imgpos_x,
-                    canvas_height / 2+self.__imgpos_y,
+                    canvas_width / 2 + self.__imgpos_x,
+                    canvas_height / 2 + self.__imgpos_y,
                     image=self.__canvas_img)
             except:
                 pass

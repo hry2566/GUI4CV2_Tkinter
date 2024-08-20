@@ -101,49 +101,49 @@ class ShadingMovingAve(EditWindow):
         height, width = img.shape[:2]
 
         num_x = self.__kernel_x  # 移動平均の個数
-        kernel_x = np.ones(num_x)/num_x
+        kernel_x = np.ones(num_x) / num_x
         num_y = self.__kernel_y  # 移動平均の個数
-        kernel_y = np.ones(num_y)/num_y
+        kernel_y = np.ones(num_y) / num_y
 
         if num_x > 1:
             for index in range(height):
-                y_1 = img[index:index+1, 0:width][0]
+                y_1 = img[index:index + 1, 0:width][0]
                 y_2 = np.convolve(y_1, kernel_x, mode='same')
 
-                n_conv = math.ceil(num_x/2)
-                y_2[0] *= num_x/n_conv
+                n_conv = math.ceil(num_x / 2)
+                y_2[0] *= num_x / n_conv
                 for i in range(1, n_conv):
-                    y_2[i] *= num_x/(i+n_conv)
-                    y_2[-i] *= num_x/(i + n_conv - (num_x % 2))
+                    y_2[i] *= num_x / (i + n_conv)
+                    y_2[-i] *= num_x / (i + n_conv - (num_x % 2))
 
-                dev = y_1-y_2
-                img[index:index+1, 0:width][0] = dev+int(255/2)
+                dev = y_1 - y_2
+                img[index:index + 1, 0:width][0] = dev + int(255 / 2)
 
         if num_y > 1:
             for index in range(width):
-                y_1 = img[0:height, index:index+1].T[0]
+                y_1 = img[0:height, index:index + 1].T[0]
                 y_2 = np.convolve(y_1, kernel_y, mode='same')
 
-                n_conv = math.ceil(num_y/2)
-                y_2[0] *= num_y/n_conv
+                n_conv = math.ceil(num_y / 2)
+                y_2[0] *= num_y / n_conv
                 for i in range(1, n_conv):
-                    y_2[i] *= num_y/(i+n_conv)
-                    y_2[-i] *= num_y/(i + n_conv - (num_y % 2))
+                    y_2[i] *= num_y / (i + n_conv)
+                    y_2[-i] *= num_y / (i + n_conv - (num_y % 2))
 
-                dev = y_1-y_2
-                img[0:height, index:index+1].T[0] = dev+int(255/2)
+                dev = y_1 - y_2
+                img[0:height, index:index + 1].T[0] = dev + int(255 / 2)
 
         if not self.__select_menu == 0:
             for index in range(height):
-                val = img[index:index+1, 0:width][0]
+                val = img[index:index + 1, 0:width][0]
                 if self.__select_menu == 1:  # 明
-                    val = np.where((val < 128+self.__noise_cut),  0, 255)
+                    val = np.where((val < 128 + self.__noise_cut), 0, 255)
                 elif self.__select_menu == 2:  # 暗
-                    val = np.where((val > 128-self.__noise_cut),  255, 0)
+                    val = np.where((val > 128 - self.__noise_cut), 255, 0)
                 elif self.__select_menu == 3:  # 明暗
-                    val = np.where((val > 128-self.__noise_cut) &
-                                 (val < 128+self.__noise_cut),  int(255/2), 255)
-                img[index:index+1, 0:width][0] = val
+                    val = np.where((val > 128 - self.__noise_cut) &
+                                   (val < 128 + self.__noise_cut), int(255 / 2), 255)
+                img[index:index + 1, 0:width][0] = val
 
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
         return img

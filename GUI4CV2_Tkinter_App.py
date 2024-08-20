@@ -63,7 +63,8 @@ class App(AppBase):
                         '輪郭抽出 (Canny)',
                         '輪郭抽出 (Laplacian)',
                         '輪郭抽出 (Sobel)',
-                        '輪郭抽出 (LaplacianCustom)']
+                        '輪郭抽出 (LaplacianCustom)',
+                        'ノイズ除去(Labelling)']
 
         menu_memory = ['画像メモリ作成(Create IMG Memory)',
                        '画像メモリI/O(MemoryIO)']
@@ -271,6 +272,10 @@ class App(AppBase):
         proc_code_list.append(['Webカメラ(WebCamera)',
                                'WebCamera(param, gui=False)'])
         fnc_list.append(partial(WebCamera))
+
+        proc_code_list.append(['ノイズ除去(Labelling)',
+                               'LabellingNoise(img, param, gui=False)'])
+        fnc_list.append(partial(LabellingNoise))
 
         self.set_proc_code(proc_code_list, fnc_list)
 
